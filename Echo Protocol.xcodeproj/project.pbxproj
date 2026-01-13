@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		A51107932F12E94C00294F75 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107922F12E94C00294F75 /* libSDL3.0.dylib */; };
 		A51107962F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */; };
-		A51107A42F12EA9C00294F75 /* libSDL3_ttf.0.2.2.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		A51107A62F12EA9D00294F75 /* libSDL3.0.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A51107922F12E94C00294F75 /* libSDL3.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,8 +27,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A51107A62F12EA9D00294F75 /* libSDL3.0.dylib in Embed Libraries */,
-				A51107A42F12EA9C00294F75 /* libSDL3_ttf.0.2.2.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,12 +276,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
-					/opt/homebrew/include,
-					/usr/local/include,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (
@@ -300,12 +295,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
-					/opt/homebrew/include,
-					/usr/local/include,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (
