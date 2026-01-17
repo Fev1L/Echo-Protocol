@@ -24,26 +24,11 @@ struct Rectangle {
     std::string label;
 };
 
-struct Bavel {
-    SDL_FRect rect;
-    int index[2];
-    std::string label;
-    bool revealed = false;
-    bool flag = false;
-};
-
 struct Text {
     SDL_FRect rect;
     SDL_Color color;
     std::string label;
     std::string textIn;
-};
-
-struct Triangle {
-    SDL_FPoint p1;
-    SDL_FPoint p2;
-    SDL_FPoint p3;
-    SDL_Color color;
 };
 
 struct Image {
@@ -60,19 +45,52 @@ enum class Anchor {
     CENTER
 };
 
+struct Monster {
+    int x;
+    int y;
+    float moveTimer;
+};
+
+struct Noise {
+    int x;
+    int y;
+    bool active;
+    float timeLeft;
+    float cooldown;
+    int radius = 10; 
+};
+
 struct Game {
     SDL_Window* window;
     SDL_Renderer* renderer;
+    
+    int GRID_W = 75;
+    int GRID_H = 55;
+    int centerX = 38;
+    int centerY = 28;
+    
+    Monster monster;
+    Noise noise;
 };
 
 struct State {
     int winW;
     int winH;
-    
-    Rectangle quit;
+
+    Rectangle table;
+    Rectangle monitor;
+    std::vector <Rectangle> rooms;
 };
 
 struct App {
     Game* game;
     State* state;
+    
+    Uint64 lastCounter;
+    double deltaTime;
+};
+
+struct Move {
+    int x;
+    int y;
 };
