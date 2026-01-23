@@ -17,6 +17,8 @@
 #include <iomanip>
 #include <cstdlib>
 
+constexpr float REAL_SECONDS_PER_15_MIN = 5.0f;
+
 struct Rectangle {
     SDL_FRect rect;
     SDL_Color color;
@@ -49,6 +51,9 @@ struct Monster {
     int x;
     int y;
     float moveTimer;
+    float cooldown;
+    bool visible = false;
+    float visibleTime = 0.0f;
 };
 
 struct Noise {
@@ -60,17 +65,29 @@ struct Noise {
     int radius = 10; 
 };
 
+struct Echo {
+    bool active = false;
+    float radius = 0.0f;
+    float speed = 12.0f;
+    float timer = 0.0f;
+    float interval = 2.5f;
+};
+
 struct Game {
     SDL_Window* window;
     SDL_Renderer* renderer;
     
     int GRID_W = 75;
     int GRID_H = 55;
-    int centerX = 38;
-    int centerY = 28;
+    int centerX = GRID_W/2;
+    int centerY = GRID_H/2;
+    float gameTime = 0.0f;
+    int hours = 0;
+    int minutes = 0;
     
     Monster monster;
     Noise noise;
+    Echo echo;
 };
 
 struct State {
@@ -82,9 +99,17 @@ struct State {
     std::vector <Rectangle> rooms;
 };
 
+struct Font {
+    TTF_Font* font1;
+    
+    Text night;
+    Text hours;
+};
+
 struct App {
     Game* game;
     State* state;
+    Font* font;
     
     Uint64 lastCounter;
     double deltaTime;

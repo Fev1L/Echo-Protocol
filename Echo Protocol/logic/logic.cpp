@@ -116,3 +116,60 @@ void updateNoise(Game* game, float deltaTime) {
         }
     }
 }
+//=================================================================
+void updateGameClock(Game* game, float deltaTime) {
+    game->gameTime += deltaTime;
+
+    float gameMinutesPassed = (game->gameTime / REAL_SECONDS_PER_15_MIN) * 15.0f;
+
+    int totalMinutes = static_cast<int>(gameMinutesPassed);
+
+    game->hours   = totalMinutes / 60;
+    if(totalMinutes % 15 == 0)
+    game->minutes = totalMinutes % 60;
+}
+//=================================================================
+void updateEcho(Game* game, float deltaTime) {
+    Echo& e = game->echo;
+
+    e.timer += deltaTime;
+
+    if (!e.active && e.timer >= e.interval) {
+        e.active = true;
+        e.radius = 0.0f;
+        e.timer = 0.0f;
+    }
+
+    if (e.active) {
+        e.radius += e.speed * deltaTime;
+
+        float maxRadius = std::max(game->GRID_W, game->GRID_H);
+        if (e.radius >= maxRadius) {
+            e.active = false;
+            e.radius = 0.0f;
+        }
+    }
+}
+//=================================================================
+void checkEchoHit(Game* game, float deltaTime) {
+    Monster& m = game->monster;
+    Echo& e = game->echo;
+
+    if (!e.active) return;
+
+    int dx = m.x - game->centerX;
+    int dy = m.y - game->centerY;
+    float dist = sqrtf(dx*dx + dy*dy);
+
+    if (fabs(dist - e.radius) < 0.5f) {
+        m.visible = true;
+        m.visibleTime = 2.0f;
+    }
+
+    if (m.visible) {
+        m.visibleTime -= deltaTime;
+        if (m.visibleTime <= 0.0f) {
+            m.visible = false;
+        }
+    }
+}

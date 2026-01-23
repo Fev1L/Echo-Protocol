@@ -24,3 +24,9 @@ Move chooseMoveProb(const Monster& m,const Game* game);
 void updateMonster(Monster& m,const Game* game, float deltaTime);
 
 void updateNoise(Game* game, float dt);
+
+void updateGameClock(Game* game, float deltaTime);
+
+void updateEcho(Game* game, float deltaTime);
+
+void checkEchoHit(Game* game, float deltaTime);
