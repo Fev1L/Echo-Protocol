@@ -79,7 +79,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
             );
         }
     }
-    fonts->night = {{20,20}, {255,255,255,255},"Night", "NIGHT 1"};
+    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT 1"};
     
     if(rand() % 2){
         game->monster.x = rand() % game->GRID_W;
@@ -90,8 +90,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     }
 
     game->noise.active = false;
-    game->noise.timeLeft = 0.0f;
-    game->noise.cooldown = 60.0f;
     
     app->lastCounter = SDL_GetPerformanceCounter();
     app->deltaTime = 0.0;
@@ -119,10 +117,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             for(int j = 0; j < game->GRID_W; j++){
                 int idx = i * game->GRID_W + j;
                 if(idx < state->rooms.size() && isButtonClicked(state->rooms[idx].rect, mouseX, mouseY)){
-                    game->noise.active = true;
-                    game->noise.timeLeft = 10.0f;
-                    game->noise.x = j;
-                    game->noise.y = i;
+                    spawnNoise(game, j, i);
                 }
             }
         }
@@ -222,9 +217,13 @@ SDL_AppResult SDL_AppIterate(void* appstate){
        << ":"
        << std::setw(2) << std::setfill('0') << game->minutes;
 
-    fonts->hours = {{30,40}, {255,255,255,255},"Hours", ss.str()};
-
+    fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str()};
     drawText(game->renderer, fonts->font1, fonts->hours);
+
+    std::ostringstream bait_ss;
+    bait_ss << std::setw(2) << std::setfill('0') << static_cast<int>(game->noise.cooldown);
+    fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str()};
+    drawText(game->renderer, fonts->font1, fonts->bait);
     
     if(game->monster.x == game->centerX && game->monster.y == game->centerY){
         std::cout<<"GAME LOSE";
@@ -267,3 +266,4 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
 
         delete app;}
 //=================================================================
+

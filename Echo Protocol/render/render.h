@@ -17,3 +17,5 @@ void drawText(SDL_Renderer* renderer,TTF_Font* font, const Text& text);
 void drawImage(SDL_Renderer* renderer, SDL_Texture* imageTexture, const Image& img);
 
 SDL_FRect layout(Anchor anchor, float wPct, float hPct, float marginXPct, float marginYPct, int winW, int winH);
+
+SDL_FRect layoutText(float marginXPct, float marginYPct, int winW, int winH);

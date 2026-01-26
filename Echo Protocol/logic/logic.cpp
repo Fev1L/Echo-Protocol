@@ -42,7 +42,7 @@ void spawnNoise(Game* game, int gridX, int gridY) {
     n.y = gridY;
     n.active = true;
     n.timeLeft = 10.0f;
-    n.cooldown = 60.0f;
+    n.cooldown = 15.0f;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {

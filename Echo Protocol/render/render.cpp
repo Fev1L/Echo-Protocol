@@ -86,4 +86,10 @@ SDL_FRect layout( Anchor anchor, float wPct, float hPct, float marginXPct, float
 
     return {x, y, w, h};
 }
-
+//=================================================================
+SDL_FRect layoutText(float marginXPct, float marginYPct, int winW, int winH){
+    float x = 0, y = 0;
+    x = winW * marginXPct;
+    y = winH * marginYPct;
+    return {x, y};
+}

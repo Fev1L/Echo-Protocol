@@ -104,6 +104,7 @@ struct Font {
     
     Text night;
     Text hours;
+    Text bait;
 };
 
 struct App {
