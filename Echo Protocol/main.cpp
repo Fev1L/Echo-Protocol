@@ -54,32 +54,39 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
         Anchor::TOP_LEFT,
         1.00f, 0.20f, //SIZE
         0.00f, 0.70f, //MARGIN
-        app->state->winW,app->state->winH)},{143,103,33,255},0.0f,"TABLE"};
+        app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::CENTER};
     state->monitor = {{layout(
         Anchor::TOP_LEFT,
         0.555f, 0.585f, //SIZE
         0.222f, 0.289f, //MARGIN
-        state->winW,state->winH)},{0,0,0,255},0.0f,"Computer"};
+        state->winW,state->winH)},{0,0,0,255},"Computer", ViewSide::CENTER};
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
             state->rooms.push_back(
-                {{
-                    layout(
-                        Anchor::TOP_LEFT,
-                        0.0069f, 0.0097f,
-                        (0.239f + (0.0069f * j)),
-                        (0.313f + (0.0097f * i)),
-                        state->winW,
-                        state->winH
-                    )
-                },
-                {120,120,120,255},
-                0.0f,
-                "WEIGHT"}
+               {{
+                   layout(
+                          Anchor::TOP_LEFT,
+                          0.0069f, 0.0097f,
+                          (0.239f + (0.0069f * j)),
+                          (0.313f + (0.0097f * i)),
+                          state->winW,
+                          state->winH
+                          )
+               },
+                   {120,120,120,255},
+                   "WEIGHT",
+                   ViewSide::CENTER
+               }
             );
         }
     }
     fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT 1"};
+    
+    state->tableR = {{layout(
+        Anchor::TOP_LEFT,
+        1.00f, 0.20f, //SIZE
+        0.00f, 0.70f, //MARGIN
+        app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::RIGHT};
     
     if(rand() % 2){
         game->monster.x = rand() % game->GRID_W;
@@ -109,8 +116,19 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         return SDL_APP_SUCCESS;
     }else if (event->type == SDL_EVENT_KEY_DOWN) {
         SDL_Keycode key = event->key.key;
-        if (key == SDLK_ESCAPE) {
+        if (key == SDLK_ESCAPE)
             return SDL_APP_SUCCESS;
+        if (key == SDLK_A && game->viewAngleTarget <= 180) {
+            game->targetView = ViewSide::LEFT;
+            game->viewAngleTarget += 180.0f;
+        }
+        if (key == SDLK_D && game->viewAngleTarget <= 180) {
+            game->targetView = ViewSide::RIGHT;
+            game->viewAngleTarget -= 180.0f;
+        }
+        if (key == SDLK_S) {
+            game->targetView = ViewSide::CENTER;
+            game->viewAngleTarget = 0.0f;
         }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         for(int i = 0; i < game->GRID_H; i++){
@@ -137,6 +155,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     app->lastCounter = now;
     updateGameClock(game, app->deltaTime);
     
+    updateCamera(game, app->deltaTime);
     updateEcho(game, app->deltaTime);
     checkEchoHit(game, app->deltaTime);
     updateNoise(game, app->deltaTime);
@@ -188,27 +207,29 @@ SDL_AppResult SDL_AppIterate(void* appstate){
                 color = {0, 255, 0, 255};
             }
             state->rooms.push_back(
-                {{
-                    layout(
-                        Anchor::TOP_LEFT,
-                        0.0069f, 0.0097f,
-                        (0.239f + (0.0069f * j)),
-                        (0.313f + (0.0097f * i)),
-                        state->winW,
-                        state->winH
-                    )
-                },
-                color,
-                0.0f,
-                "WEIGHT"}
+               {{
+                   layout(
+                          Anchor::TOP_LEFT,
+                          0.0069f, 0.0097f,
+                          (0.239f + (0.0069f * j)),
+                          (0.313f + (0.0097f * i)),
+                          state->winW,
+                          state->winH
+                          )
+               },
+                   color,
+                   "WEIGHT",
+                   ViewSide::CENTER
+               }
             );
         }
     }
     
-    drawRectangle(game->renderer, state->table);
-    drawRectangle(game->renderer, state->monitor);
+    drawRectangle(game->renderer, state->table, app);
+    drawRectangle(game->renderer, state->tableR, app);
+    drawRectangle(game->renderer, state->monitor, app);
     for(Rectangle rec : state->rooms){
-        drawRectangle(game->renderer, rec);
+        drawRectangle(game->renderer, rec, app);
     }
     drawText(game->renderer, fonts->font1, fonts->night);
     

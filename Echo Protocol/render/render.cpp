@@ -7,27 +7,32 @@
 
 #include "render.h"
 
-void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct) {
-    SDL_SetRenderDrawColor(renderer, rct.color.r, rct.color.g, rct.color.b, rct.color.a);
+void drawRectangle(SDL_Renderer* renderer, const Rectangle& rct, App* app) {
+    SDL_SetRenderDrawColor(renderer,
+        rct.color.r, rct.color.g, rct.color.b, rct.color.a);
 
-    SDL_FRect core = { rct.rect.x + rct.radius, rct.rect.y, rct.rect.w - 2 * rct.radius, rct.rect.h };
-    SDL_RenderFillRect(renderer, &core);
+    SDL_FRect r = rct.rect;
 
-    SDL_FRect left = { rct.rect.x, rct.rect.y + rct.radius, rct.radius, rct.rect.h - 2 * rct.radius };
-    SDL_FRect right = { rct.rect.x + rct.rect.w - rct.radius, rct.rect.y + rct.radius, rct.radius, rct.rect.h - 2 * rct.radius };
-    SDL_RenderFillRect(renderer, &left);
-    SDL_RenderFillRect(renderer, &right);
+    float cx = app->state->winW * 0.5f;
+    float cy = app->state->winH * 0.5f;
 
-    for (float w = 0; w < rct.radius; ++w) {
-        for (float h = 0; h < rct.radius; ++h) {
-            if ((w * w + h * h) <= rct.radius * rct.radius) {
-                SDL_RenderPoint(renderer, rct.rect.x + rct.radius - w, rct.rect.y + rct.radius - h);
-                SDL_RenderPoint(renderer, rct.rect.x + rct.rect.w - rct.radius + w - 1, rct.rect.y + rct.radius - h);
-                SDL_RenderPoint(renderer, rct.rect.x + rct.radius - w, rct.rect.y + rct.rect.h - rct.radius + h - 1);
-                SDL_RenderPoint(renderer, rct.rect.x + rct.rect.w - rct.radius + w - 1, rct.rect.y + rct.rect.h - rct.radius + h - 1);
-            }
-        }
-    }
+    float t = fabs(app->game->viewAngle) / 90.0f;
+    t = SDL_clamp(t, 0.0f, 1.0f);
+
+    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
+    float scale   = 1.0f - 0.25f * t;
+    
+    float sideX = sideOffsetX(rct.side, app->state->winW);
+    
+    r.x += sideX;
+
+    r.x = (r.x - cx) * scale + cx + offsetX;
+    r.y = (r.y - cy) * scale + cy;
+
+    r.w *= scale;
+    r.h *= scale;
+
+    SDL_RenderFillRect(renderer, &r);
 }
 //=================================================================
 bool isButtonClicked(SDL_FRect rect, float x, float y) {
@@ -92,4 +97,12 @@ SDL_FRect layoutText(float marginXPct, float marginYPct, int winW, int winH){
     x = winW * marginXPct;
     y = winH * marginYPct;
     return {x, y};
+}
+//=================================================================
+float sideOffsetX(ViewSide side, float screenW) {
+    switch (side) {
+        case ViewSide::LEFT:   return -screenW;
+        case ViewSide::RIGHT:  return +screenW;
+        default:               return 0.0f;
+    }
 }

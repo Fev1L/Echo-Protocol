@@ -19,11 +19,17 @@
 
 constexpr float REAL_SECONDS_PER_15_MIN = 5.0f;
 
+enum class ViewSide {
+    LEFT = 0,
+    CENTER = 1,
+    RIGHT = 2
+};
+
 struct Rectangle {
     SDL_FRect rect;
     SDL_Color color;
-    float radius;
     std::string label;
+    ViewSide side;
 };
 
 struct Text {
@@ -73,6 +79,13 @@ struct Echo {
     float interval = 2.5f;
 };
 
+struct Camera {
+    float currentX = 0.0f;
+    float targetX = 0.0f;
+    float speed = 6.0f;
+    ViewSide side = ViewSide::CENTER;
+};
+
 struct Game {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -84,10 +97,15 @@ struct Game {
     float gameTime = 0.0f;
     int hours = 0;
     int minutes = 0;
+    ViewSide currentView = ViewSide::CENTER;
+    ViewSide targetView  = ViewSide::CENTER;
+    float viewAngle = 0.0f; 
+    float viewAngleTarget = 0.0f;
     
     Monster monster;
     Noise noise;
     Echo echo;
+    Camera camera;
 };
 
 struct State {
@@ -95,6 +113,7 @@ struct State {
     int winH;
 
     Rectangle table;
+    Rectangle tableR;
     Rectangle monitor;
     std::vector <Rectangle> rooms;
 };

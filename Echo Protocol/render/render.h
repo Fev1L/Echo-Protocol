@@ -8,7 +8,7 @@
 #pragma once
 #include "../types.h"
 
-void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct);
+void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);
 
 bool isButtonClicked(SDL_FRect rect, float x, float y);
 
@@ -19,3 +19,5 @@ void drawImage(SDL_Renderer* renderer, SDL_Texture* imageTexture, const Image& i
 SDL_FRect layout(Anchor anchor, float wPct, float hPct, float marginXPct, float marginYPct, int winW, int winH);
 
 SDL_FRect layoutText(float marginXPct, float marginYPct, int winW, int winH);
+
+float sideOffsetX(ViewSide side, float screenW);

@@ -95,7 +95,7 @@ Move chooseMoveProb(const Monster& m, const Game* game) {
 //=================================================================
 void updateMonster(Monster& m, const Game* game,float deltaTime) {
     m.moveTimer += deltaTime;
-    if (m.moveTimer >= 0.5f) {
+    if (m.moveTimer >= 1.0f) {
         Move next = chooseMoveProb(m, game);
         m.x = next.x;
         m.y = next.y;
@@ -171,5 +171,19 @@ void checkEchoHit(Game* game, float deltaTime) {
         if (m.visibleTime <= 0.0f) {
             m.visible = false;
         }
+    }
+}
+//=================================================================
+void updateCamera(Game* game, float deltaTime) {
+    float speed = 720.0f;
+
+    float diff = game->viewAngleTarget - game->viewAngle;
+    float step = speed * deltaTime;
+
+    if (fabs(diff) <= step) {
+        game->viewAngle = game->viewAngleTarget;
+        game->currentView = game->targetView;
+    } else {
+        game->viewAngle += (diff > 0 ? step : -step);
     }
 }
