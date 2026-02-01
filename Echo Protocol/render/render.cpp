@@ -13,19 +13,23 @@ void drawRectangle(SDL_Renderer* renderer, const Rectangle& rct, App* app) {
 
     SDL_FRect r = rct.rect;
 
-    float cx = app->state->winW * 0.5f;
-    float cy = app->state->winH * 0.5f;
-
-    float t = fabs(app->game->viewAngle) / 90.0f;
-    t = SDL_clamp(t, 0.0f, 1.0f);
-
-    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
-    float scale   = 1.0f - 0.25f * t;
-    
     float sideX = sideOffsetX(rct.side, app->state->winW);
-    
     r.x += sideX;
 
+    float cx = app->state->winW * 0.5f + sideX;
+    float cy = app->state->winH * 0.5f;
+    float scale;
+
+    if (app->game->camera.isTurning) {
+        float t = fabs(app->game->viewAngle - app->game->viewAngleTarget) / 90.0f;
+        t = SDL_clamp(t, 0.0f, 1.0f);
+        scale = 1.0f - 0.25f * (1.0f - t);
+    }else{
+        scale = 1.0f;
+    }
+
+    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
+    
     r.x = (r.x - cx) * scale + cx + offsetX;
     r.y = (r.y - cy) * scale + cy;
 

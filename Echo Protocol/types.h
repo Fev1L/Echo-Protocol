@@ -57,8 +57,10 @@ struct Monster {
     int x;
     int y;
     float moveTimer;
-    float cooldown;
+    float monsterLiveTime;
+    float monsterSpawnTime;
     bool visible = false;
+    bool present;
     float visibleTime = 0.0f;
 };
 
@@ -83,7 +85,14 @@ struct Camera {
     float currentX = 0.0f;
     float targetX = 0.0f;
     float speed = 6.0f;
+    bool isTurning = false;
     ViewSide side = ViewSide::CENTER;
+};
+
+struct System {
+    bool echoSystem = true;
+    bool baitSystem = true;
+    bool monitorSystem = true;
 };
 
 struct Game {
@@ -106,6 +115,7 @@ struct Game {
     Noise noise;
     Echo echo;
     Camera camera;
+    System system;
 };
 
 struct State {
@@ -115,6 +125,7 @@ struct State {
     Rectangle table;
     Rectangle tableR;
     Rectangle monitor;
+    Rectangle monitorR;
     std::vector <Rectangle> rooms;
 };
 

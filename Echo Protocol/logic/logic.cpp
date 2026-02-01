@@ -7,6 +7,30 @@
 
 #include "logic.h"
 
+//=================================================================
+void spawnMonster(Game* game) {
+    Monster& m = game->monster;
+    int w = game->GRID_W;
+    int h = game->GRID_H;
+
+    do {
+        if (rand() % 2) {
+            m.x = rand() % w;
+            m.y = (rand() % 2) ? 0 : h - 1;
+        } else {
+            m.y = rand() % h;
+            m.x = (rand() % 2) ? 0 : w - 1;
+        }
+    } while (m.x == game->centerX && m.y == game->centerY);
+
+    m.present = true;
+    m.monsterLiveTime = 0.0f;
+    m.moveTimer = 0.0f;
+    m.visible = false;
+    m.visibleTime = 0.0f;
+}
+
+//=================================================================
 bool inBounds(int x, int y) {
     return x >= 0 && y >= 0 && x < 75 && y < 55;
 }
@@ -93,13 +117,31 @@ Move chooseMoveProb(const Monster& m, const Game* game) {
     return bestMove;
 }
 //=================================================================
-void updateMonster(Monster& m, const Game* game,float deltaTime) {
-    m.moveTimer += deltaTime;
-    if (m.moveTimer >= 1.0f) {
-        Move next = chooseMoveProb(m, game);
-        m.x = next.x;
-        m.y = next.y;
-        m.moveTimer = 0.0f;
+void updateMonster(Monster& m, const Game* game, float deltaTime) {
+    if (m.present) {
+        m.monsterLiveTime += deltaTime;
+        m.moveTimer += deltaTime;
+
+        if (m.moveTimer >= 1.0f) {
+            Move next = chooseMoveProb(m, game);
+            m.x = next.x;
+            m.y = next.y;
+            m.moveTimer = 0.0f;
+        }
+
+        if (m.monsterLiveTime >= 60.0f) {
+            m.present = false;
+            m.monsterSpawnTime = rand() % 10;
+            m.visible = false;
+        }
+    }
+    
+    else {
+        if (m.monsterSpawnTime > 0.0f) {
+            m.monsterSpawnTime -= deltaTime;
+        } else {
+            spawnMonster(const_cast<Game*>(game));
+        }
     }
 }
 //=================================================================
@@ -155,7 +197,7 @@ void checkEchoHit(Game* game, float deltaTime) {
     Monster& m = game->monster;
     Echo& e = game->echo;
 
-    if (!e.active) return;
+    if (!e.active || !m.present) return;
 
     int dx = m.x - game->centerX;
     int dy = m.y - game->centerY;
@@ -183,7 +225,9 @@ void updateCamera(Game* game, float deltaTime) {
     if (fabs(diff) <= step) {
         game->viewAngle = game->viewAngleTarget;
         game->currentView = game->targetView;
+        game->camera.isTurning = false;
     } else {
         game->viewAngle += (diff > 0 ? step : -step);
+        game->camera.isTurning = true;  
     }
 }

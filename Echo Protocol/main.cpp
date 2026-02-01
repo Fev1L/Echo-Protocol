@@ -52,7 +52,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     
     state->table = {{layout(
         Anchor::TOP_LEFT,
-        1.00f, 0.20f, //SIZE
+        1.0f, 0.20f, //SIZE
         0.00f, 0.70f, //MARGIN
         app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::CENTER};
     state->monitor = {{layout(
@@ -87,14 +87,13 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
         1.00f, 0.20f, //SIZE
         0.00f, 0.70f, //MARGIN
         app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::RIGHT};
+    state->monitorR = {{layout(
+        Anchor::TOP_LEFT,
+        0.555f, 0.585f, //SIZE
+        0.222f, 0.289f, //MARGIN
+        state->winW,state->winH)},{0,0,0,255},"Computer", ViewSide::RIGHT};
     
-    if(rand() % 2){
-        game->monster.x = rand() % game->GRID_W;
-        game->monster.y = (rand() % 2) ? 0 : game->GRID_H - 1;
-    }else{
-        game->monster.y = rand() % game->GRID_H;
-        game->monster.x = (rand() % 2) ? 0 : game->GRID_W - 1;
-    }
+    spawnMonster(game);
 
     game->noise.active = false;
     
@@ -118,11 +117,11 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         SDL_Keycode key = event->key.key;
         if (key == SDLK_ESCAPE)
             return SDL_APP_SUCCESS;
-        if (key == SDLK_A && game->viewAngleTarget <= 180) {
+        if (key == SDLK_A && game->viewAngleTarget <= 90) {
             game->targetView = ViewSide::LEFT;
             game->viewAngleTarget += 180.0f;
         }
-        if (key == SDLK_D && game->viewAngleTarget <= 180) {
+        if (key == SDLK_D && game->viewAngleTarget >= -90) {
             game->targetView = ViewSide::RIGHT;
             game->viewAngleTarget -= 180.0f;
         }
@@ -197,7 +196,8 @@ SDL_AppResult SDL_AppIterate(void* appstate){
                 }
             }
 
-            if (game->monster.visible &&
+            if (game->monster.present &&
+                game->monster.visible &&
                 i == game->monster.y &&
                 j == game->monster.x) {
                 color = {255, 80, 80, 255};
@@ -228,6 +228,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     drawRectangle(game->renderer, state->table, app);
     drawRectangle(game->renderer, state->tableR, app);
     drawRectangle(game->renderer, state->monitor, app);
+    drawRectangle(game->renderer, state->monitorR, app);
     for(Rectangle rec : state->rooms){
         drawRectangle(game->renderer, rec, app);
     }
@@ -246,7 +247,9 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str()};
     drawText(game->renderer, fonts->font1, fonts->bait);
     
-    if(game->monster.x == game->centerX && game->monster.y == game->centerY){
+    if(game->monster.present &&
+       game->monster.x == game->centerX &&
+       game->monster.y == game->centerY){
         std::cout<<"GAME LOSE";
         return SDL_APP_SUCCESS;
     }
@@ -287,4 +290,5 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
 
         delete app;}
 //=================================================================
+
 

@@ -9,6 +9,8 @@
 #include "../types.h"
 #include "render.h"
 
+void spawnMonster(Game* game);
+
 bool inBounds(int x, int y, int GRID_W, int GRID_H);
 
 std::vector<Move> getMoves(const Monster& m);
