@@ -80,7 +80,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
             );
         }
     }
-    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT 1"};
+    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT 1", ViewSide::CENTER};
     
     state->tableR = {{layout(
         Anchor::TOP_LEFT,
@@ -232,20 +232,20 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     for(Rectangle rec : state->rooms){
         drawRectangle(game->renderer, rec, app);
     }
-    drawText(game->renderer, fonts->font1, fonts->night);
+    drawText(game->renderer, fonts->font1, fonts->night, app);
     
     std::ostringstream ss;
     ss << std::setw(2) << std::setfill('0') << game->hours
        << ":"
        << std::setw(2) << std::setfill('0') << game->minutes;
 
-    fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str()};
-    drawText(game->renderer, fonts->font1, fonts->hours);
+    fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str(), ViewSide::CENTER};
+    drawText(game->renderer, fonts->font1, fonts->hours, app);
 
     std::ostringstream bait_ss;
     bait_ss << std::setw(2) << std::setfill('0') << static_cast<int>(game->noise.cooldown);
-    fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str()};
-    drawText(game->renderer, fonts->font1, fonts->bait);
+    fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str(), ViewSide::CENTER};
+    drawText(game->renderer, fonts->font1, fonts->bait, app);
     
     if(game->monster.present &&
        game->monster.x == game->centerX &&

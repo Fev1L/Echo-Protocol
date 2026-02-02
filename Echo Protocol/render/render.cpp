@@ -44,15 +44,52 @@ bool isButtonClicked(SDL_FRect rect, float x, float y) {
             y >= rect.y && y <= rect.y + rect.h);
 }
 //=================================================================
-void drawText(SDL_Renderer* renderer,TTF_Font* font, const Text& text){
-    float textW, textH;
-    SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
-    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text.textIn.c_str(), 0, color, 375);
+void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app){
+    SDL_Color color = {
+        text.color.r,
+        text.color.g,
+        text.color.b,
+        255
+    };
+
+    float wrapWidth = app->state->winW * 0.25f;
+
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped( font, text.textIn.c_str(), 0, color, (int)wrapWidth);
+    if (!surface) return;
+
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
+    if (!texture) return;
+
+    float textW, textH;
     SDL_GetTextureSize(texture, &textW, &textH);
-    SDL_FRect dst = { text.rect.x, text.rect.y, textW, textH };
+
+    float scale = app->state->winW / 1920.0f;
+
+
+    float sideX = sideOffsetX(text.side, app->state->winW);
+
+    float cx = app->state->winW * 0.5f + sideX;
+    float cy = app->state->winH * 0.5f;
+
+    float t = fabs(app->game->viewAngle) / 90.0f;
+    t = SDL_clamp(t, 0.0f, 1.0f);
+
+    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
+    float animScale = app->game->camera.isTurning ? (1.0f - 0.25f * t) : 1.0f;
+
+    SDL_FRect dst = {
+        text.rect.x + sideX,
+        text.rect.y,
+        textW * scale * animScale,
+        textH * scale * animScale
+    };
+
+    dst.x = (dst.x - cx) * animScale + cx + offsetX;
+    dst.y = (dst.y - cy) * animScale + cy;
+
     SDL_RenderTexture(renderer, texture, nullptr, &dst);
+    SDL_DestroyTexture(texture);
 }
 //=================================================================
 void drawImage(SDL_Renderer* renderer, SDL_Texture* imageTexture, const Image& img){

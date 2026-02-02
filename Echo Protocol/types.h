@@ -37,6 +37,7 @@ struct Text {
     SDL_Color color;
     std::string label;
     std::string textIn;
+    ViewSide side;
 };
 
 struct Image {
