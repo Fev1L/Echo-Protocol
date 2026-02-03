@@ -174,12 +174,18 @@ void updateGameClock(Game* game, float deltaTime) {
 void updateEcho(Game* game, float deltaTime) {
     Echo& e = game->echo;
 
-    e.timer += deltaTime;
+    if (!game->system.echoSystem) {
+        if (!e.active) {
+            e.timer = 0.0f;
+        }
+    } else {
+        e.timer += deltaTime;
 
-    if (!e.active && e.timer >= e.interval) {
-        e.active = true;
-        e.radius = 0.0f;
-        e.timer = 0.0f;
+        if (!e.active && e.timer >= e.interval) {
+            e.active = true;
+            e.radius = 0.0f;
+            e.timer = 0.0f;
+        }
     }
 
     if (e.active) {
@@ -230,4 +236,7 @@ void updateCamera(Game* game, float deltaTime) {
         game->viewAngle += (diff > 0 ? step : -step);
         game->camera.isTurning = true;  
     }
+    
+    if(game->viewAngle == 0)
+        game->currentView = ViewSide::CENTER;
 }

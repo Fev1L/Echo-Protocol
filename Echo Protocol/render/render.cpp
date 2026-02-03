@@ -7,6 +7,43 @@
 
 #include "render.h"
 
+SDL_FRect getTextScreenRect(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app) {
+    SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
+
+    float wrapWidth = app->state->winW * 0.25f;
+
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped( font, text.textIn.c_str(), 0, color, (int)wrapWidth);
+    if (!surface) return {0,0,0,0};
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    if (!texture) return {0,0,0,0};
+
+    float textW, textH;
+    SDL_GetTextureSize(texture, &textW, &textH);
+    SDL_DestroyTexture(texture);
+
+    float scale = app->state->winW / 1920.0f;
+
+    float sideX = sideOffsetX(text.side, app->state->winW);
+
+    float cx = app->state->winW * 0.5f + sideX;
+    float cy = app->state->winH * 0.5f;
+
+    float t = fabs(app->game->viewAngle) / 90.0f;
+    t = SDL_clamp(t, 0.0f, 1.0f);
+
+    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
+    float animScale = app->game->camera.isTurning ? (1.0f - 0.25f * t) : 1.0f;
+
+    SDL_FRect r = {text.rect.x + sideX, text.rect.y, textW * scale * animScale, textH * scale * animScale};
+
+    r.x = (r.x - cx) * animScale + cx + offsetX;
+    r.y = (r.y - cy) * animScale + cy;
+
+    return r;
+}
+//=================================================================
 void drawRectangle(SDL_Renderer* renderer, const Rectangle& rct, App* app) {
     SDL_SetRenderDrawColor(renderer,
         rct.color.r, rct.color.g, rct.color.b, rct.color.a);
@@ -44,13 +81,16 @@ bool isButtonClicked(SDL_FRect rect, float x, float y) {
             y >= rect.y && y <= rect.y + rect.h);
 }
 //=================================================================
+bool isTextClicked(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app, float x, float y){
+    SDL_FRect r = getTextScreenRect(renderer, font, text, app);;
+    std::cout<<r.x<<" "<<r.y<<" "<<r.w<<" "<<r.h;
+    
+    return (x >= r.x && x <= r.x + r.w &&
+            y >= r.y && y <= r.y + r.h);
+}
+//=================================================================
 void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app){
-    SDL_Color color = {
-        text.color.r,
-        text.color.g,
-        text.color.b,
-        255
-    };
+    SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
 
     float wrapWidth = app->state->winW * 0.25f;
 
@@ -61,32 +101,7 @@ void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const Ap
     SDL_DestroySurface(surface);
     if (!texture) return;
 
-    float textW, textH;
-    SDL_GetTextureSize(texture, &textW, &textH);
-
-    float scale = app->state->winW / 1920.0f;
-
-
-    float sideX = sideOffsetX(text.side, app->state->winW);
-
-    float cx = app->state->winW * 0.5f + sideX;
-    float cy = app->state->winH * 0.5f;
-
-    float t = fabs(app->game->viewAngle) / 90.0f;
-    t = SDL_clamp(t, 0.0f, 1.0f);
-
-    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
-    float animScale = app->game->camera.isTurning ? (1.0f - 0.25f * t) : 1.0f;
-
-    SDL_FRect dst = {
-        text.rect.x + sideX,
-        text.rect.y,
-        textW * scale * animScale,
-        textH * scale * animScale
-    };
-
-    dst.x = (dst.x - cx) * animScale + cx + offsetX;
-    dst.y = (dst.y - cy) * animScale + cy;
+    SDL_FRect dst = getTextScreenRect(renderer, font, text, app);
 
     SDL_RenderTexture(renderer, texture, nullptr, &dst);
     SDL_DestroyTexture(texture);

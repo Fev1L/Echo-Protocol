@@ -107,6 +107,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
     App* app = (App*)appstate;
     Game* game = app->game;
     State* state = app->state;
+    Font* fonts = app->font;
     
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
@@ -129,15 +130,24 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->targetView = ViewSide::CENTER;
             game->viewAngleTarget = 0.0f;
         }
+        if (key == SDLK_T) {
+            game->system.echoSystem = false;
+            game->system.baitSystem = false;
+        }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         for(int i = 0; i < game->GRID_H; i++){
             for(int j = 0; j < game->GRID_W; j++){
                 int idx = i * game->GRID_W + j;
-                if(idx < state->rooms.size() && isButtonClicked(state->rooms[idx].rect, mouseX, mouseY)){
+                if(idx < state->rooms.size() && isButtonClicked(state->rooms[idx].rect, mouseX, mouseY) && game->currentView == ViewSide::CENTER && game->system.baitSystem == true){
                     spawnNoise(game, j, i);
                 }
             }
         }
+        
+        if(isTextClicked(game->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT)
+            game->system.baitSystem = true;
+        if(isTextClicked(game->renderer, fonts->font1, fonts->echoSystem, app, mouseX, mouseY) && game->system.echoSystem == false && game->currentView == ViewSide::RIGHT)
+            game->system.echoSystem = true;
     }
     
     return SDL_APP_CONTINUE;
@@ -152,18 +162,30 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     Uint64 now = SDL_GetPerformanceCounter();
     app->deltaTime = (double)(now - app->lastCounter) / (double)SDL_GetPerformanceFrequency();
     app->lastCounter = now;
-    updateGameClock(game, app->deltaTime);
     
+    updateGameClock(game, app->deltaTime);
     updateCamera(game, app->deltaTime);
+    updateNoise(game, app->deltaTime);
     updateEcho(game, app->deltaTime);
     checkEchoHit(game, app->deltaTime);
-    updateNoise(game, app->deltaTime);
     updateMonster(game->monster, game, app->deltaTime);
     
     SDL_SetRenderDrawColor(game->renderer, 55, 55, 55, 255);
     SDL_RenderClear(game->renderer);
     
     state->rooms.clear();
+    
+    if(game->system.baitSystem){
+        fonts->baitSystem = {{layoutText(0.246f, 0.323f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
+    }else{
+        fonts->baitSystem = {{layoutText(0.246f, 0.323f, state->winW, state->winH)}, {255,0,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
+    }
+    if(game->system.echoSystem){
+        fonts->echoSystem = {{layoutText(0.246f, 0.373f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
+    }else{
+        fonts->echoSystem = {{layoutText(0.246f, 0.373f, state->winW, state->winH)}, {255,0,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
+    }
+    
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
 
@@ -246,6 +268,8 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     bait_ss << std::setw(2) << std::setfill('0') << static_cast<int>(game->noise.cooldown);
     fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str(), ViewSide::CENTER};
     drawText(game->renderer, fonts->font1, fonts->bait, app);
+    drawText(game->renderer, fonts->font1, fonts->baitSystem, app);
+    drawText(game->renderer, fonts->font1, fonts->echoSystem, app);
     
     if(game->monster.present &&
        game->monster.x == game->centerX &&

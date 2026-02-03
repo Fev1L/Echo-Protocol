@@ -93,7 +93,6 @@ struct Camera {
 struct System {
     bool echoSystem = true;
     bool baitSystem = true;
-    bool monitorSystem = true;
 };
 
 struct Game {
@@ -136,6 +135,8 @@ struct Font {
     Text night;
     Text hours;
     Text bait;
+    Text baitSystem;
+    Text echoSystem;
 };
 
 struct App {

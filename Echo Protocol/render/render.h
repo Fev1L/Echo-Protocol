@@ -12,6 +12,8 @@ void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);
 
 bool isButtonClicked(SDL_FRect rect, float x, float y);
 
+bool isTextClicked(SDL_Renderer* renderer , TTF_Font* font, const Text& text, const App* app, float x, float y);
+
 void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app);
 
 void drawImage(SDL_Renderer* renderer, SDL_Texture* imageTexture, const Image& img);
