@@ -77,16 +77,12 @@ void drawRectangle(SDL_Renderer* renderer, const Rectangle& rct, App* app) {
 }
 //=================================================================
 bool isButtonClicked(SDL_FRect rect, float x, float y) {
-    return (x >= rect.x && x <= rect.x + rect.w &&
-            y >= rect.y && y <= rect.y + rect.h);
+    return (x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h);
 }
 //=================================================================
 bool isTextClicked(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app, float x, float y){
-    SDL_FRect r = getTextScreenRect(renderer, font, text, app);;
-    std::cout<<r.x<<" "<<r.y<<" "<<r.w<<" "<<r.h;
-    
-    return (x >= r.x && x <= r.x + r.w &&
-            y >= r.y && y <= r.y + r.h);
+    SDL_FRect r = getTextScreenRect(renderer, font, text, app);
+    return (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h);
 }
 //=================================================================
 void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app){

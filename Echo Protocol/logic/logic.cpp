@@ -183,6 +183,7 @@ void updateEcho(Game* game, float deltaTime) {
 
         if (!e.active && e.timer >= e.interval) {
             e.active = true;
+            e.interval = rand() % 3 + 1;
             e.radius = 0.0f;
             e.timer = 0.0f;
         }
@@ -212,12 +213,17 @@ void checkEchoHit(Game* game, float deltaTime) {
     if (fabs(dist - e.radius) < 0.5f) {
         m.visible = true;
         m.visibleTime = 2.0f;
+        
+        m.echoX = m.x;
+        m.echoY = m.y;
+        m.echoMarked = true;
     }
 
     if (m.visible) {
         m.visibleTime -= deltaTime;
         if (m.visibleTime <= 0.0f) {
             m.visible = false;
+            m.echoMarked = false;
         }
     }
 }

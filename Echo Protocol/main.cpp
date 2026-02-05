@@ -188,7 +188,6 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
-
             SDL_Color color = {120,120,120,255};
 
             if (game->noise.active) {
@@ -218,27 +217,11 @@ SDL_AppResult SDL_AppIterate(void* appstate){
                 }
             }
 
-            if (game->monster.present &&
-                game->monster.visible &&
-                i == game->monster.y &&
-                j == game->monster.x) {
-                color = {255, 80, 80, 255};
-            }
-
-            if (i == game->centerY && j == game->centerX) {
-                color = {0, 255, 0, 255};
-            }
-            state->rooms.push_back(
-               {{
-                   layout(
-                          Anchor::TOP_LEFT,
-                          0.0069f, 0.0097f,
-                          (0.239f + (0.0069f * j)),
-                          (0.313f + (0.0097f * i)),
-                          state->winW,
-                          state->winH
-                          )
-               },
+            if (game->monster.present && game->monster.visible && i == game->monster.echoY && j == game->monster.echoX) color = {255, 80, 80, 255};
+            
+            if (i == game->centerY && j == game->centerX) color = {0, 255, 0, 255};
+            
+            state->rooms.push_back({{layout(Anchor::TOP_LEFT, 0.0069f, 0.0097f, (0.239f + (0.0069f * j)), (0.313f + (0.0097f * i)), state->winW, state->winH)},
                    color,
                    "WEIGHT",
                    ViewSide::CENTER
@@ -289,30 +272,31 @@ SDL_AppResult SDL_AppIterate(void* appstate){
 //=================================================================
 void SDL_AppQuit(void* appstate, SDL_AppResult result){
     if (!appstate) return;
-
-        App* app = (App*)appstate;
-        if (!app) return;
-
-        if (app->game) {
-            if (app->game->renderer)
-                SDL_DestroyRenderer(app->game->renderer);
-
-            if (app->game->window)
-                SDL_DestroyWindow(app->game->window);
-
-            delete app->game;
-        }
-
-        if (app->state)
-            delete app->state;
-
-        if (app->font)
-            delete app->font;
-
-        TTF_Quit();
-        SDL_Quit();
-
-        delete app;}
+    
+    App* app = (App*)appstate;
+    if (!app) return;
+    
+    if (app->game) {
+        if (app->game->renderer)
+            SDL_DestroyRenderer(app->game->renderer);
+        
+        if (app->game->window)
+            SDL_DestroyWindow(app->game->window);
+        
+        delete app->game;
+    }
+    
+    if (app->state)
+        delete app->state;
+    
+    if (app->font)
+        delete app->font;
+    
+    TTF_Quit();
+    SDL_Quit();
+    
+    delete app;
+}
 //=================================================================
 
 

@@ -63,6 +63,9 @@ struct Monster {
     bool visible = false;
     bool present;
     float visibleTime = 0.0f;
+    int echoX = 0;
+    int echoY = 0;
+    bool echoMarked = false;
 };
 
 struct Noise {
