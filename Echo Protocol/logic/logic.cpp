@@ -246,3 +246,12 @@ void updateCamera(Game* game, float deltaTime) {
     if(game->viewAngle == 0)
         game->currentView = ViewSide::CENTER;
 }
+//=================================================================
+void startNewGame(Game* game) {
+    //resetAllSystems(game);
+    game->currentNight = 1;
+}
+//=================================================================
+void loadGame(Game* game) {
+    //#
+}

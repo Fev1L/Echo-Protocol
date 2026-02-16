@@ -19,6 +19,13 @@
 
 constexpr float REAL_SECONDS_PER_15_MIN = 5.0f;
 
+enum class GameState {
+    MENU,
+    PLAYING,
+    ENDSCREEN,
+    SETTINGS
+};
+
 enum class ViewSide {
     LEFT = 0,
     CENTER = 1,
@@ -98,6 +105,14 @@ struct System {
     bool baitSystem = true;
 };
 
+struct Menu {
+    int selectedIndex = 0;
+    
+    Text newGame;
+    Text continueGame;
+    Text settings;
+};
+
 struct Game {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -113,12 +128,15 @@ struct Game {
     ViewSide targetView  = ViewSide::CENTER;
     float viewAngle = 0.0f; 
     float viewAngleTarget = 0.0f;
+    int currentNight;
     
     Monster monster;
     Noise noise;
     Echo echo;
     Camera camera;
     System system;
+    
+    Menu menu;
 };
 
 struct State {
@@ -145,8 +163,9 @@ struct Font {
 struct App {
     Game* game;
     State* state;
-    Font* font;
+    Font* fonts;
     
+    GameState gamestate = GameState::MENU;
     Uint64 lastCounter;
     double deltaTime;
 };

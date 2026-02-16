@@ -34,3 +34,7 @@ void updateEcho(Game* game, float deltaTime);
 void checkEchoHit(Game* game, float deltaTime);
 
 void updateCamera(Game* game, float deltaTime);
+
+void startNewGame(Game* game);
+
+void loadGame(Game* game);
