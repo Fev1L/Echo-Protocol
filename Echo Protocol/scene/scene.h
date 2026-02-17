@@ -12,4 +12,8 @@
 
 void renderMenu(Game* game, App* app);
 
+void renderGame(Game* game, App* app);
 
+void renderCustomgame(Game* game, App* app);
+
+void renderEndgame(Game* game, App* app);

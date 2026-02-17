@@ -23,7 +23,7 @@ enum class GameState {
     MENU,
     PLAYING,
     ENDSCREEN,
-    SETTINGS
+    CUSTOMGAME
 };
 
 enum class ViewSide {
@@ -110,7 +110,7 @@ struct Menu {
     
     Text newGame;
     Text continueGame;
-    Text settings;
+    Text customGame;
 };
 
 struct Game {
@@ -158,6 +158,7 @@ struct Font {
     Text bait;
     Text baitSystem;
     Text echoSystem;
+    Text endGameText;
 };
 
 struct App {
