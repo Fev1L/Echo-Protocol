@@ -247,9 +247,11 @@ void updateCamera(Game* game, float deltaTime) {
         game->currentView = ViewSide::CENTER;
 }
 //=================================================================
-void startNewGame(Game* game) {
+void startNewGame(App* app) {
     //resetAllSystems(game);
-    game->currentNight = 1;
+    app->game->nightIntroTimer = 0.0f;
+    app->gamestate = GameState::ENDSCREEN;
+    app->game->currentNight = 1;
 }
 //=================================================================
 void loadGame(Game* game) {

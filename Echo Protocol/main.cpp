@@ -127,8 +127,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         }
         
         if (isTextClicked(game->renderer, app->fonts->font1, game->menu.newGame, app, mouseX, mouseY)) {
-            startNewGame(game);
-            app->gamestate = GameState::PLAYING;
+            startNewGame(app);
         }
         if (isTextClicked(game->renderer, app->fonts->font1, game->menu.continueGame, app, mouseX, mouseY)) {
             loadGame(game);
@@ -157,6 +156,13 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         checkEchoHit(game, app->deltaTime);
         updateMonster(game->monster, game, app->deltaTime);
         updateRepair(game, app->deltaTime);
+    }
+    if (app->gamestate == GameState::ENDSCREEN){
+        game->nightIntroTimer += app->deltaTime;
+
+        if (game->nightIntroTimer >= game->nightIntroDuration){
+            app->gamestate = GameState::PLAYING;
+        }
     }
     
     SDL_SetRenderDrawColor(game->renderer, 55, 55, 55, 255);

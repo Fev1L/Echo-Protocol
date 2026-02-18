@@ -157,11 +157,13 @@ void renderCustomgame(Game* game, App* app) {
 }
 
 void renderEndgame(Game* game, App* app) {
-    if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY)
+    if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY){
         app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "YOU LOSE", ViewSide::CENTER};
-    
-    if (game->hours >= 8)
+    }else if(game->hours >= 8){
         app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "YOU WIN", ViewSide::CENTER};
-    
+    }else{
+        app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    }
+        
     drawText(game->renderer, app->fonts->font1, app->fonts->endGameText, app);
 }
