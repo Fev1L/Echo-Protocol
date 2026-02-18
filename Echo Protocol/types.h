@@ -16,6 +16,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
+#include <fstream>
 
 constexpr float REAL_SECONDS_PER_15_MIN = 5.0f;
 
@@ -128,9 +129,6 @@ struct Menu {
 };
 
 struct Game {
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    
     int GRID_W = 75;
     int GRID_H = 55;
     int centerX = GRID_W/2;
@@ -142,7 +140,7 @@ struct Game {
     ViewSide targetView  = ViewSide::CENTER;
     float viewAngle = 0.0f; 
     float viewAngleTarget = 0.0f;
-    int currentNight;
+    int currentNight = 1;
     float nightIntroTimer = 0.0f;
     float nightIntroDuration = 4.0f;
     
@@ -180,6 +178,9 @@ struct Font {
 };
 
 struct App {
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    
     Game* game;
     State* state;
     Font* fonts;

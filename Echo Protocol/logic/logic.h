@@ -9,6 +9,10 @@
 #include "../types.h"
 #include "render.h"
 
+void saveProgress(Game* game);
+    
+void loadProgress(Game* game);
+    
 void spawnMonster(Game* game);
 
 bool inBounds(int x, int y, int GRID_W, int GRID_H);
@@ -34,6 +38,8 @@ void updateEcho(Game* game, float deltaTime);
 void checkEchoHit(Game* game, float deltaTime);
 
 void updateCamera(Game* game, float deltaTime);
+
+void resetGame(App* app);
 
 void startNewGame(App* app);
 

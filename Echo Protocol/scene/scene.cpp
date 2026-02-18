@@ -12,9 +12,9 @@ void renderMenu(Game* game, App* app) {
     game->menu.continueGame = {{layoutText(0.034f, 0.536f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "CONTINUE GAME", ViewSide::CENTER};
     game->menu.customGame = {{layoutText(0.034f, 0.594f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "SETTINGS", ViewSide::CENTER};
 
-    drawText(game->renderer, app->fonts->font1, game->menu.newGame, app);
-    drawText(game->renderer, app->fonts->font1, game->menu.continueGame, app);
-    drawText(game->renderer, app->fonts->font1, game->menu.customGame, app);
+    drawText(app->renderer, app->fonts->font1, game->menu.newGame, app);
+    drawText(app->renderer, app->fonts->font1, game->menu.continueGame, app);
+    drawText(app->renderer, app->fonts->font1, game->menu.customGame, app);
 }
 
 void renderGame(Game* game, App* app) {
@@ -51,7 +51,7 @@ void renderGame(Game* game, App* app) {
             );
         }
     }
-    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT 1", ViewSide::CENTER};
+    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     
     state->tableR = {{layout(
         Anchor::TOP_LEFT,
@@ -125,14 +125,14 @@ void renderGame(Game* game, App* app) {
         }
     }
     
-    drawRectangle(game->renderer, state->table, app);
-    drawRectangle(game->renderer, state->tableR, app);
-    drawRectangle(game->renderer, state->monitor, app);
-    drawRectangle(game->renderer, state->monitorR, app);
+    drawRectangle(app->renderer, state->table, app);
+    drawRectangle(app->renderer, state->tableR, app);
+    drawRectangle(app->renderer, state->monitor, app);
+    drawRectangle(app->renderer, state->monitorR, app);
     for(Rectangle rec : state->rooms){
-        drawRectangle(game->renderer, rec, app);
+        drawRectangle(app->renderer, rec, app);
     }
-    drawText(game->renderer, fonts->font1, fonts->night, app);
+    drawText(app->renderer, fonts->font1, fonts->night, app);
     
     std::ostringstream ss;
     ss << std::setw(2) << std::setfill('0') << game->hours
@@ -140,16 +140,16 @@ void renderGame(Game* game, App* app) {
        << std::setw(2) << std::setfill('0') << game->minutes;
 
     fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str(), ViewSide::CENTER};
-    drawText(game->renderer, fonts->font1, fonts->hours, app);
+    drawText(app->renderer, fonts->font1, fonts->hours, app);
 
     std::ostringstream bait_ss;
     bait_ss << std::setw(2) << std::setfill('0') << static_cast<int>(game->noise.cooldown);
     fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str(), ViewSide::CENTER};
-    drawText(game->renderer, fonts->font1, fonts->bait, app);
-    drawText(game->renderer, fonts->font1, fonts->baitSystem, app);
-    drawText(game->renderer, fonts->font1, fonts->echoSystem, app);
-    drawText(game->renderer, fonts->font1, fonts->trackingSystem, app);
-    drawText(game->renderer, fonts->font1, fonts->rebootAll, app);
+    drawText(app->renderer, fonts->font1, fonts->bait, app);
+    drawText(app->renderer, fonts->font1, fonts->baitSystem, app);
+    drawText(app->renderer, fonts->font1, fonts->echoSystem, app);
+    drawText(app->renderer, fonts->font1, fonts->trackingSystem, app);
+    drawText(app->renderer, fonts->font1, fonts->rebootAll, app);
 }
 
 void renderCustomgame(Game* game, App* app) {
@@ -159,11 +159,9 @@ void renderCustomgame(Game* game, App* app) {
 void renderEndgame(Game* game, App* app) {
     if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY){
         app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "YOU LOSE", ViewSide::CENTER};
-    }else if(game->hours >= 8){
-        app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "YOU WIN", ViewSide::CENTER};
     }else{
         app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     }
         
-    drawText(game->renderer, app->fonts->font1, app->fonts->endGameText, app);
+    drawText(app->renderer, app->fonts->font1, app->fonts->endGameText, app);
 }

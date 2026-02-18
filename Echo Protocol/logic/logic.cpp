@@ -7,8 +7,27 @@
 
 #include "logic.h"
 
+void saveProgress(Game* game){
+    std::ofstream file("save.dat");
+    if (file.is_open()){
+        file << game->currentNight << std::endl;
+        file.close();
+    }
+}
 //=================================================================
-void spawnMonster(Game* game) {
+void loadProgress(Game* game){
+    std::ifstream file("save.dat");
+
+    if (file.is_open()){
+        file >> game->currentNight;
+        file.close();
+    }
+    else{
+        game->currentNight = 1;
+    }
+}
+//=================================================================
+void spawnMonster(Game* game){
     Monster& m = game->monster;
     int w = game->GRID_W;
     int h = game->GRID_H;
@@ -66,7 +85,7 @@ void spawnNoise(Game* game, int gridX, int gridY) {
     n.y = gridY;
     n.active = true;
     n.timeLeft = 10.0f;
-    n.cooldown = 15.0f;
+    n.cooldown = 10.0f;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
@@ -247,11 +266,16 @@ void updateCamera(Game* game, float deltaTime) {
         game->currentView = ViewSide::CENTER;
 }
 //=================================================================
+void resetGame(App* app){
+    saveProgress(app->game);
+    *app->game = Game();
+    loadProgress(app->game);
+}
+//=================================================================
 void startNewGame(App* app) {
-    //resetAllSystems(game);
+    resetGame(app);
     app->game->nightIntroTimer = 0.0f;
     app->gamestate = GameState::ENDSCREEN;
-    app->game->currentNight = 1;
 }
 //=================================================================
 void loadGame(Game* game) {

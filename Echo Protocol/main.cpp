@@ -33,10 +33,10 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
         return SDL_APP_FAILURE;
     }
     
-    game->window = SDL_CreateWindow("Protocol 'ECHO'", 700, 700, SDL_WINDOW_FULLSCREEN);
-    game->renderer = SDL_CreateRenderer(game->window, nullptr);
+    app->window = SDL_CreateWindow("Protocol 'ECHO'", 700, 700, SDL_WINDOW_FULLSCREEN);
+    app->renderer = SDL_CreateRenderer(app->window, nullptr);
     
-    SDL_GetWindowSize(game->window, &state->winW, &state->winH);
+    SDL_GetWindowSize(app->window, &state->winW, &state->winH);
     
     std::string basePath = SDL_GetBasePath();
     std::string fontPath = basePath + "Assets/PressStart2P-Regular.ttf";
@@ -44,17 +44,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     fonts->font1 = TTF_OpenFont(fontPath.c_str(), 15);
     if (!fonts->font1) {
         SDL_Log("FONT Failure!");
-        SDL_DestroyRenderer(app->game->renderer);
-        SDL_DestroyWindow(app->game->window);
-        TTF_Quit();
-        SDL_Quit();
         return SDL_APP_FAILURE;
     }
     
     spawnMonster(game);
-
     game->noise.active = false;
-    
     app->lastCounter = SDL_GetPerformanceCounter();
     app->deltaTime = 0.0;
     *appstate = app;
@@ -105,35 +99,35 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             }
         }
         
-        if(isTextClicked(game->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT){
+        if(isTextClicked(app->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT){
             game->system.active = true;
             game->system.timer = 0.0f;
             game->system.type = RepairType::BAIT;
         }
-        if(isTextClicked(game->renderer, fonts->font1, fonts->echoSystem, app, mouseX, mouseY) && game->system.echoSystem == false && game->currentView == ViewSide::RIGHT){
+        if(isTextClicked(app->renderer, fonts->font1, fonts->echoSystem, app, mouseX, mouseY) && game->system.echoSystem == false && game->currentView == ViewSide::RIGHT){
             game->system.active = true;
             game->system.timer = 0.0f;
             game->system.type = RepairType::ECHO;
         }
-        if(isTextClicked(game->renderer, fonts->font1, fonts->trackingSystem, app, mouseX, mouseY) && game->system.trackingSystem == false && game->currentView == ViewSide::RIGHT){
+        if(isTextClicked(app->renderer, fonts->font1, fonts->trackingSystem, app, mouseX, mouseY) && game->system.trackingSystem == false && game->currentView == ViewSide::RIGHT){
             game->system.active = true;
             game->system.timer = 0.0f;
             game->system.type = RepairType::TRACK;
         }
-        if(isTextClicked(game->renderer, fonts->font1, fonts->rebootAll, app, mouseX, mouseY) && game->currentView == ViewSide::RIGHT){
+        if(isTextClicked(app->renderer, fonts->font1, fonts->rebootAll, app, mouseX, mouseY) && game->currentView == ViewSide::RIGHT){
             game->system.active = true;
             game->system.timer = -3.0f;
             game->system.type = RepairType::REBOOT;
         }
         
-        if (isTextClicked(game->renderer, app->fonts->font1, game->menu.newGame, app, mouseX, mouseY)) {
+        if (isTextClicked(app->renderer, app->fonts->font1, game->menu.newGame, app, mouseX, mouseY)) {
             startNewGame(app);
         }
-        if (isTextClicked(game->renderer, app->fonts->font1, game->menu.continueGame, app, mouseX, mouseY)) {
+        if (isTextClicked(app->renderer, app->fonts->font1, game->menu.continueGame, app, mouseX, mouseY)) {
             loadGame(game);
             app->gamestate = GameState::PLAYING;
         }
-        if (isTextClicked(game->renderer, app->fonts->font1, game->menu.customGame, app, mouseX, mouseY))
+        if (isTextClicked(app->renderer, app->fonts->font1, game->menu.customGame, app, mouseX, mouseY))
             app->gamestate = GameState::CUSTOMGAME;
     }
     
@@ -165,8 +159,8 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         }
     }
     
-    SDL_SetRenderDrawColor(game->renderer, 55, 55, 55, 255);
-    SDL_RenderClear(game->renderer);
+    SDL_SetRenderDrawColor(app->renderer, 55, 55, 55, 255);
+    SDL_RenderClear(app->renderer);
     app->state->rooms.clear();
     
     switch (app->gamestate) {
@@ -185,12 +179,14 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     }
     
     if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY)
-        app->gamestate = GameState::ENDSCREEN;
+        startNewGame(app);
     
-    if (game->hours >= 8)
-        app->gamestate = GameState::ENDSCREEN;
+    if (game->hours >= 8){
+        game->currentNight++;
+        startNewGame(app);
+    }
     
-    SDL_RenderPresent(game->renderer);
+    SDL_RenderPresent(app->renderer);
     return SDL_APP_CONTINUE;
 }
 //=================================================================
@@ -201,11 +197,11 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
     if (!app) return;
     
     if (app->game) {
-        if (app->game->renderer)
-            SDL_DestroyRenderer(app->game->renderer);
+        if (app->renderer)
+            SDL_DestroyRenderer(app->renderer);
         
-        if (app->game->window)
-            SDL_DestroyWindow(app->game->window);
+        if (app->window)
+            SDL_DestroyWindow(app->window);
         
         delete app->game;
     }
