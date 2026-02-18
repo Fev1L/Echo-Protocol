@@ -69,6 +69,8 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
     
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
+    if (game->system.active)
+        return SDL_APP_CONTINUE;
     
     if (event->type == SDL_EVENT_QUIT){
         return SDL_APP_SUCCESS;
@@ -91,6 +93,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         if (key == SDLK_T) {
             game->system.echoSystem = false;
             game->system.baitSystem = false;
+            game->system.trackingSystem = false;
         }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         for(int i = 0; i < game->GRID_H; i++){
@@ -102,10 +105,26 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             }
         }
         
-        if(isTextClicked(game->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT)
-            game->system.baitSystem = true;
-        if(isTextClicked(game->renderer, fonts->font1, fonts->echoSystem, app, mouseX, mouseY) && game->system.echoSystem == false && game->currentView == ViewSide::RIGHT)
-            game->system.echoSystem = true;
+        if(isTextClicked(game->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT){
+            game->system.active = true;
+            game->system.timer = 0.0f;
+            game->system.type = RepairType::BAIT;
+        }
+        if(isTextClicked(game->renderer, fonts->font1, fonts->echoSystem, app, mouseX, mouseY) && game->system.echoSystem == false && game->currentView == ViewSide::RIGHT){
+            game->system.active = true;
+            game->system.timer = 0.0f;
+            game->system.type = RepairType::ECHO;
+        }
+        if(isTextClicked(game->renderer, fonts->font1, fonts->trackingSystem, app, mouseX, mouseY) && game->system.trackingSystem == false && game->currentView == ViewSide::RIGHT){
+            game->system.active = true;
+            game->system.timer = 0.0f;
+            game->system.type = RepairType::TRACK;
+        }
+        if(isTextClicked(game->renderer, fonts->font1, fonts->rebootAll, app, mouseX, mouseY) && game->currentView == ViewSide::RIGHT){
+            game->system.active = true;
+            game->system.timer = -3.0f;
+            game->system.type = RepairType::REBOOT;
+        }
         
         if (isTextClicked(game->renderer, app->fonts->font1, game->menu.newGame, app, mouseX, mouseY)) {
             startNewGame(game);
@@ -137,6 +156,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         updateEcho(game, app->deltaTime);
         checkEchoHit(game, app->deltaTime);
         updateMonster(game->monster, game, app->deltaTime);
+        updateRepair(game, app->deltaTime);
     }
     
     SDL_SetRenderDrawColor(game->renderer, 55, 55, 55, 255);

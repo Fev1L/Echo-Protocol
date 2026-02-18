@@ -74,6 +74,12 @@ void renderGame(Game* game, App* app) {
     }else{
         fonts->echoSystem = {{layoutText(0.246f, 0.373f, state->winW, state->winH)}, {255,0,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
     }
+    if(game->system.trackingSystem){
+        fonts->trackingSystem = {{layoutText(0.246f, 0.422f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
+    }else{
+        fonts->trackingSystem = {{layoutText(0.246f, 0.422f, state->winW, state->winH)}, {255,0,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
+    }
+    fonts->rebootAll = {{layoutText(0.246f, 0.5f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
     
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
@@ -142,6 +148,8 @@ void renderGame(Game* game, App* app) {
     drawText(game->renderer, fonts->font1, fonts->bait, app);
     drawText(game->renderer, fonts->font1, fonts->baitSystem, app);
     drawText(game->renderer, fonts->font1, fonts->echoSystem, app);
+    drawText(game->renderer, fonts->font1, fonts->trackingSystem, app);
+    drawText(game->renderer, fonts->font1, fonts->rebootAll, app);
 }
 
 void renderCustomgame(Game* game, App* app) {

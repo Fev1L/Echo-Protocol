@@ -255,3 +255,39 @@ void startNewGame(Game* game) {
 void loadGame(Game* game) {
     //#
 }
+//=================================================================
+void updateRepair(Game* game, float dt){
+    if (!game->system.active)
+        return;
+
+    game->system.timer += dt;
+
+    if (game->system.timer >= game->system.duration){
+        game->system.active = false;
+
+        switch (game->system.type)
+        {
+            case RepairType::BAIT:
+                game->system.baitSystem = true;
+                break;
+
+            case RepairType::ECHO:
+                game->system.echoSystem = true;
+                break;
+
+            case RepairType::TRACK:
+                game->system.trackingSystem = true;
+                break;
+                
+            case RepairType::REBOOT:
+                game->system.baitSystem = true;
+                game->system.echoSystem = true;
+                game->system.trackingSystem = true;
+                break;
+
+            default:
+                break;
+        }
+        game->system.type = RepairType::NONE;
+    }
+}

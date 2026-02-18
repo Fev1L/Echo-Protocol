@@ -32,6 +32,14 @@ enum class ViewSide {
     RIGHT = 2
 };
 
+enum class RepairType {
+    NONE,
+    BAIT,
+    ECHO,
+    TRACK,
+    REBOOT
+};
+
 struct Rectangle {
     SDL_FRect rect;
     SDL_Color color;
@@ -103,6 +111,12 @@ struct Camera {
 struct System {
     bool echoSystem = true;
     bool baitSystem = true;
+    bool trackingSystem = true;
+    
+    bool active = false;
+    float timer = 0.0f;
+    float duration = 2.0f;
+    RepairType type = RepairType::NONE;
 };
 
 struct Menu {
@@ -158,6 +172,8 @@ struct Font {
     Text bait;
     Text baitSystem;
     Text echoSystem;
+    Text trackingSystem;
+    Text rebootAll;
     Text endGameText;
 };
 

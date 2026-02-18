@@ -38,3 +38,5 @@ void updateCamera(Game* game, float deltaTime);
 void startNewGame(Game* game);
 
 void loadGame(Game* game);
+
+void updateRepair(Game* game, float dt);
