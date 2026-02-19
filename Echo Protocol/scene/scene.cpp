@@ -35,8 +35,7 @@ void renderGame(Game* game, App* app) {
         for(int j = 0; j < game->GRID_W; j++){
             state->rooms.push_back(
                {{
-                   layout(
-                          Anchor::TOP_LEFT,
+                   layout(Anchor::TOP_LEFT,
                           0.0069f, 0.0097f,
                           (0.239f + (0.0069f * j)),
                           (0.313f + (0.0097f * i)),
@@ -157,11 +156,7 @@ void renderCustomgame(Game* game, App* app) {
 }
 
 void renderEndgame(Game* game, App* app) {
-    if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY){
-        app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "YOU LOSE", ViewSide::CENTER};
-    }else{
-        app->fonts->endGameText = {{layoutText(0.5f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
-    }
+    app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
         
     drawText(app->renderer, app->fonts->font1, app->fonts->endGameText, app);
 }

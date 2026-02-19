@@ -43,6 +43,8 @@ void resetGame(App* app);
 
 void startNewGame(App* app);
 
-void loadGame(Game* game);
+void loadGame(App* app);
 
 void updateRepair(Game* game, float dt);
+
+void getNightConfig(App* app);

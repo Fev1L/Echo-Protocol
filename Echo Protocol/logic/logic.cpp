@@ -48,7 +48,6 @@ void spawnMonster(Game* game){
     m.visible = false;
     m.visibleTime = 0.0f;
 }
-
 //=================================================================
 bool inBounds(int x, int y) {
     return x >= 0 && y >= 0 && x < 75 && y < 55;
@@ -78,14 +77,14 @@ inline int distance(int x1, int y1, int x2, int y2) {
 void spawnNoise(Game* game, int gridX, int gridY) {
     Noise& n = game->noise;
 
-    if (n.cooldown > 0.0f || n.active)
+    if (n.cooldown > 0.0f)
         return;
 
     n.x = gridX;
     n.y = gridY;
     n.active = true;
     n.timeLeft = 10.0f;
-    n.cooldown = 10.0f;
+    n.cooldown = 10.0f * game->cfg.baitReload;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
@@ -141,7 +140,7 @@ void updateMonster(Monster& m, const Game* game, float deltaTime) {
         m.monsterLiveTime += deltaTime;
         m.moveTimer += deltaTime;
 
-        if (m.moveTimer >= 1.0f) {
+        if (m.moveTimer >= game->cfg.monsterMoveInterval) {
             Move next = chooseMoveProb(m, game);
             m.x = next.x;
             m.y = next.y;
@@ -200,9 +199,8 @@ void updateEcho(Game* game, float deltaTime) {
     } else {
         e.timer += deltaTime;
 
-        if (!e.active && e.timer >= e.interval) {
+        if (!e.active && e.timer >= game->cfg.echoInterval) {
             e.active = true;
-            e.interval = rand() % 3 + 1;
             e.radius = 0.0f;
             e.timer = 0.0f;
         }
@@ -267,19 +265,22 @@ void updateCamera(Game* game, float deltaTime) {
 }
 //=================================================================
 void resetGame(App* app){
-    saveProgress(app->game);
     *app->game = Game();
-    loadProgress(app->game);
 }
 //=================================================================
 void startNewGame(App* app) {
     resetGame(app);
     app->game->nightIntroTimer = 0.0f;
     app->gamestate = GameState::ENDSCREEN;
+    getNightConfig(app);
 }
 //=================================================================
-void loadGame(Game* game) {
-    //#
+void loadGame(App* app) {
+    resetGame(app);
+    loadProgress(app->game);
+    app->game->nightIntroTimer = 0.0f;
+    app->gamestate = GameState::ENDSCREEN;
+    getNightConfig(app);
 }
 //=================================================================
 void updateRepair(Game* game, float dt){
@@ -315,5 +316,66 @@ void updateRepair(Game* game, float dt){
                 break;
         }
         game->system.type = RepairType::NONE;
+    }
+}
+//=================================================================
+void getNightConfig(App* app){
+    NightConfig& cfg = app->game->cfg;
+    switch(app->game->currentNight){
+        case 1:
+            cfg.monsterCount = 1;
+            cfg.monsterMoveInterval = 1.2f;
+            cfg.echoInterval = 2.5f;
+            cfg.systemBreakChance = 0.0f;
+            cfg.baitReload = 1.5f;
+            break;
+
+        case 2:
+            cfg.monsterCount = 1;
+            cfg.monsterMoveInterval = 1.0f;
+            cfg.echoInterval = 2.0f;
+            cfg.systemBreakChance = 0.1f;
+            cfg.baitReload = 1.5f;
+            break;
+
+        case 3:
+            cfg.monsterCount = 2;
+            cfg.monsterMoveInterval = 0.9f;
+            cfg.echoInterval = 1.5f;
+            cfg.systemBreakChance = 0.2f;
+            cfg.baitReload = 1.0f;
+            break;
+
+        case 4:
+            cfg.monsterCount = 3;
+            cfg.monsterMoveInterval = 0.8f;
+            cfg.echoInterval = 1.2f;
+            cfg.systemBreakChance = 0.3f;
+            cfg.baitReload = 0.8f;
+            break;
+
+        case 5:
+            cfg.monsterCount = 4;
+            cfg.monsterMoveInterval = 0.7f;
+            cfg.echoInterval = 1.0f;
+            cfg.systemBreakChance = 0.4f;
+            cfg.baitReload = 0.5f;
+            break;
+
+        case 6:
+            cfg.monsterCount = 5;
+            cfg.monsterMoveInterval = 0.6f;
+            cfg.echoInterval = 1.0f;
+            cfg.systemBreakChance = 0.5f;
+            cfg.baitReload = 0.3f;
+            break;
+
+        case 7:
+            cfg.monsterCount = 5;
+            cfg.monsterMoveInterval = 0.5f;
+            cfg.echoInterval = 0.5f;
+            cfg.systemBreakChance = 0.7f;
+            cfg.baitReload = 0.3f;
+            break;
     }
 }

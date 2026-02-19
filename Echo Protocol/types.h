@@ -41,6 +41,14 @@ enum class RepairType {
     REBOOT
 };
 
+struct NightConfig {
+    int monsterCount;
+    float monsterMoveInterval;
+    float echoInterval;
+    float systemBreakChance;
+    float baitReload;
+};
+
 struct Rectangle {
     SDL_FRect rect;
     SDL_Color color;
@@ -98,7 +106,6 @@ struct Echo {
     float radius = 0.0f;
     float speed = 12.0f;
     float timer = 0.0f;
-    float interval = 2.5f;
 };
 
 struct Camera {
@@ -149,6 +156,7 @@ struct Game {
     Echo echo;
     Camera camera;
     System system;
+    NightConfig cfg;
     
     Menu menu;
 };

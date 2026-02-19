@@ -89,6 +89,16 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->system.baitSystem = false;
             game->system.trackingSystem = false;
         }
+        if (key == SDLK_Z) {
+            game->currentNight++;
+            saveProgress(app->game);
+            loadGame(app);
+        }
+        if (key == SDLK_X) {
+            game->currentNight--;
+            saveProgress(app->game);
+            loadGame(app);
+        }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         for(int i = 0; i < game->GRID_H; i++){
             for(int j = 0; j < game->GRID_W; j++){
@@ -124,8 +134,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             startNewGame(app);
         }
         if (isTextClicked(app->renderer, app->fonts->font1, game->menu.continueGame, app, mouseX, mouseY)) {
-            loadGame(game);
-            app->gamestate = GameState::PLAYING;
+            loadGame(app);
         }
         if (isTextClicked(app->renderer, app->fonts->font1, game->menu.customGame, app, mouseX, mouseY))
             app->gamestate = GameState::CUSTOMGAME;
@@ -183,7 +192,8 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     
     if (game->hours >= 8){
         game->currentNight++;
-        startNewGame(app);
+        saveProgress(app->game);
+        loadGame(app);
     }
     
     SDL_RenderPresent(app->renderer);
