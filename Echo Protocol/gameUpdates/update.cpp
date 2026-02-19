@@ -47,20 +47,22 @@ void updateMonster(Monster& m, const Game* game, float deltaTime) {
 }
 //=================================================================
 void updateNoises(Game* game, float deltaTime) {
-    for (auto& n : game->noise) {
-        updateNoise(n, game, deltaTime);
-    }
-}
-//=================================================================
-void updateNoise(Noise& n, Game* game, float deltaTime) {
     if (game->noiseCooldown > 0.0f) game->noiseCooldown -= deltaTime;
-
-    if (n.active) {
-        n.timeLeft -= deltaTime;
-        if (n.timeLeft <= 0.0f) {
-            n.active = false;
+    
+    for (auto& n : game->noise) {
+        if (n.active) {
+            n.timeLeft -= deltaTime;
+            if (n.timeLeft <= 0.0f) {
+                n.active = false;
+            }
         }
     }
+    
+    game->noise.erase(
+        std::remove_if(game->noise.begin(), game->noise.end(),
+            [](const Noise& n){ return !n.active; }),
+        game->noise.end()
+    );
 }
 //=================================================================
 void updateGameClock(Game* game, float deltaTime) {

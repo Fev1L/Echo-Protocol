@@ -89,6 +89,7 @@ void spawnNoise(Game* game, int gridX, int gridY) {
     game->noise.push_back(n);
     
     game->noiseCooldown = 10.0f * game->cfg.baitReload;
+    std::cout<<game->noiseCooldown<<" ";
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {

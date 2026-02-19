@@ -82,49 +82,83 @@ void renderGame(Game* game, App* app) {
     
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
-            SDL_Color color = {120,120,120,255};
 
-            for(auto& noise : game->noise){
-                if (noise.active) {
-                    int dx = j - noise.x;
-                    int dy = i - noise.y;
-                    float dist = sqrtf(dx * dx + dy * dy);
+            float baseR = 11.0f;
+            float baseG = 47.0f;
+            float baseB = 0.0f;
 
-                    if (dist <= noise.radius) {
-                        float t = 1.0f - (dist / noise.radius);
-                        t = SDL_clamp(t, 0.0f, 1.0f);
+            float lightR = 0.0f;
+            float lightG = 0.0f;
+            float lightB = 0.0f;
 
-                        Uint8 r = (Uint8)(120 + t * 135);
-                        Uint8 g = (Uint8)(120 + t * 135);
-                        Uint8 b = (Uint8)(120 - t * 120);
+            for(const auto& noise : game->noise){
+                if (!noise.active) continue;
 
-                        color = { r, g, b, 255 };
-                    }
+                int dx = j - noise.x;
+                int dy = i - noise.y;
+                float dist = sqrtf(dx * dx + dy * dy);
+
+                if (dist <= noise.radius){
+                    float t = 1.0f - (dist / noise.radius);
+
+                    t = t * t;
+
+                    lightR += 160.0f * t;
+                    lightG += 170.0f * t;
+                    lightB += 120.0f * t;
                 }
             }
-            
-            if (game->echo.active) {
+
+            if (game->echo.active){
                 int dx = j - game->centerX;
                 int dy = i - game->centerY;
                 float dist = sqrtf(dx*dx + dy*dy);
 
-                if (fabs(dist - game->echo.radius) < 0.5f) {
-                    color = {255, 255, 255, 180};
+                float diff = fabs(dist - game->echo.radius);
+
+                if (diff < 1.0f){
+                    float t = 1.0f - diff;
+                    lightR += 255.0f * t;
+                    lightG += 255.0f * t;
+                    lightB += 255.0f * t;
                 }
             }
-            
-            for(auto& monster : game->monsters){
-                if (monster.present && monster.visible && i == monster.echoY && j == monster.echoX) color = {255, 80, 80, 255};
+
+            float finalR = baseR + lightR;
+            float finalG = baseG + lightG;
+            float finalB = baseB + lightB;
+
+            finalR = SDL_clamp(finalR, 0.0f, 255.0f);
+            finalG = SDL_clamp(finalG, 0.0f, 255.0f);
+            finalB = SDL_clamp(finalB, 0.0f, 255.0f);
+
+            SDL_Color color = {
+                (Uint8)finalR,
+                (Uint8)finalG,
+                (Uint8)finalB,
+                255
+            };
+
+            for(const auto& monster : game->monsters){
+                if (monster.present && monster.visible &&
+                    i == monster.echoY && j == monster.echoX)
+                {
+                    color = {255, 60, 60, 255};
+                }
             }
-            
-            if (i == game->centerY && j == game->centerX) color = {0, 255, 0, 255};
-            
-            state->rooms.push_back({{layout(Anchor::TOP_LEFT, 0.0069f, 0.0097f, (0.239f + (0.0069f * j)), (0.313f + (0.0097f * i)), state->winW, state->winH)},
-                   color,
-                   "WEIGHT",
-                   ViewSide::CENTER
-               }
-            );
+
+            if (i == game->centerY && j == game->centerX)
+                color = {0, 255, 0, 255};
+
+            state->rooms.push_back({
+                {layout(Anchor::TOP_LEFT, 0.0069f, 0.0097f,
+                        (0.239f + (0.0069f * j)),
+                        (0.313f + (0.0097f * i)),
+                        state->winW, state->winH)},
+                color,
+                "WEIGHT",
+                ViewSide::CENTER
+            });
         }
     }
     

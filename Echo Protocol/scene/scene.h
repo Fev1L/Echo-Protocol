@@ -9,6 +9,7 @@
 #include "../types.h"
 #include "../render/render.h"
 #include "../logic/logic.h"
+#include "../gameUpdates/update.h"
 
 void renderMenu(Game* game, App* app);
 
