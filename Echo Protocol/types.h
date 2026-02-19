@@ -47,6 +47,7 @@ struct NightConfig {
     float echoInterval;
     float systemBreakChance;
     float baitReload;
+    float spawnInterval;
 };
 
 struct Rectangle {
@@ -97,7 +98,6 @@ struct Noise {
     int y;
     bool active;
     float timeLeft;
-    float cooldown;
     int radius = 10; 
 };
 
@@ -150,9 +150,10 @@ struct Game {
     int currentNight = 1;
     float nightIntroTimer = 0.0f;
     float nightIntroDuration = 4.0f;
+    float noiseCooldown = 0.0f;
     
-    Monster monster;
-    Noise noise;
+    std::vector<Monster> monsters;
+    std::vector<Noise> noise;
     Echo echo;
     Camera camera;
     System system;

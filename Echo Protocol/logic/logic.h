@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../types.h"
-#include "render.h"
+#include "../gameUpdates/update.h"
 
 void saveProgress(Game* game);
     
@@ -27,24 +27,12 @@ void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty);
 
 Move chooseMoveProb(const Monster& m,const Game* game);
 
-void updateMonster(Monster& m,const Game* game, float deltaTime);
-
-void updateNoise(Game* game, float dt);
-
-void updateGameClock(Game* game, float deltaTime);
-
-void updateEcho(Game* game, float deltaTime);
-
 void checkEchoHit(Game* game, float deltaTime);
-
-void updateCamera(Game* game, float deltaTime);
 
 void resetGame(App* app);
 
 void startNewGame(App* app);
 
 void loadGame(App* app);
-
-void updateRepair(Game* game, float dt);
 
 void getNightConfig(App* app);

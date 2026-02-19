@@ -11,6 +11,7 @@
 #include "render/render.h"
 #include "logic/logic.h"
 #include "scene/scene.h"
+#include "gameUpdates/update.h"
 
 //=================================================================
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
@@ -40,7 +41,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     
     std::string basePath = SDL_GetBasePath();
     std::string fontPath = basePath + "Assets/PressStart2P-Regular.ttf";
-    std::cout<<fontPath<<std::endl;
     fonts->font1 = TTF_OpenFont(fontPath.c_str(), 15);
     if (!fonts->font1) {
         SDL_Log("FONT Failure!");
@@ -48,7 +48,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     }
     
     spawnMonster(game);
-    game->noise.active = false;
     app->lastCounter = SDL_GetPerformanceCounter();
     app->deltaTime = 0.0;
     *appstate = app;
@@ -151,13 +150,17 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     app->deltaTime = (double)(now - app->lastCounter) / (double)SDL_GetPerformanceFrequency();
     app->lastCounter = now;
     
+    if (game->monsters.size() < game->cfg.monsterCount) {
+        spawnMonster(game);
+    }
+    
     if(app->gamestate == GameState::PLAYING){
         updateGameClock(game, app->deltaTime);
         updateCamera(game, app->deltaTime);
-        updateNoise(game, app->deltaTime);
+        updateNoises(game, app->deltaTime);
         updateEcho(game, app->deltaTime);
         checkEchoHit(game, app->deltaTime);
-        updateMonster(game->monster, game, app->deltaTime);
+        updateMonsters(game, app->deltaTime);
         updateRepair(game, app->deltaTime);
     }
     if (app->gamestate == GameState::ENDSCREEN){
@@ -187,8 +190,12 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
     }
     
-    if(game->monster.present && game->monster.x == game->centerX && game->monster.y == game->centerY)
-        startNewGame(app);
+    for(auto& monster : game->monsters){
+        if(monster.present && monster.x == game->centerX && monster.y == game->centerY){
+            saveProgress(app->game);
+            loadGame(app);
+        }
+    }
     
     if (game->hours >= 8){
         game->currentNight++;
@@ -204,6 +211,7 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
     if (!appstate) return;
     
     App* app = (App*)appstate;
+    saveProgress(app->game);
     if (!app) return;
     
     if (app->game) {

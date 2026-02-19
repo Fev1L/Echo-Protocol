@@ -84,20 +84,22 @@ void renderGame(Game* game, App* app) {
         for(int j = 0; j < game->GRID_W; j++){
             SDL_Color color = {120,120,120,255};
 
-            if (game->noise.active) {
-                int dx = j - game->noise.x;
-                int dy = i - game->noise.y;
-                float dist = sqrtf(dx * dx + dy * dy);
+            for(auto& noise : game->noise){
+                if (noise.active) {
+                    int dx = j - noise.x;
+                    int dy = i - noise.y;
+                    float dist = sqrtf(dx * dx + dy * dy);
 
-                if (dist <= game->noise.radius) {
-                    float t = 1.0f - (dist / game->noise.radius);
-                    t = SDL_clamp(t, 0.0f, 1.0f);
+                    if (dist <= noise.radius) {
+                        float t = 1.0f - (dist / noise.radius);
+                        t = SDL_clamp(t, 0.0f, 1.0f);
 
-                    Uint8 r = (Uint8)(120 + t * 135);
-                    Uint8 g = (Uint8)(120 + t * 135);
-                    Uint8 b = (Uint8)(120 - t * 120);
+                        Uint8 r = (Uint8)(120 + t * 135);
+                        Uint8 g = (Uint8)(120 + t * 135);
+                        Uint8 b = (Uint8)(120 - t * 120);
 
-                    color = { r, g, b, 255 };
+                        color = { r, g, b, 255 };
+                    }
                 }
             }
             
@@ -110,8 +112,10 @@ void renderGame(Game* game, App* app) {
                     color = {255, 255, 255, 180};
                 }
             }
-
-            if (game->monster.present && game->monster.visible && i == game->monster.echoY && j == game->monster.echoX) color = {255, 80, 80, 255};
+            
+            for(auto& monster : game->monsters){
+                if (monster.present && monster.visible && i == monster.echoY && j == monster.echoX) color = {255, 80, 80, 255};
+            }
             
             if (i == game->centerY && j == game->centerX) color = {0, 255, 0, 255};
             
@@ -141,9 +145,6 @@ void renderGame(Game* game, App* app) {
     fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str(), ViewSide::CENTER};
     drawText(app->renderer, fonts->font1, fonts->hours, app);
 
-    std::ostringstream bait_ss;
-    bait_ss << std::setw(2) << std::setfill('0') << static_cast<int>(game->noise.cooldown);
-    fonts->bait = {{layoutText(0.234f, 0.183f, state->winW, state->winH)}, {255,255,255,255},"Bait", bait_ss.str(), ViewSide::CENTER};
     drawText(app->renderer, fonts->font1, fonts->bait, app);
     drawText(app->renderer, fonts->font1, fonts->baitSystem, app);
     drawText(app->renderer, fonts->font1, fonts->echoSystem, app);
