@@ -9,6 +9,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -129,9 +130,14 @@ struct System {
 
 struct Menu {
     int selectedIndex = 0;
+    float menuFade = 0.0f;
+    SDL_Texture* menuBackground;
+    SDL_Texture* menuLogo;
+    SDL_Texture* menuFog;
     
     Text newGame;
     Text continueGame;
+    Text continueGameNight;
     Text customGame;
 };
 
@@ -175,6 +181,8 @@ struct State {
 
 struct Font {
     TTF_Font* font1;
+    TTF_Font* font2;
+    TTF_Font* font3;
     
     Text night;
     Text hours;

@@ -8,13 +8,22 @@
 #include "scene.h"
 
 void renderMenu(Game* game, App* app) {
-    game->menu.newGame = {{layoutText(0.034f, 0.477f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
-    game->menu.continueGame = {{layoutText(0.034f, 0.536f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "CONTINUE GAME", ViewSide::CENTER};
-    game->menu.customGame = {{layoutText(0.034f, 0.594f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "SETTINGS", ViewSide::CENTER};
+    float mouseX, mouseY;
+    SDL_GetMouseState(&mouseX,&mouseY);
 
-    drawText(app->renderer, app->fonts->font1, game->menu.newGame, app);
-    drawText(app->renderer, app->fonts->font1, game->menu.continueGame, app);
-    drawText(app->renderer, app->fonts->font1, game->menu.customGame, app);
+    SDL_RenderTexture(app->renderer, game->menu.menuBackground, NULL, NULL);
+    
+    SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.353f, 0.226f, 0.045f, 0.1f, app->state->winW, app->state->winH)};
+    drawImage(app->renderer, game->menu.menuLogo, logoRect);
+
+    drawText(app->renderer, app->fonts->font2, game->menu.newGame, app);
+    drawText(app->renderer, app->fonts->font2, game->menu.continueGame, app);
+    drawText(app->renderer, app->fonts->font1, game->menu.continueGameNight, app);
+    drawText(app->renderer, app->fonts->font2, game->menu.customGame, app);
+    
+    SDL_SetRenderDrawBlendMode(app->renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, (1.0f - game->menu.menuFade) * 255);
+    SDL_RenderFillRect(app->renderer, NULL);
 }
 
 void renderGame(Game* game, App* app) {

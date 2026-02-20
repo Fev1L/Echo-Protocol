@@ -103,9 +103,22 @@ void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const Ap
     SDL_DestroyTexture(texture);
 }
 //=================================================================
-void drawImage(SDL_Renderer* renderer, SDL_Texture* imageTexture, const Image& img){
-    SDL_FRect imageRect = {img.rect.x, img.rect.y, img.rect.h, img.rect.w};
-    SDL_RenderTexture(renderer, imageTexture, nullptr, &imageRect);
+void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect){
+    if (!texture) return;
+
+    float texW, texH;
+    if (!SDL_GetTextureSize(texture, &texW, &texH))
+        return;
+
+    float ratio = texW / texH;
+
+    SDL_FRect finalRect;
+    finalRect.x = targetRect.x;
+    finalRect.y = targetRect.y;
+    finalRect.w = targetRect.w;
+    finalRect.h = targetRect.w / ratio;
+
+    SDL_RenderTexture(renderer, texture, nullptr, &finalRect);
 }
 //=================================================================
 SDL_FRect layout( Anchor anchor, float wPct, float hPct, float marginXPct, float marginYPct, int winW, int winH){

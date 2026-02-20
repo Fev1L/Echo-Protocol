@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A50957812F48C3AB00715055 /* libSDL3_image.0.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */; };
 		A51107932F12E94C00294F75 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107922F12E94C00294F75 /* libSDL3.0.dylib */; };
 		A51107962F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */; };
 /* End PBXBuildFile section */
@@ -21,19 +22,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		A51107A52F12EA9C00294F75 /* Embed Libraries */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Libraries";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.0/lib/libSDL3_image.0.4.0.dylib; sourceTree = "<group>"; };
 		A511075D2F12E36000294F75 /* Echo Protocol */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Echo Protocol"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A51107922F12E94C00294F75 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.24/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
 		A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_ttf.0.2.2.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib/libSDL3_ttf.0.2.2.dylib; sourceTree = "<group>"; };
@@ -52,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A50957812F48C3AB00715055 /* libSDL3_image.0.4.0.dylib in Frameworks */,
 				A51107932F12E94C00294F75 /* libSDL3.0.dylib in Frameworks */,
 				A51107962F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib in Frameworks */,
 			);
@@ -80,6 +73,7 @@
 		A51107672F12E50400294F75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */,
 				A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */,
 				A51107922F12E94C00294F75 /* libSDL3.0.dylib */,
 			);
@@ -96,7 +90,6 @@
 				A51107592F12E36000294F75 /* Sources */,
 				A511075A2F12E36000294F75 /* Frameworks */,
 				A511075B2F12E36000294F75 /* CopyFiles */,
-				A51107A52F12EA9C00294F75 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -275,12 +268,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
 				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
+					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (
@@ -294,12 +289,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
 				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
+					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (
