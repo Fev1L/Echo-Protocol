@@ -24,12 +24,17 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     State* state = app->state;
     Font* fonts = app->fonts;
     
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         SDL_Log("Failure!");
         return SDL_APP_FAILURE;
     }
     
     if (!TTF_Init()) {
+        SDL_Log("Failure!");
+        return SDL_APP_FAILURE;
+    }
+
+    if (!MIX_Init()) {
         SDL_Log("Failure!");
         return SDL_APP_FAILURE;
     }
@@ -41,7 +46,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     
     std::string basePath = SDL_GetBasePath();
     std::string fontPath = basePath + "Assets/Inter_28pt-Regular.ttf";
-    std::string fontPath1 = basePath + "Assets/Inter_28pt-Thin.ttf";
+    std::string fontPath1 = basePath + "Assets/Inter_28pt-ExtraBold.ttf";
     fonts->font1 = TTF_OpenFont(fontPath.c_str(), 24);
     fonts->font2 = TTF_OpenFont(fontPath.c_str(), 64);
     fonts->font3 = TTF_OpenFont(fontPath1.c_str(), 96);
@@ -53,16 +58,20 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
     game->menu.menuFog = IMG_LoadTexture(app->renderer, "Assets/fog.png");
     game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
-    if (!game->menu.menuFog) {
+    game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
+    
+    SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);
+    if (!game->menu.lampGlowTexture) {
         printf("Failed to load menu background: %s\n", SDL_GetError());
     }
+    
+    loadProgress(game);
     
     game->menu.newGame = {{layoutText(0.045f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
     game->menu.continueGame = {{layoutText(0.045f, 0.608f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
     game->menu.continueGameNight = {{layoutText(0.063f, 0.670f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
-    if(game->currentNight == 8){
-        game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
-    }
+    game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
+    
     
     spawnMonster(game);
     app->lastCounter = SDL_GetPerformanceCounter();
@@ -146,14 +155,9 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->system.type = RepairType::REBOOT;
         }
         
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) {
-            startNewGame(app);
-        }
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) {
-            loadGame(app);
-        }
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY))
-            app->gamestate = GameState::CUSTOMGAME;
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) startNewGame(app);
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) loadGame(app);
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight) app->gamestate = GameState::CUSTOMGAME;
     }
     
     return SDL_APP_CONTINUE;

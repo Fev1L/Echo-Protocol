@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A50957812F48C3AB00715055 /* libSDL3_image.0.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */; };
-		A51107932F12E94C00294F75 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107922F12E94C00294F75 /* libSDL3.0.dylib */; };
 		A51107962F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */; };
+		A5A116022F4E667B0052B282 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A5A116012F4E667B0052B282 /* libSDL3.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -22,13 +22,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		A5A1160C2F4E69E90052B282 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.0/lib/libSDL3_image.0.4.0.dylib; sourceTree = "<group>"; };
 		A511075D2F12E36000294F75 /* Echo Protocol */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Echo Protocol"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A51107922F12E94C00294F75 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.24/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
 		A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_ttf.0.2.2.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib/libSDL3_ttf.0.2.2.dylib; sourceTree = "<group>"; };
+		A5A116012F4E667B0052B282 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.4.0/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,7 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A50957812F48C3AB00715055 /* libSDL3_image.0.4.0.dylib in Frameworks */,
-				A51107932F12E94C00294F75 /* libSDL3.0.dylib in Frameworks */,
+				A5A116022F4E667B0052B282 /* libSDL3.0.dylib in Frameworks */,
 				A51107962F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,9 +83,9 @@
 		A51107672F12E50400294F75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5A116012F4E667B0052B282 /* libSDL3.0.dylib */,
 				A50957802F48C3AB00715055 /* libSDL3_image.0.4.0.dylib */,
 				A51107952F12E95500294F75 /* libSDL3_ttf.0.2.2.dylib */,
-				A51107922F12E94C00294F75 /* libSDL3.0.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -90,6 +100,7 @@
 				A51107592F12E36000294F75 /* Sources */,
 				A511075A2F12E36000294F75 /* Frameworks */,
 				A511075B2F12E36000294F75 /* CopyFiles */,
+				A5A1160C2F4E69E90052B282 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -270,12 +281,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Echo\\ Protocol",
+					"$(PROJECT_DIR)/frameworks/**",
+					"$(PROJECT_DIR)/Echo\\ Protocol",
+				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/frameworks/SDL3_mixer.xcframework/macos-arm64_x86_64/SDL3_mixer.framework/Headers";
 				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
 					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
+					/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib,
+					/opt/homebrew/Cellar/sdl3/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (
@@ -291,12 +311,21 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* *.xcassets *.icon (*) .DS_Store CVS .svn .git .hg *.pbproj *.pbxproj *.framework";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Echo\\ Protocol",
+					"$(PROJECT_DIR)/frameworks/**",
+					"$(PROJECT_DIR)/Echo\\ Protocol",
+				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/frameworks/SDL3_mixer.xcframework/macos-arm64_x86_64/SDL3_mixer.framework/Headers";
 				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
 					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
+					/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib,
+					/opt/homebrew/Cellar/sdl3/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = (

@@ -11,15 +11,33 @@ void renderMenu(Game* game, App* app) {
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
 
+    float t = SDL_GetTicks() * 0.002f;
+    float flicker = 0.9f + sin(t * 5.0f) * 0.04f + sin(t * 13.0f) * 0.02f;
+    Uint8 lampAlpha = (Uint8)(flicker * 50);
     SDL_RenderTexture(app->renderer, game->menu.menuBackground, NULL, NULL);
     
     SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.353f, 0.226f, 0.045f, 0.1f, app->state->winW, app->state->winH)};
     drawImage(app->renderer, game->menu.menuLogo, logoRect);
-
+    
+    game->menu.newGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) ? "> NEW GAME" : "NEW GAME";
+    game->menu.continueGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) ? "> CONTINUE GAME" : "CONTINUE GAME";
+    game->menu.customGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY)) ? "> CUSTOM NIGHT" : "CUSTOM NIGHT";
+    
     drawText(app->renderer, app->fonts->font2, game->menu.newGame, app);
     drawText(app->renderer, app->fonts->font2, game->menu.continueGame, app);
     drawText(app->renderer, app->fonts->font1, game->menu.continueGameNight, app);
-    drawText(app->renderer, app->fonts->font2, game->menu.customGame, app);
+    if(game->currentNight >= 8) drawText(app->renderer, app->fonts->font2, game->menu.customGame, app);
+    
+    SDL_FRect baseLampRect = {layout(Anchor::TOP_LEFT, 0.277f, 0.390f, 0.65f, 0.199f, app->state->winW, app->state->winH)};
+    SDL_FRect lampRect;
+    float scale = 1.0f + sin(t * 3.0f) * 0.01f;
+    lampRect.w = baseLampRect.w * scale;
+    lampRect.h = baseLampRect.h * scale;
+    lampRect.x = baseLampRect.x - (lampRect.w - baseLampRect.w) / 2.0f;
+    lampRect.y = baseLampRect.y - (lampRect.h - baseLampRect.h) / 2.0f;
+    
+    SDL_SetTextureAlphaMod(game->menu.lampGlowTexture, lampAlpha);
+    SDL_RenderTexture(app->renderer, game->menu.lampGlowTexture, NULL, &lampRect);
     
     SDL_SetRenderDrawBlendMode(app->renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, (1.0f - game->menu.menuFade) * 255);
