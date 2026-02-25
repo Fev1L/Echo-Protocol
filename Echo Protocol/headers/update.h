@@ -6,8 +6,8 @@
 //
 
 #pragma once
-#include "../types.h"
-#include "../logic/logic.h"
+#include "types.h"
+#include "logic.h"
 
 void updateMonsters(Game* game, float deltaTime);
 

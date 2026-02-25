@@ -140,7 +140,6 @@ struct Menu {
     float menuFade = 0.0f;
     SDL_Texture* menuBackground;
     SDL_Texture* menuLogo;
-    SDL_Texture* menuFog;
     SDL_Texture* lampGlowTexture;
     
     Text newGame;
@@ -204,6 +203,7 @@ struct Font {
 
 struct Audio {
     AudioSystem menuBackgroundSong;
+    AudioSystem mouseClick;
 };
 
 struct App {

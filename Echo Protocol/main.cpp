@@ -8,10 +8,11 @@
 #define SDL_MAIN_USE_CALLBACKS
 
 #include "types.h"
-#include "render/render.h"
-#include "logic/logic.h"
-#include "scene/scene.h"
-#include "gameUpdates/update.h"
+#include "render.h"
+#include "logic.h"
+#include "scene.h"
+#include "update.h"
+#include "init.h"
 
 //=================================================================
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
@@ -21,59 +22,13 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     app->state = new State();
     app->fonts = new Font();
     app->audio = new Audio();
-    Game* game = app->game;
-    State* state = app->state;
-    Font* fonts = app->fonts;
-    Audio* audio = app->audio;
     
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-        SDL_Log("Failure!");
+    if(!initApp(app)){
         return SDL_APP_FAILURE;
     }
+    loadProgress(app->game);
+    spawnMonster(app->game);
     
-    if (!TTF_Init()) {
-        SDL_Log("Failure!");
-        return SDL_APP_FAILURE;
-    }
-    
-    app->window = SDL_CreateWindow("Protocol 'ECHO'", 700, 700, SDL_WINDOW_FULLSCREEN);
-    app->renderer = SDL_CreateRenderer(app->window, nullptr);
-    
-    SDL_GetWindowSize(app->window, &state->winW, &state->winH);
-    
-    std::string basePath = SDL_GetBasePath();
-    std::string fontPath = basePath + "Assets/Inter_28pt-Regular.ttf";
-    std::string fontPath1 = basePath + "Assets/Inter_28pt-ExtraBold.ttf";
-    fonts->font1 = TTF_OpenFont(fontPath.c_str(), 24);
-    fonts->font2 = TTF_OpenFont(fontPath.c_str(), 64);
-    fonts->font3 = TTF_OpenFont(fontPath1.c_str(), 96);
-    if (!fonts->font1) {
-        SDL_Log("FONT Failure!");
-        return SDL_APP_FAILURE;
-    }
-    
-    SDL_LoadWAV("assets/sounds/menuBackgroundSong.wav", &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
-    audio->menuBackgroundSong.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->menuBackgroundSong.spec, NULL, NULL);
-    SDL_ResumeAudioStreamDevice(audio->menuBackgroundSong.stream);
-    
-    game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
-    game->menu.menuFog = IMG_LoadTexture(app->renderer, "Assets/fog.png");
-    game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
-    game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
-    
-    SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);
-    if (!game->menu.lampGlowTexture) {
-        printf("Failed to load menu background: %s\n", SDL_GetError());
-    }
-    
-    loadProgress(game);
-    
-    game->menu.newGame = {{layoutText(0.045f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
-    game->menu.continueGame = {{layoutText(0.045f, 0.608f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
-    game->menu.continueGameNight = {{layoutText(0.063f, 0.670f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
-    game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
-    
-    spawnMonster(game);
     app->lastCounter = SDL_GetPerformanceCounter();
     app->deltaTime = 0.0;
     *appstate = app;
@@ -155,9 +110,18 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->system.type = RepairType::REBOOT;
         }
         
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) startNewGame(app);
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) loadGame(app);
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight) app->gamestate = GameState::CUSTOMGAME;
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)){
+            startNewGame(app);
+            SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
+        }
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)){
+            loadGame(app);
+            SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
+        }
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight){
+            app->gamestate = GameState::CUSTOMGAME;
+            SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
+        }
     }
     
     return SDL_APP_CONTINUE;

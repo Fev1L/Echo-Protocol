@@ -6,8 +6,8 @@
 //
 
 #pragma once
-#include "../types.h"
-#include "../gameUpdates/update.h"
+#include "types.h"
+#include "update.h"
 
 void saveProgress(Game* game);
     

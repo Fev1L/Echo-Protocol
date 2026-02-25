@@ -6,7 +6,7 @@
 //
 
 #pragma once
-#include "../types.h"
+#include "types.h"
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);
 
