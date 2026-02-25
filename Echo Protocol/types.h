@@ -10,7 +10,6 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
-#include <SDL3_mixer/SDL_mixer.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -129,6 +128,13 @@ struct System {
     RepairType type = RepairType::NONE;
 };
 
+struct AudioSystem {
+    SDL_AudioStream* stream = nullptr;
+    SDL_AudioSpec spec{};
+    Uint8* Data = nullptr;
+    Uint32 Len = 0;
+};
+
 struct Menu {
     int selectedIndex = 0;
     float menuFade = 0.0f;
@@ -196,6 +202,10 @@ struct Font {
     Text endGameText;
 };
 
+struct Audio {
+    AudioSystem menuBackgroundSong;
+};
+
 struct App {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -203,6 +213,7 @@ struct App {
     Game* game;
     State* state;
     Font* fonts;
+    Audio* audio;
     
     GameState gamestate = GameState::MENU;
     Uint64 lastCounter;

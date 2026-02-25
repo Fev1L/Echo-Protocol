@@ -20,9 +20,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     app->game = new Game();
     app->state = new State();
     app->fonts = new Font();
+    app->audio = new Audio();
     Game* game = app->game;
     State* state = app->state;
     Font* fonts = app->fonts;
+    Audio* audio = app->audio;
     
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         SDL_Log("Failure!");
@@ -30,11 +32,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     }
     
     if (!TTF_Init()) {
-        SDL_Log("Failure!");
-        return SDL_APP_FAILURE;
-    }
-
-    if (!MIX_Init()) {
         SDL_Log("Failure!");
         return SDL_APP_FAILURE;
     }
@@ -54,6 +51,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
         SDL_Log("FONT Failure!");
         return SDL_APP_FAILURE;
     }
+    std::cout<<basePath;
+    
+    SDL_LoadWAV("assets/sounds/hover.wav", &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
+    audio->menuBackgroundSong.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->menuBackgroundSong.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->menuBackgroundSong.stream);
     
     game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
     game->menu.menuFog = IMG_LoadTexture(app->renderer, "Assets/fog.png");
@@ -71,7 +73,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     game->menu.continueGame = {{layoutText(0.045f, 0.608f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
     game->menu.continueGameNight = {{layoutText(0.063f, 0.670f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
-    
     
     spawnMonster(game);
     app->lastCounter = SDL_GetPerformanceCounter();
@@ -248,12 +249,9 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
         
         delete app->game;
     }
-    
-    if (app->state)
-        delete app->state;
-    
-    if (app->fonts)
-        delete app->fonts;
+    if (app->state) delete app->state;
+    if (app->fonts) delete app->fonts;
+    if (app->audio) delete app->audio;
     
     TTF_Quit();
     SDL_Quit();
@@ -261,5 +259,6 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
     delete app;
 }
 //=================================================================
+
 
 

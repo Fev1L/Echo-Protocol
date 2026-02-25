@@ -10,6 +10,10 @@
 void renderMenu(Game* game, App* app) {
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
+    
+    if (SDL_GetAudioStreamQueued(app->audio->stream) < (int)app->audio->hoverLen) {
+        SDL_PutAudioStreamData(app->audio->stream, app->audio->hoverData, app->audio->hoverLen);
+    }
 
     float t = SDL_GetTicks() * 0.002f;
     float flicker = 0.9f + sin(t * 5.0f) * 0.04f + sin(t * 13.0f) * 0.02f;
@@ -18,6 +22,12 @@ void renderMenu(Game* game, App* app) {
     
     SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.353f, 0.226f, 0.045f, 0.1f, app->state->winW, app->state->winH)};
     drawImage(app->renderer, game->menu.menuLogo, logoRect);
+    
+    if(isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY) ||
+       isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY) ||
+       isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY)){
+        
+    }
     
     game->menu.newGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) ? "> NEW GAME" : "NEW GAME";
     game->menu.continueGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) ? "> CONTINUE GAME" : "CONTINUE GAME";
