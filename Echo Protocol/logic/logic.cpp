@@ -171,6 +171,7 @@ void checkEchoHit(Game* game, float deltaTime) {
 //=================================================================
 void resetGame(App* app){
     *app->game = Game();
+    SDL_ClearAudioStream(app->audio->menuBackgroundSong.stream);
 }
 //=================================================================
 void startNewGame(App* app) {

@@ -51,9 +51,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
         SDL_Log("FONT Failure!");
         return SDL_APP_FAILURE;
     }
-    std::cout<<basePath;
     
-    SDL_LoadWAV("assets/sounds/hover.wav", &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
+    SDL_LoadWAV("assets/sounds/menuBackgroundSong.wav", &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
     audio->menuBackgroundSong.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->menuBackgroundSong.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->menuBackgroundSong.stream);
     

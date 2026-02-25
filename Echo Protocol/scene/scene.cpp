@@ -11,8 +11,8 @@ void renderMenu(Game* game, App* app) {
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
     
-    if (SDL_GetAudioStreamQueued(app->audio->stream) < (int)app->audio->hoverLen) {
-        SDL_PutAudioStreamData(app->audio->stream, app->audio->hoverData, app->audio->hoverLen);
+    if (SDL_GetAudioStreamQueued(app->audio->menuBackgroundSong.stream) < (int)app->audio->menuBackgroundSong.Len) {
+        SDL_PutAudioStreamData(app->audio->menuBackgroundSong.stream, app->audio->menuBackgroundSong.Data, app->audio->menuBackgroundSong.Len);
     }
 
     float t = SDL_GetTicks() * 0.002f;
