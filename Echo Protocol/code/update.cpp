@@ -18,6 +18,14 @@ void updateMonsters(Game* game, float deltaTime) {
     );
 }
 //=================================================================
+bool isCellOccupied(int x, int y, const Game* game) {
+    for (const Monster& other : game->monsters) {
+        if (other.present && other.x == x && other.y == y) {
+            return true;
+        }
+    }
+    return false;
+}
 void updateMonster(Monster& m, const Game* game, float deltaTime) {
     if (m.present) {
         m.monsterLiveTime += deltaTime;
@@ -25,8 +33,10 @@ void updateMonster(Monster& m, const Game* game, float deltaTime) {
 
         if (m.moveTimer >= game->cfg.monsterMoveInterval) {
             Move next = chooseMoveProb(m, game);
-            m.x = next.x;
-            m.y = next.y;
+            if (!isCellOccupied(next.x, next.y, game)) {
+                m.x = next.x;
+                m.y = next.y;
+            }
             m.moveTimer = 0.0f;
         }
 
@@ -68,8 +78,7 @@ void updateNoises(Game* game, float deltaTime) {
 void updateGameClock(Game* game, float deltaTime) {
     game->gameTime += deltaTime;
 
-    float gameMinutesPassed = (game->gameTime / REAL_SECONDS_PER_15_MIN) * 15.0f;
-
+    float gameMinutesPassed = (game->gameTime / game->cfg.REAL_SECONDS_PER_15_MIN) * 15.0f;
     int totalMinutes = static_cast<int>(gameMinutesPassed);
 
     game->hours   = totalMinutes / 60;
@@ -91,6 +100,7 @@ void updateEcho(Game* game, float deltaTime) {
             e.active = true;
             e.radius = 0.0f;
             e.timer = 0.0f;
+            if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.echoSystem = false;
         }
     }
 

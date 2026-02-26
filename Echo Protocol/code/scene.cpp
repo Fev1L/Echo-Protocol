@@ -177,8 +177,7 @@ void renderGame(Game* game, App* app) {
 
             for(const auto& monster : game->monsters){
                 if (monster.present && monster.visible &&
-                    i == monster.echoY && j == monster.echoX)
-                {
+                    i == monster.echoY && j == monster.echoX){
                     color = {255, 60, 60, 255};
                 }
             }
@@ -227,7 +226,8 @@ void renderCustomgame(Game* game, App* app) {
 }
 
 void renderEndgame(Game* game, App* app) {
-    app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    SDL_SetRenderDrawColor(app->renderer, 2, 2, 2, 255);
+    app->fonts->endGameText.textIn = "NIGHT " + std::to_string(game->currentNight);
         
     drawText(app->renderer, app->fonts->font1, app->fonts->endGameText, app);
 }

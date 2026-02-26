@@ -22,11 +22,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){
     app->state = new State();
     app->fonts = new Font();
     app->audio = new Audio();
+    loadProgress(app->game);
     
     if(!initApp(app)){
         return SDL_APP_FAILURE;
     }
-    loadProgress(app->game);
     spawnMonster(app->game);
     
     app->lastCounter = SDL_GetPerformanceCounter();

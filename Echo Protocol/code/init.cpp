@@ -62,6 +62,7 @@ bool initApp(App* app){
     game->menu.continueGame = {{layoutText(0.045f, 0.608f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
     game->menu.continueGameNight = {{layoutText(0.063f, 0.670f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
+    app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     //=================RECT=================
     
     return true;

@@ -89,7 +89,7 @@ void spawnNoise(Game* game, int gridX, int gridY) {
     game->noise.push_back(n);
     
     game->noiseCooldown = 10.0f * game->cfg.baitReload;
-    std::cout<<game->noiseCooldown<<" ";
+    if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.baitSystem = false;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
@@ -151,6 +151,7 @@ void checkEchoHit(Game* game, float deltaTime) {
         float dist = sqrtf(dx*dx + dy*dy);
 
         if (fabs(dist - e.radius) < 0.5f) {
+            if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.trackingSystem = false;
             m.visible = true;
             m.visibleTime = 2.0f;
             
@@ -198,6 +199,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 2.5f;
             cfg.systemBreakChance = 0.0f;
             cfg.baitReload = 1.5f;
+            cfg.REAL_SECONDS_PER_15_MIN = 5.0f;
             break;
 
         case 2:
@@ -206,6 +208,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 2.0f;
             cfg.systemBreakChance = 0.1f;
             cfg.baitReload = 1.5f;
+            cfg.REAL_SECONDS_PER_15_MIN = 10.0f;
             break;
 
         case 3:
@@ -214,6 +217,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 1.5f;
             cfg.systemBreakChance = 0.2f;
             cfg.baitReload = 1.0f;
+            cfg.REAL_SECONDS_PER_15_MIN = 20.0f;
             break;
 
         case 4:
@@ -222,6 +226,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 1.2f;
             cfg.systemBreakChance = 0.3f;
             cfg.baitReload = 0.8f;
+            cfg.REAL_SECONDS_PER_15_MIN = 30.0f;
             break;
 
         case 5:
@@ -230,6 +235,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 1.0f;
             cfg.systemBreakChance = 0.4f;
             cfg.baitReload = 0.5f;
+            cfg.REAL_SECONDS_PER_15_MIN = 40.0f;
             break;
 
         case 6:
@@ -238,6 +244,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 1.0f;
             cfg.systemBreakChance = 0.5f;
             cfg.baitReload = 0.3f;
+            cfg.REAL_SECONDS_PER_15_MIN = 50.0f;
             break;
 
         case 7:
@@ -246,6 +253,7 @@ void getNightConfig(App* app){
             cfg.echoInterval = 0.5f;
             cfg.systemBreakChance = 0.7f;
             cfg.baitReload = 0.3f;
+            cfg.REAL_SECONDS_PER_15_MIN = 60.0f;
             break;
     }
 }

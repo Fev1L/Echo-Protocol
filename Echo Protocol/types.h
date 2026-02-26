@@ -19,8 +19,6 @@
 #include <cstdlib>
 #include <fstream>
 
-constexpr float REAL_SECONDS_PER_15_MIN = 5.0f;
-
 enum class GameState {
     MENU,
     PLAYING,
@@ -49,6 +47,7 @@ struct NightConfig {
     float systemBreakChance;
     float baitReload;
     float spawnInterval;
+    float REAL_SECONDS_PER_15_MIN;
 };
 
 struct Rectangle {
