@@ -19,14 +19,8 @@ void renderMenu(Game* game, App* app) {
     Uint8 lampAlpha = (Uint8)(flicker * 50);
     SDL_RenderTexture(app->renderer, game->menu.menuBackground, NULL, NULL);
     
-    SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.353f, 0.226f, 0.045f, 0.1f, app->state->winW, app->state->winH)};
+    SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.256f, 0.173f, 0.034f, 0.101f, app->state->winW, app->state->winH)};
     drawImage(app->renderer, game->menu.menuLogo, logoRect, app , ViewSide::CENTER);
-    
-    if(isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY) ||
-       isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY) ||
-       isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY)){
-        
-    }
     
     game->menu.newGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) ? "> NEW GAME" : "NEW GAME";
     game->menu.continueGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) ? "> CONTINUE GAME" : "CONTINUE GAME";
@@ -59,6 +53,8 @@ void renderGame(Game* game, App* app) {
     
     SDL_FRect gameBackgroundRect = {0, 0, static_cast<float>(app->state->winW), static_cast<float>(app->state->winH)};
     drawImage(app->renderer, app->state->gameBackgroundTexture, gameBackgroundRect,app, ViewSide::CENTER);
+    drawImage(app->renderer, app->state->gameBackgroundTextureRight, gameBackgroundRect,app, ViewSide::RIGHT);
+    drawImage(app->renderer, app->state->gameBackgroundTextureLeftClose, gameBackgroundRect,app, ViewSide::LEFT);
     
     state->monitor = {{layout(
         Anchor::TOP_LEFT,
@@ -73,22 +69,9 @@ void renderGame(Game* game, App* app) {
         0.222f, 0.289f, //MARGIN
         state->winW,state->winH)},{0,0,0,255},"Computer", ViewSide::RIGHT};
 
-    if(game->system.baitSystem){
-        fonts->baitSystem = {{layoutText(0.246f, 0.323f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
-    }else{
-        fonts->baitSystem = {{layoutText(0.246f, 0.323f, state->winW, state->winH)}, {255,0,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
-    }
-    if(game->system.echoSystem){
-        fonts->echoSystem = {{layoutText(0.246f, 0.373f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
-    }else{
-        fonts->echoSystem = {{layoutText(0.246f, 0.373f, state->winW, state->winH)}, {255,0,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
-    }
-    if(game->system.trackingSystem){
-        fonts->trackingSystem = {{layoutText(0.246f, 0.422f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
-    }else{
-        fonts->trackingSystem = {{layoutText(0.246f, 0.422f, state->winW, state->winH)}, {255,0,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
-    }
-    fonts->rebootAll = {{layoutText(0.246f, 0.5f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
+    fonts->baitSystem.color = (game->system.baitSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
+    fonts->echoSystem.color = (game->system.echoSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
+    fonts->trackingSystem.color = (game->system.trackingSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
     
     for(int i = 0; i < game->GRID_H; i++){
         for(int j = 0; j < game->GRID_W; j++){
@@ -171,9 +154,8 @@ void renderGame(Game* game, App* app) {
         }
     }
     
-    drawRectangle(app->renderer, state->tableR, app);
     //drawRectangle(app->renderer, state->monitor, app);
-    drawRectangle(app->renderer, state->monitorR, app);
+    //drawRectangle(app->renderer, state->monitorR, app);
     for(Rectangle rec : state->rooms){
         drawRectangle(app->renderer, rec, app);
     }

@@ -183,6 +183,9 @@ struct State {
     Rectangle monitor;
     Rectangle monitorR;
     SDL_Texture* gameBackgroundTexture;
+    SDL_Texture* gameBackgroundTextureRight;
+    SDL_Texture* gameBackgroundTextureLeftClose;
+    SDL_Texture* gameBackgroundTextureLeftOpen;
     std::vector <Rectangle> rooms;
 };
 

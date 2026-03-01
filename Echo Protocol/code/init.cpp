@@ -53,16 +53,24 @@ bool initApp(App* app){
     //=================IMAGE=================
     game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
     app->state->gameBackgroundTexture = IMG_LoadTexture(app->renderer, "Assets/gameBackground.png");
+    app->state->gameBackgroundTextureRight = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundRight.png");
+    app->state->gameBackgroundTextureLeftClose = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftClose.png");
+    app->state->gameBackgroundTextureLeftOpen = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftOpen.png");
     game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
     game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
     SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);
     //=================IMAGE=================
     
     //=================RECT=================
-    game->menu.newGame = {{layoutText(0.045f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
-    game->menu.continueGame = {{layoutText(0.045f, 0.608f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
-    game->menu.continueGameNight = {{layoutText(0.063f, 0.670f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
-    game->menu.customGame = {{layoutText(0.045f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
+    game->menu.newGame = {{layoutText(0.034f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
+    game->menu.continueGame = {{layoutText(0.034f, 0.589f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
+    game->menu.continueGameNight = {{layoutText(0.046f, 0.661f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    game->menu.customGame = {{layoutText(0.034f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
+    
+    fonts->baitSystem = {{layoutText(0.281f, 0.296f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
+    fonts->echoSystem = {{layoutText(0.281f, 0.346f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
+    fonts->trackingSystem = {{layoutText(0.281f, 0.395f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
+    
     app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     //=================RECT=================
     
