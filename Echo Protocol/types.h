@@ -148,8 +148,8 @@ struct Menu {
 };
 
 struct Game {
-    int GRID_W = 75;
-    int GRID_H = 55;
+    int GRID_W = 86;
+    int GRID_H = 66;
     int centerX = GRID_W/2;
     int centerY = GRID_H/2;
     float gameTime = 0.0f;
@@ -182,6 +182,7 @@ struct State {
     Rectangle tableR;
     Rectangle monitor;
     Rectangle monitorR;
+    SDL_Texture* gameBackgroundTexture;
     std::vector <Rectangle> rooms;
 };
 

@@ -20,7 +20,7 @@ void renderMenu(Game* game, App* app) {
     SDL_RenderTexture(app->renderer, game->menu.menuBackground, NULL, NULL);
     
     SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.353f, 0.226f, 0.045f, 0.1f, app->state->winW, app->state->winH)};
-    drawImage(app->renderer, game->menu.menuLogo, logoRect);
+    drawImage(app->renderer, game->menu.menuLogo, logoRect, app , ViewSide::CENTER);
     
     if(isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY) ||
        isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY) ||
@@ -57,42 +57,16 @@ void renderGame(Game* game, App* app) {
     State* state = app->state;
     Font* fonts = app->fonts;
     
-    state->table = {{layout(
-        Anchor::TOP_LEFT,
-        1.0f, 0.20f, //SIZE
-        0.00f, 0.70f, //MARGIN
-        app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::CENTER};
+    SDL_FRect gameBackgroundRect = {0, 0, static_cast<float>(app->state->winW), static_cast<float>(app->state->winH)};
+    drawImage(app->renderer, app->state->gameBackgroundTexture, gameBackgroundRect,app, ViewSide::CENTER);
+    
     state->monitor = {{layout(
         Anchor::TOP_LEFT,
         0.555f, 0.585f, //SIZE
         0.222f, 0.289f, //MARGIN
         state->winW,state->winH)},{0,0,0,255},"Computer", ViewSide::CENTER};
-    for(int i = 0; i < game->GRID_H; i++){
-        for(int j = 0; j < game->GRID_W; j++){
-            state->rooms.push_back(
-               {{
-                   layout(Anchor::TOP_LEFT,
-                          0.0069f, 0.0097f,
-                          (0.239f + (0.0069f * j)),
-                          (0.313f + (0.0097f * i)),
-                          state->winW,
-                          state->winH
-                          )
-               },
-                   {120,120,120,255},
-                   "WEIGHT",
-                   ViewSide::CENTER
-               }
-            );
-        }
-    }
     fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     
-    state->tableR = {{layout(
-        Anchor::TOP_LEFT,
-        1.00f, 0.20f, //SIZE
-        0.00f, 0.70f, //MARGIN
-        app->state->winW,app->state->winH)},{143,103,33,255},"TABLE",ViewSide::RIGHT};
     state->monitorR = {{layout(
         Anchor::TOP_LEFT,
         0.555f, 0.585f, //SIZE
@@ -186,9 +160,9 @@ void renderGame(Game* game, App* app) {
                 color = {0, 255, 0, 255};
 
             state->rooms.push_back({
-                {layout(Anchor::TOP_LEFT, 0.0069f, 0.0097f,
-                        (0.239f + (0.0069f * j)),
-                        (0.313f + (0.0097f * i)),
+                {layout(Anchor::TOP_LEFT, 0.0052f, 0.0092f,
+                        (0.276f + (0.0052f * j)),
+                        (0.287f + (0.0092f * i)),
                         state->winW, state->winH)},
                 color,
                 "WEIGHT",
@@ -197,9 +171,8 @@ void renderGame(Game* game, App* app) {
         }
     }
     
-    drawRectangle(app->renderer, state->table, app);
     drawRectangle(app->renderer, state->tableR, app);
-    drawRectangle(app->renderer, state->monitor, app);
+    //drawRectangle(app->renderer, state->monitor, app);
     drawRectangle(app->renderer, state->monitorR, app);
     for(Rectangle rec : state->rooms){
         drawRectangle(app->renderer, rec, app);

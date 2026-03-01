@@ -103,22 +103,35 @@ void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const Ap
     SDL_DestroyTexture(texture);
 }
 //=================================================================
-void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect){
+void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect, App* app , ViewSide side){
     if (!texture) return;
 
-    float texW, texH;
-    if (!SDL_GetTextureSize(texture, &texW, &texH))
-        return;
+    SDL_FRect r = targetRect;
 
-    float ratio = texW / texH;
+    float sideX = sideOffsetX(side, app->state->winW);
+    r.x += sideX;
 
-    SDL_FRect finalRect;
-    finalRect.x = targetRect.x;
-    finalRect.y = targetRect.y;
-    finalRect.w = targetRect.w;
-    finalRect.h = targetRect.w / ratio;
+    float cx = app->state->winW * 0.5f + sideX;
+    float cy = app->state->winH * 0.5f;
 
-    SDL_RenderTexture(renderer, texture, nullptr, &finalRect);
+    float scale;
+    if (app->game->camera.isTurning) {
+        float t = fabs(app->game->viewAngle - app->game->viewAngleTarget) / 90.0f;
+        t = SDL_clamp(t, 0.0f, 1.0f);
+        scale = 1.0f - 0.25f * (1.0f - t);
+    } else {
+        scale = 1.0f;
+    }
+
+    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
+
+    r.x = (r.x - cx) * scale + cx + offsetX;
+    r.y = (r.y - cy) * scale + cy;
+
+    r.w *= scale;
+    r.h *= scale;
+
+    SDL_RenderTexture(renderer, texture, nullptr, &r);
 }
 //=================================================================
 SDL_FRect layout( Anchor anchor, float wPct, float hPct, float marginXPct, float marginYPct, int winW, int winH){

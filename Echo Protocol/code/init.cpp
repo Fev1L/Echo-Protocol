@@ -24,7 +24,7 @@ bool initApp(App* app){
         return false;
     }
     
-    app->window = SDL_CreateWindow("Protocol 'ECHO'", 700, 700, SDL_WINDOW_FULLSCREEN);
+    app->window = SDL_CreateWindow("Protocol 'ECHO'", 1920, 1080, SDL_WINDOW_FULLSCREEN);
     app->renderer = SDL_CreateRenderer(app->window, nullptr);
     
     SDL_GetWindowSize(app->window, &state->winW, &state->winH);
@@ -52,6 +52,7 @@ bool initApp(App* app){
     
     //=================IMAGE=================
     game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
+    app->state->gameBackgroundTexture = IMG_LoadTexture(app->renderer, "Assets/gameBackground.png");
     game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
     game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
     SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);

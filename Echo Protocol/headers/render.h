@@ -16,7 +16,7 @@ bool isTextClicked(SDL_Renderer* renderer , TTF_Font* font, const Text& text, co
 
 void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app);
 
-void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect);
+void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect, App* app , ViewSide side);
 
 SDL_FRect layout(Anchor anchor, float wPct, float hPct, float marginXPct, float marginYPct, int winW, int winH);
 

@@ -52,7 +52,7 @@ void spawnMonster(Game* game){
 }
 //=================================================================
 bool inBounds(int x, int y) {
-    return x >= 0 && y >= 0 && x < 75 && y < 55;
+    return x >= 0 && y >= 0 && x < 86 && y < 66;
 }
 //=================================================================
 std::vector<Move> getMoves(const Monster& m) {
@@ -89,7 +89,8 @@ void spawnNoise(Game* game, int gridX, int gridY) {
     game->noise.push_back(n);
     
     game->noiseCooldown = 10.0f * game->cfg.baitReload;
-    if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.baitSystem = false;
+    float r = static_cast<float>(rand()) / RAND_MAX;
+    if (r < game->cfg.systemBreakChance) game->system.baitSystem = false;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
@@ -151,7 +152,8 @@ void checkEchoHit(Game* game, float deltaTime) {
         float dist = sqrtf(dx*dx + dy*dy);
 
         if (fabs(dist - e.radius) < 0.5f) {
-            if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.trackingSystem = false;
+            float r = static_cast<float>(rand()) / RAND_MAX;
+            if (r < game->cfg.systemBreakChance) game->system.trackingSystem = false;
             m.visible = true;
             m.visibleTime = 2.0f;
             

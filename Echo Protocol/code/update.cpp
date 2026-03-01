@@ -100,7 +100,8 @@ void updateEcho(Game* game, float deltaTime) {
             e.active = true;
             e.radius = 0.0f;
             e.timer = 0.0f;
-            if(rand() % 100 < rand() % static_cast<int>(game->cfg.systemBreakChance * 100)) game->system.echoSystem = false;
+            float r = static_cast<float>(rand()) / RAND_MAX;
+            if (r < game->cfg.systemBreakChance) game->system.echoSystem = false;
         }
     }
 

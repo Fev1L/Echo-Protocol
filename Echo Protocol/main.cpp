@@ -135,9 +135,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     app->deltaTime = (double)(now - app->lastCounter) / (double)SDL_GetPerformanceFrequency();
     app->lastCounter = now;
     
-    if (game->monsters.size() < game->cfg.monsterCount) {
-        spawnMonster(game);
-    }
+    if (game->monsters.size() < game->cfg.monsterCount) spawnMonster(game);
     
     if(app->gamestate == GameState::MENU){
         game->menu.menuFade += app->deltaTime * 1.5f;
@@ -222,6 +220,3 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
     delete app;
 }
 //=================================================================
-
-
-
