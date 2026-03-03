@@ -70,6 +70,7 @@ bool initApp(App* app){
     fonts->baitSystem = {{layoutText(0.281f, 0.296f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
     fonts->echoSystem = {{layoutText(0.281f, 0.346f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
     fonts->trackingSystem = {{layoutText(0.281f, 0.395f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
+    fonts->rebootAll = {{layoutText(0.281f, 0.5f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
     
     app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     //=================RECT=================
