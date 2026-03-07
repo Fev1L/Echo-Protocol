@@ -294,7 +294,6 @@
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
 					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
-					/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib,
 					/opt/homebrew/Cellar/sdl3/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -324,7 +323,6 @@
 					/opt/homebrew/Cellar/sdl3/3.2.24/lib,
 					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
 					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
-					/opt/homebrew/Cellar/sdl2_mixer/2.8.1_1/lib,
 					/opt/homebrew/Cellar/sdl3/3.4.0/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

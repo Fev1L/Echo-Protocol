@@ -10,9 +10,7 @@
 SDL_FRect getTextScreenRect(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app) {
     SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
 
-    float wrapWidth = app->state->winW * 0.25f;
-
-    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped( font, text.textIn.c_str(), 0, color, (int)wrapWidth);
+    SDL_Surface* surface = TTF_RenderText_Blended( font, text.textIn.c_str(), 0, color);
     if (!surface) return {0,0,0,0};
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -90,7 +88,7 @@ void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const Ap
 
     float wrapWidth = app->state->winW * 0.25f;
 
-    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped( font, text.textIn.c_str(), 0, color, (int)wrapWidth);
+    SDL_Surface* surface = TTF_RenderText_Blended( font, text.textIn.c_str(), 0, color);
     if (!surface) return;
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);

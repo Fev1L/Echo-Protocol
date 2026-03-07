@@ -24,7 +24,7 @@ bool initApp(App* app){
         return false;
     }
     
-    app->window = SDL_CreateWindow("Protocol 'ECHO'", 1920, 1080, SDL_WINDOW_FULLSCREEN);
+    app->window = SDL_CreateWindow("Protocol 'ECHO'", 700, 700, SDL_WINDOW_FULLSCREEN);
     app->renderer = SDL_CreateRenderer(app->window, nullptr);
     
     SDL_GetWindowSize(app->window, &state->winW, &state->winH);
