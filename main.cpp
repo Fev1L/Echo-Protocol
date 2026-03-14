@@ -199,6 +199,7 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result){
     
     App* app = (App*)appstate;
     saveProgress(app->game);
+    if (!app) return;
     
     if (app->game) {
         if (app->renderer)
