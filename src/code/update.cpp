@@ -117,7 +117,7 @@ void updateEcho(Game* game, float deltaTime) {
 }
 //=================================================================
 void updateCamera(Game* game, float deltaTime) {
-    float speed = 720.0f;
+    float speed = 360.0f;
 
     float diff = game->viewAngleTarget - game->viewAngle;
     float step = speed * deltaTime;
@@ -130,7 +130,7 @@ void updateCamera(Game* game, float deltaTime) {
         game->viewAngle += (diff > 0 ? step : -step);
         game->camera.isTurning = true;
     }
-    
+
     if(game->viewAngle == 0)
         game->currentView = ViewSide::CENTER;
 }

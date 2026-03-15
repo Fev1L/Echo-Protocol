@@ -52,13 +52,13 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         SDL_Keycode key = event->key.key;
         if (key == SDLK_ESCAPE)
             return SDL_APP_SUCCESS;
-        if (key == SDLK_A && game->viewAngleTarget <= 90) {
+        if (key == SDLK_A && game->viewAngleTarget >= 0) {
             game->targetView = ViewSide::LEFT;
-            game->viewAngleTarget += 180.0f;
+            game->viewAngleTarget -= 90.0f;
         }
-        if (key == SDLK_D && game->viewAngleTarget >= -90) {
+        if (key == SDLK_D && game->viewAngleTarget <= 0) {
             game->targetView = ViewSide::RIGHT;
-            game->viewAngleTarget -= 180.0f;
+            game->viewAngleTarget += 90.0f;
         }
         if (key == SDLK_S) {
             game->targetView = ViewSide::CENTER;

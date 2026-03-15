@@ -8,69 +8,35 @@
 #include "render.h"
 
 SDL_FRect getTextScreenRect(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app) {
-    SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
+    int textW = 0;
+    int textH = 0;
 
-    SDL_Surface* surface = TTF_RenderText_Blended( font, text.textIn.c_str(), 0, color);
-    if (!surface) return {0,0,0,0};
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_DestroySurface(surface);
-    if (!texture) return {0,0,0,0};
-
-    float textW, textH;
-    SDL_GetTextureSize(texture, &textW, &textH);
-    SDL_DestroyTexture(texture);
+    TTF_GetStringSize(font, text.textIn.c_str(), text.textIn.size(), &textW, &textH);
 
     float scale = app->state->winW / 1920.0f;
 
     float sideX = sideOffsetX(text.side, app->state->winW);
+    float camOffset = -(app->game->viewAngle / 90.0f) * app->state->winW;
 
-    float cx = app->state->winW * 0.5f + sideX;
-    float cy = app->state->winH * 0.5f;
+    SDL_FRect r;
 
-    float t = fabs(app->game->viewAngle) / 90.0f;
-    t = SDL_clamp(t, 0.0f, 1.0f);
+    r.w = textW * scale;
+    r.h = textH * scale;
 
-    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
-    float animScale = app->game->camera.isTurning ? (1.0f - 0.25f * t) : 1.0f;
-
-    SDL_FRect r = {text.rect.x + sideX, text.rect.y, textW * scale * animScale, textH * scale * animScale};
-
-    r.x = (r.x - cx) * animScale + cx + offsetX;
-    r.y = (r.y - cy) * animScale + cy;
+    r.x = text.rect.x + sideX + camOffset;
+    r.y = text.rect.y;
 
     return r;
 }
 //=================================================================
 void drawRectangle(SDL_Renderer* renderer, const Rectangle& rct, App* app) {
-    SDL_SetRenderDrawColor(renderer,
-        rct.color.r, rct.color.g, rct.color.b, rct.color.a);
-
+    SDL_SetRenderDrawColor(renderer, rct.color.r, rct.color.g, rct.color.b, rct.color.a);
     SDL_FRect r = rct.rect;
 
     float sideX = sideOffsetX(rct.side, app->state->winW);
-    r.x += sideX;
+    float camOffset = -(app->game->viewAngle / 90.0f) * app->state->winW;
 
-    float cx = app->state->winW * 0.5f + sideX;
-    float cy = app->state->winH * 0.5f;
-    float scale;
-
-    if (app->game->camera.isTurning) {
-        float t = fabs(app->game->viewAngle - app->game->viewAngleTarget) / 90.0f;
-        t = SDL_clamp(t, 0.0f, 1.0f);
-        scale = 1.0f - 0.25f * (1.0f - t);
-    }else{
-        scale = 1.0f;
-    }
-
-    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
-    
-    r.x = (r.x - cx) * scale + cx + offsetX;
-    r.y = (r.y - cy) * scale + cy;
-
-    r.w *= scale;
-    r.h *= scale;
-
+    r.x += sideX + camOffset;
     SDL_RenderFillRect(renderer, &r);
 }
 //=================================================================
@@ -86,9 +52,7 @@ bool isTextClicked(SDL_Renderer* renderer, TTF_Font* font, const Text& text, con
 void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app){
     SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
 
-    float wrapWidth = app->state->winW * 0.25f;
-
-    SDL_Surface* surface = TTF_RenderText_Blended( font, text.textIn.c_str(), 0, color);
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.textIn.c_str(), 0, color);
     if (!surface) return;
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -101,34 +65,14 @@ void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const Ap
     SDL_DestroyTexture(texture);
 }
 //=================================================================
-void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect, App* app , ViewSide side){
+void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect, App* app, ViewSide side){
     if (!texture) return;
-
     SDL_FRect r = targetRect;
 
     float sideX = sideOffsetX(side, app->state->winW);
-    r.x += sideX;
+    float camOffset = -(app->game->viewAngle / 90.0f) * app->state->winW;
 
-    float cx = app->state->winW * 0.5f + sideX;
-    float cy = app->state->winH * 0.5f;
-
-    float scale;
-    if (app->game->camera.isTurning) {
-        float t = fabs(app->game->viewAngle - app->game->viewAngleTarget) / 90.0f;
-        t = SDL_clamp(t, 0.0f, 1.0f);
-        scale = 1.0f - 0.25f * (1.0f - t);
-    } else {
-        scale = 1.0f;
-    }
-
-    float offsetX = (app->game->viewAngle / 90.0f) * app->state->winW * 0.5f;
-
-    r.x = (r.x - cx) * scale + cx + offsetX;
-    r.y = (r.y - cy) * scale + cy;
-
-    r.w *= scale;
-    r.h *= scale;
-
+    r.x += sideX + camOffset;
     SDL_RenderTexture(renderer, texture, nullptr, &r);
 }
 //=================================================================

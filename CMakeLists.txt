@@ -35,4 +35,10 @@ target_link_libraries(EchoProtocol
         SDL3_ttf::SDL3_ttf
 )
 
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+add_custom_target(copy_assets ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        ${CMAKE_BINARY_DIR}/assets
+)
+
+add_dependencies(EchoProtocol copy_assets)
