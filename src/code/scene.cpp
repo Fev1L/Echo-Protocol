@@ -144,8 +144,8 @@ void renderGame(Game* game, App* app) {
 
             state->rooms.push_back({
                 {layout(Anchor::TOP_LEFT, 0.0052f, 0.0092f,
-                        (0.276f + (0.0052f * j)),
-                        (0.287f + (0.0092f * i)),
+                        (0.184 + (0.0052f * j)),
+                        (0.212f + (0.0092f * i)),
                         state->winW, state->winH)},
                 color,
                 "WEIGHT",

@@ -26,7 +26,7 @@ bool isCellOccupied(int x, int y, const Game* game) {
     }
     return false;
 }
-void updateMonster(Monster& m, const Game* game, float deltaTime) {
+void updateMonster(Monster& m, Game* game, float deltaTime) {
     if (m.present) {
         m.monsterLiveTime += deltaTime;
         m.moveTimer += deltaTime;

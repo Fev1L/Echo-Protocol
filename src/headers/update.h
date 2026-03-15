@@ -11,7 +11,7 @@
 
 void updateMonsters(Game* game, float deltaTime);
 
-void updateMonster(Monster& m,const Game* game, float deltaTime);
+void updateMonster(Monster& m, Game* game, float deltaTime);
 
 void updateNoises(Game* game, float deltaTime);
 

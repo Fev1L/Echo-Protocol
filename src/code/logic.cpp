@@ -51,11 +51,11 @@ void spawnMonster(Game* game){
     game->monsters.push_back(m);
 }
 //=================================================================
-bool inBounds(int x, int y) {
-    return x >= 0 && y >= 0 && x < 86 && y < 66;
+bool inBounds(int x, int y, int GRID_W, int GRID_H) {
+    return x >= 0 && y >= 0 && x < GRID_W && y < GRID_H;
 }
 //=================================================================
-std::vector<Move> getMoves(const Monster& m) {
+std::vector<Move> getMoves(const Monster& m, Game* game) {
     std::vector<Move> moves;
 
     for (int dx = -1; dx <= 1; dx++) {
@@ -63,7 +63,7 @@ std::vector<Move> getMoves(const Monster& m) {
             if (dx == 0 && dy == 0) continue;
             int nx = m.x + dx;
             int ny = m.y + dy;
-            if (inBounds(nx, ny)) {
+            if (inBounds(nx, ny, game->GRID_W, game->GRID_H)) {
                 moves.push_back({nx, ny});
             }
         }
@@ -113,11 +113,11 @@ void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
    }
 }
 //=================================================================
-Move chooseMoveProb(const Monster& m, const Game* game) {
+Move chooseMoveProb(const Monster& m, Game* game) {
     int tx, ty;
     getTarget(game, m.x, m.y, tx, ty);
 
-    auto moves = getMoves(m);
+    auto moves = getMoves(m, game);
 
     if (moves.empty())
         return { m.x, m.y };

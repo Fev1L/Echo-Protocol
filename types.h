@@ -148,8 +148,8 @@ struct Menu {
 };
 
 struct Game {
-    int GRID_W = 86;
-    int GRID_H = 66;
+    int GRID_W = 121;
+    int GRID_H = 71;
     int centerX = GRID_W/2;
     int centerY = GRID_H/2;
     float gameTime = 0.0f;
