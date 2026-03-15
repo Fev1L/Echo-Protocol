@@ -145,7 +145,7 @@ Move chooseMoveProb(const Monster& m, Game* game) {
 void checkEchoHit(Game* game, float deltaTime) {
     Echo& e = game->echo;
     for(auto& m : game->monsters){
-        if (!e.active || !m.present) return;
+        if (!e.active || !m.present) continue;
 
         int dx = m.x - game->centerX;
         int dy = m.y - game->centerY;
@@ -179,6 +179,7 @@ void resetGame(App* app){
 //=================================================================
 void startNewGame(App* app) {
     resetGame(app);
+    buildText(app->renderer, app->fonts->font1, app->fonts->night);
     app->game->nightIntroTimer = 0.0f;
     app->gamestate = GameState::ENDSCREEN;
     getNightConfig(app);
@@ -197,7 +198,7 @@ void getNightConfig(App* app){
     switch(app->game->currentNight){
         case 1:
             cfg.monsterCount = 1;
-            cfg.monsterMoveInterval = 1.2f;
+            cfg.monsterMoveInterval = 1.0f;
             cfg.echoInterval = 2.5f;
             cfg.systemBreakChance = 0.0f;
             cfg.baitReload = 1.5f;
@@ -208,7 +209,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 1;
             cfg.monsterMoveInterval = 1.0f;
             cfg.echoInterval = 2.0f;
-            cfg.systemBreakChance = 0.1f;
+            cfg.systemBreakChance = 0.05f;
             cfg.baitReload = 1.5f;
             cfg.REAL_SECONDS_PER_15_MIN = 10.0f;
             break;
@@ -217,7 +218,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 2;
             cfg.monsterMoveInterval = 0.9f;
             cfg.echoInterval = 1.5f;
-            cfg.systemBreakChance = 0.2f;
+            cfg.systemBreakChance = 0.10f;
             cfg.baitReload = 1.0f;
             cfg.REAL_SECONDS_PER_15_MIN = 20.0f;
             break;
@@ -226,7 +227,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 3;
             cfg.monsterMoveInterval = 0.8f;
             cfg.echoInterval = 1.2f;
-            cfg.systemBreakChance = 0.3f;
+            cfg.systemBreakChance = 0.15f;
             cfg.baitReload = 0.8f;
             cfg.REAL_SECONDS_PER_15_MIN = 30.0f;
             break;
@@ -235,7 +236,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 4;
             cfg.monsterMoveInterval = 0.7f;
             cfg.echoInterval = 1.0f;
-            cfg.systemBreakChance = 0.4f;
+            cfg.systemBreakChance = 0.2f;
             cfg.baitReload = 0.5f;
             cfg.REAL_SECONDS_PER_15_MIN = 40.0f;
             break;
@@ -244,7 +245,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 5;
             cfg.monsterMoveInterval = 0.6f;
             cfg.echoInterval = 1.0f;
-            cfg.systemBreakChance = 0.5f;
+            cfg.systemBreakChance = 0.25f;
             cfg.baitReload = 0.3f;
             cfg.REAL_SECONDS_PER_15_MIN = 50.0f;
             break;
@@ -253,7 +254,7 @@ void getNightConfig(App* app){
             cfg.monsterCount = 5;
             cfg.monsterMoveInterval = 0.5f;
             cfg.echoInterval = 0.5f;
-            cfg.systemBreakChance = 0.7f;
+            cfg.systemBreakChance = 0.3f;
             cfg.baitReload = 0.3f;
             cfg.REAL_SECONDS_PER_15_MIN = 60.0f;
             break;

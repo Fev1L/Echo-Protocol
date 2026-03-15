@@ -63,6 +63,10 @@ struct Text {
     std::string label;
     std::string textIn;
     ViewSide side;
+
+    SDL_Texture* texture = nullptr;
+    int w = 0;
+    int h = 0;
 };
 
 struct Image {
@@ -196,7 +200,6 @@ struct Font {
     
     Text night;
     Text hours;
-    Text bait;
     Text baitSystem;
     Text echoSystem;
     Text trackingSystem;

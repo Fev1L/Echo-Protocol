@@ -8,6 +8,7 @@
 #pragma once
 #include "types.h"
 #include "update.h"
+#include "render.h"
 
 void saveProgress(Game* game);
     

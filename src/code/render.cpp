@@ -49,20 +49,43 @@ bool isTextClicked(SDL_Renderer* renderer, TTF_Font* font, const Text& text, con
     return (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h);
 }
 //=================================================================
-void drawText(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app){
+void buildText(SDL_Renderer* renderer, TTF_Font* font, Text& text){
     SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
 
-    SDL_Surface* surface = TTF_RenderText_Blended(font, text.textIn.c_str(), 0, color);
+    SDL_Surface* surface = TTF_RenderText_Blended(
+        font,
+        text.textIn.c_str(),
+        0,
+        color
+    );
+
     if (!surface) return;
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    text.texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    text.w = surface->w;
+    text.h = surface->h;
+
     SDL_DestroySurface(surface);
-    if (!texture) return;
+}
+//=================================================================
+void drawText(SDL_Renderer* renderer, const Text& text, const App* app){
+    if (!text.texture) return;
 
-    SDL_FRect dst = getTextScreenRect(renderer, font, text, app);
+    float scale = app->state->winW / 1920.0f;
 
-    SDL_RenderTexture(renderer, texture, nullptr, &dst);
-    SDL_DestroyTexture(texture);
+    float sideX = sideOffsetX(text.side, app->state->winW);
+    float camOffset = -(app->game->viewAngle / 90.0f) * app->state->winW;
+
+    SDL_FRect r;
+
+    r.w = text.w * scale;
+    r.h = text.h * scale;
+
+    r.x = text.rect.x + sideX + camOffset;
+    r.y = text.rect.y;
+
+    SDL_RenderTexture(renderer, text.texture, nullptr, &r);
 }
 //=================================================================
 void drawImage(SDL_Renderer* renderer, SDL_Texture* texture, const SDL_FRect& targetRect, App* app, ViewSide side){
@@ -124,5 +147,36 @@ float sideOffsetX(ViewSide side, float screenW) {
         case ViewSide::LEFT:   return -screenW;
         case ViewSide::RIGHT:  return +screenW;
         default:               return 0.0f;
+    }
+}
+//=================================================================
+void buildGrid(App* app){
+    Game* game = app->game;
+    State* state = app->state;
+
+    state->rooms.clear();
+    state->rooms.reserve(game->GRID_W * game->GRID_H);
+
+    for(int i = 0; i < game->GRID_H; i++)
+    {
+        for(int j = 0; j < game->GRID_W; j++)
+        {
+            Rectangle r;
+
+            r.rect = layout(
+                Anchor::TOP_LEFT,
+                0.0052f, 0.0092f,
+                0.184f + (0.0052f * j),
+                0.212f + (0.0092f * i),
+                state->winW,
+                state->winH
+            );
+
+            r.color = {11,47,0,255};
+            r.label = "CELL";
+            r.side = ViewSide::CENTER;
+
+            state->rooms.push_back(r);
+        }
     }
 }

@@ -15,12 +15,12 @@ bool initApp(App* app){
     
     //=================INIT=================
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-        SDL_Log("Failure!");
+        SDL_Log("SDL Init error: %s", SDL_GetError());
         return false;
     }
     
     if (!TTF_Init()) {
-        SDL_Log("Failure!");
+        SDL_Log("TTF Init error: %s", SDL_GetError());
         return false;
     }
     
@@ -28,10 +28,12 @@ bool initApp(App* app){
     app->renderer = SDL_CreateRenderer(app->window, nullptr);
     
     SDL_GetWindowSize(app->window, &state->winW, &state->winH);
+    buildGrid(app);
+    state->rooms.shrink_to_fit();
     //=================INIT=================
     
     //=================FONTS=================
-    std::string basePath = SDL_GetBasePath();
+    const std::string basePath = SDL_GetBasePath();
     std::string fontPath = basePath + "Assets/Inter_28pt-Regular.ttf";
     std::string fontPath1 = basePath + "Assets/Inter_28pt-ExtraBold.ttf";
     fonts->font1 = TTF_OpenFont(fontPath.c_str(), 24);
@@ -63,16 +65,25 @@ bool initApp(App* app){
     
     //=================RECT=================
     game->menu.newGame = {{layoutText(0.034f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"newGame", "NEW GAME", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font2, game->menu.newGame);
     game->menu.continueGame = {{layoutText(0.034f, 0.589f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGame", "CONTINUE GAME", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font2, game->menu.continueGame);
     game->menu.continueGameNight = {{layoutText(0.046f, 0.661f, app->state->winW, app->state->winH)}, {255,255,255,255},"continueGameNight", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->menu.continueGameNight);
     game->menu.customGame = {{layoutText(0.034f, 0.706f, app->state->winW, app->state->winH)}, {255,255,255,255},"customNight", "CUSTOM NIGHT", ViewSide::CENTER};
-    
-    fonts->baitSystem = {{layoutText(0.281f, 0.296f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
-    fonts->echoSystem = {{layoutText(0.281f, 0.346f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
-    fonts->trackingSystem = {{layoutText(0.281f, 0.395f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
-    fonts->rebootAll = {{layoutText(0.281f, 0.5f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
-    
+    buildText(app->renderer, fonts->font2, game->menu.customGame);
+
+    fonts->baitSystem = {{layoutText(0.281f, 0.218f, state->winW, state->winH)}, {0,255,0,255},"baitSystem", "BAIT SYSTEM", ViewSide::RIGHT};
+    buildText(app->renderer, fonts->font1, fonts->baitSystem);
+    fonts->echoSystem = {{layoutText(0.281f, 0.268f, state->winW, state->winH)}, {0,255,0,255},"echoSystem", "ECHO SYSTEM", ViewSide::RIGHT};
+    buildText(app->renderer, fonts->font1, fonts->echoSystem);
+    fonts->trackingSystem = {{layoutText(0.281f, 0.317f, state->winW, state->winH)}, {0,255,0,255},"trackingSystem", "TRACKING SYSTEM", ViewSide::RIGHT};
+    buildText(app->renderer, fonts->font1, fonts->trackingSystem);
+    fonts->rebootAll = {{layoutText(0.281f, 0.422f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
+    buildText(app->renderer, fonts->font1, fonts->rebootAll);
+
     app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, fonts->endGameText);
     //=================RECT=================
     
     return true;

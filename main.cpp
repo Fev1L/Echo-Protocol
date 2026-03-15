@@ -160,7 +160,6 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     
     SDL_SetRenderDrawColor(app->renderer, 11, 16, 20, 255);
     SDL_RenderClear(app->renderer);
-    app->state->rooms.clear();
     
     switch (app->gamestate) {
         case GameState::MENU:
