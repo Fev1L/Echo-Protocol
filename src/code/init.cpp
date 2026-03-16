@@ -81,6 +81,8 @@ bool initApp(App* app){
     buildText(app->renderer, fonts->font1, fonts->trackingSystem);
     fonts->rebootAll = {{layoutText(0.281f, 0.422f, state->winW, state->winH)}, {0,255,0,255},"rebootAll", "REBOOT ALL", ViewSide::RIGHT};
     buildText(app->renderer, fonts->font1, fonts->rebootAll);
+    fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", "HOURS", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, fonts->hours);
 
     app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
     //=================RECT=================

@@ -82,12 +82,44 @@ void renderGame(Game* game, App* app) {
     drawImage(app->renderer, app->state->gameBackgroundTextureRight, gameBackgroundRect,app, ViewSide::RIGHT);
     drawImage(app->renderer, app->state->gameBackgroundTextureLeftClose, gameBackgroundRect,app, ViewSide::LEFT);
 
-    fonts->baitSystem.color = (game->system.baitSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
-    buildText(app->renderer, fonts->font1, fonts->baitSystem);
-    fonts->echoSystem.color = (game->system.echoSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
-    buildText(app->renderer, fonts->font1, fonts->echoSystem);
-    fonts->trackingSystem.color = (game->system.trackingSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
-    buildText(app->renderer, fonts->font1, fonts->trackingSystem);
+    constexpr SDL_Color red = {255, 0, 0, 255};
+    constexpr SDL_Color green = {0, 255, 0, 255};
+
+    if (game->system.baitSystem){
+        if (fonts->baitSystem.color.g != green.g){
+            fonts->baitSystem.color = green;
+            buildText(app->renderer, fonts->font1, fonts->baitSystem);
+        }
+    }else{
+        if (fonts->baitSystem.color.r != red.r){
+            fonts->baitSystem.color = red;
+            buildText(app->renderer, fonts->font1, fonts->baitSystem);
+        }
+    }
+
+    if (game->system.echoSystem){
+        if (fonts->echoSystem.color.g != green.g){
+            fonts->echoSystem.color = green;
+            buildText(app->renderer, fonts->font1, fonts->echoSystem);
+        }
+    }else{
+        if (fonts->echoSystem.color.r != red.r){
+            fonts->echoSystem.color = red;
+            buildText(app->renderer, fonts->font1, fonts->echoSystem);
+        }
+    }
+
+    if (game->system.trackingSystem){
+        if (fonts->trackingSystem.color.g != green.g){
+            fonts->trackingSystem.color = green;
+            buildText(app->renderer, fonts->font1, fonts->trackingSystem);
+        }
+    }else{
+        if (fonts->trackingSystem.color.r != red.r){
+            fonts->trackingSystem.color = red;
+            buildText(app->renderer, fonts->font1, fonts->trackingSystem);
+        }
+    }
 
     for(int i = 0; i < game->GRID_H; i++) {
         for(int j = 0; j < game->GRID_W; j++){
@@ -176,8 +208,12 @@ void renderGame(Game* game, App* app) {
        << ":"
        << std::setw(2) << std::setfill('0') << game->minutes;
 
-    fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", ss.str(), ViewSide::CENTER};
-    buildText(app->renderer, fonts->font1, fonts->hours);
+
+    if (fonts->hours.textIn != ss.str()){
+        fonts->hours.textIn = ss.str();
+        buildText(app->renderer, fonts->font1, fonts->hours);
+    }
+
     drawText(app->renderer, fonts->hours, app);
 
     drawText(app->renderer, fonts->baitSystem, app);
