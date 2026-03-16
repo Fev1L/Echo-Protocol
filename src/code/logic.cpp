@@ -179,6 +179,8 @@ void resetGame(App* app){
 //=================================================================
 void startNewGame(App* app) {
     resetGame(app);
+    app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
+        {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
     app->game->nightIntroTimer = 0.0f;
     app->gamestate = GameState::ENDSCREEN;
@@ -188,6 +190,9 @@ void startNewGame(App* app) {
 void loadGame(App* app) {
     resetGame(app);
     loadProgress(app->game);
+    app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
+        {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
+    buildText(app->renderer, app->fonts->font1, app->fonts->night);
     app->game->nightIntroTimer = 0.0f;
     app->gamestate = GameState::ENDSCREEN;
     getNightConfig(app);

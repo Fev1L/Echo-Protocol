@@ -21,13 +21,36 @@ void renderMenu(Game* game, App* app) {
     
     SDL_FRect logoRect = {layout(Anchor::TOP_LEFT, 0.256f, 0.173f, 0.034f, 0.101f, app->state->winW, app->state->winH)};
     drawImage(app->renderer, game->menu.menuLogo, logoRect, app , ViewSide::CENTER);
-    
-    game->menu.newGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)) ? "> NEW GAME" : "NEW GAME";
-    buildText(app->renderer, app->fonts->font2, game->menu.newGame);
-    game->menu.continueGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)) ? "> CONTINUE GAME" : "CONTINUE GAME";
-    buildText(app->renderer, app->fonts->font2, game->menu.continueGame);
-    game->menu.customGame.textIn = (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY)) ? "> CUSTOM NIGHT" : "CUSTOM NIGHT";
-    buildText(app->renderer, app->fonts->font2, game->menu.customGame);
+
+    if(isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)){
+        game->menu.newGame.textIn = "> NEW GAME";
+        buildText(app->renderer, app->fonts->font2, game->menu.newGame);
+    }else{
+        if(game->menu.newGame.textIn != "NEW GAME"){
+            game->menu.newGame.textIn = "NEW GAME";
+            buildText(app->renderer, app->fonts->font2, game->menu.newGame);
+        }
+    }
+
+    if(isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)){
+        game->menu.continueGame.textIn = "> CONTINUE GAME";
+        buildText(app->renderer, app->fonts->font2, game->menu.continueGame);
+    }else{
+        if(game->menu.newGame.textIn != "CONTINUE GAME"){
+            game->menu.continueGame.textIn = "CONTINUE GAME";
+            buildText(app->renderer, app->fonts->font2, game->menu.continueGame);
+        }
+    }
+
+    if(isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY)){
+        game->menu.customGame.textIn = "> CUSTOM GAME";
+        buildText(app->renderer, app->fonts->font2, game->menu.customGame);
+    }else{
+        if(game->menu.newGame.textIn != "CUSTOM GAME"){
+            game->menu.customGame.textIn = "CUSTOM GAME";
+            buildText(app->renderer, app->fonts->font2, game->menu.customGame);
+        }
+    }
 
     drawText(app->renderer, game->menu.newGame, app);
     drawText(app->renderer, game->menu.continueGame, app);
@@ -58,7 +81,6 @@ void renderGame(Game* game, App* app) {
     drawImage(app->renderer, app->state->gameBackgroundTexture, gameBackgroundRect,app, ViewSide::CENTER);
     drawImage(app->renderer, app->state->gameBackgroundTextureRight, gameBackgroundRect,app, ViewSide::RIGHT);
     drawImage(app->renderer, app->state->gameBackgroundTextureLeftClose, gameBackgroundRect,app, ViewSide::LEFT);
-    fonts->night = {{layoutText(0.006f, 0.009f, state->winW, state->winH)}, {255,255,255,255},"Night", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
 
     fonts->baitSystem.color = (game->system.baitSystem) ? SDL_Color{0,255,0,255} : SDL_Color{255,0,0,255};
     buildText(app->renderer, fonts->font1, fonts->baitSystem);
@@ -171,6 +193,7 @@ void renderCustomgame(Game* game, App* app) {
 void renderEndgame(Game* game, App* app) {
     SDL_SetRenderDrawColor(app->renderer, 2, 2, 2, 255);
     app->fonts->endGameText.textIn = "NIGHT " + std::to_string(game->currentNight);
-        
+    buildText(app->renderer, app->fonts->font1, app->fonts->endGameText);
+
     drawText(app->renderer, app->fonts->endGameText, app);
 }

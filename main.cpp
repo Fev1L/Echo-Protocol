@@ -80,13 +80,20 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             loadGame(app);
         }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
-        for(int i = 0; i < game->GRID_H; i++){
-            for(int j = 0; j < game->GRID_W; j++){
-                int idx = i * game->GRID_W + j;
-                if(idx < state->rooms.size() && isButtonClicked(state->rooms[idx].rect, mouseX, mouseY) && game->currentView == ViewSide::CENTER && game->system.baitSystem == true){
-                    spawnNoise(game, j, i);
-                }
-            }
+        if (game->currentView == ViewSide::CENTER && game->system.baitSystem)
+        {
+            if(state->rooms.empty()) return SDL_APP_CONTINUE;
+            const SDL_FRect& first = state->rooms[0].rect;
+
+            float cellW = first.w;
+            float cellH = first.h;
+            float gridStartX = first.x;
+            float gridStartY = first.y;
+
+            int j = (mouseX - gridStartX) / cellW;
+            int i = (mouseY - gridStartY) / cellH;
+
+            if (i >= 0 && i < game->GRID_H && j >= 0 && j < game->GRID_W) spawnNoise(game, j, i);
         }
         
         if(isTextClicked(app->renderer, fonts->font1, fonts->baitSystem, app, mouseX, mouseY) && game->system.baitSystem == false && game->currentView == ViewSide::RIGHT){
@@ -167,6 +174,12 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
         case GameState::PLAYING:
             renderGame(game, app);
+            for(auto& monster : game->monsters){
+                if(monster.present && monster.x == game->centerX && monster.y == game->centerY){
+                    saveProgress(app->game);
+                    loadGame(app);
+                }
+            }
             break;
         case GameState::CUSTOMGAME:
             renderCustomgame(game, app);
@@ -176,18 +189,27 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
     }
     
-    for(auto& monster : game->monsters){
-        if(monster.present && monster.x == game->centerX && monster.y == game->centerY){
-            saveProgress(app->game);
-            loadGame(app);
-        }
-    }
-    
     if (game->hours >= 8){
         game->currentNight++;
         saveProgress(app->game);
         loadGame(app);
     }
+
+    // static float timer = 0;
+    // static int frames = 0;
+    //
+    // timer += app->deltaTime;
+    // frames++;
+    //
+    // if(timer >= 1.0f){
+    //     SDL_Log("FPS: %d", frames);
+    //     frames = 0;
+    //     timer = 0;
+    // }
+
+    // SDL_Log("monsters: %zu", game->monsters.size());
+    // SDL_Log("noise: %zu", game->noise.size());
+    // SDL_Log("rooms: %zu", app->state->rooms.size());
     
     SDL_RenderPresent(app->renderer);
     return SDL_APP_CONTINUE;

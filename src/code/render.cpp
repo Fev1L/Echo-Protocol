@@ -50,6 +50,7 @@ bool isTextClicked(SDL_Renderer* renderer, TTF_Font* font, const Text& text, con
 }
 //=================================================================
 void buildText(SDL_Renderer* renderer, TTF_Font* font, Text& text){
+    if(text.texture) SDL_DestroyTexture(text.texture);
     SDL_Color color = {text.color.r, text.color.g, text.color.b, 255};
 
     SDL_Surface* surface = TTF_RenderText_Blended(

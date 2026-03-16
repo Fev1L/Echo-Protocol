@@ -51,7 +51,7 @@ void updateMonster(Monster& m, Game* game, float deltaTime) {
         if (m.monsterSpawnTime > 0.0f) {
             m.monsterSpawnTime -= deltaTime;
         } else {
-            spawnMonster(const_cast<Game*>(game));
+            spawnMonster(game);
         }
     }
 }

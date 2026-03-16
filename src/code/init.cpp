@@ -83,7 +83,6 @@ bool initApp(App* app){
     buildText(app->renderer, fonts->font1, fonts->rebootAll);
 
     app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
-    buildText(app->renderer, fonts->font1, fonts->endGameText);
     //=================RECT=================
     
     return true;
