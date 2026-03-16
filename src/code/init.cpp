@@ -50,6 +50,11 @@ bool initApp(App* app){
     audio->mouseClick.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->mouseClick.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->mouseClick.stream);
     SDL_SetAudioStreamGain(app->audio->mouseClick.stream, 0.5f);
+
+    SDL_LoadWAV("assets/sounds/fanAmbient.wav", &audio->fanAmbient.spec, &audio->fanAmbient.Data, &audio->fanAmbient.Len);
+    audio->fanAmbient.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->fanAmbient.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->fanAmbient.stream);
+    SDL_SetAudioStreamGain(app->audio->fanAmbient.stream, 2.0f);
     //=================AUDIO=================
     
     //=================IMAGE=================

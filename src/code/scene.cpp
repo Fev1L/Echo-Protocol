@@ -11,7 +11,8 @@ void renderMenu(Game* game, App* app) {
     float mouseX, mouseY;
     SDL_GetMouseState(&mouseX,&mouseY);
     
-    if (SDL_GetAudioStreamQueued(app->audio->menuBackgroundSong.stream) < (int)app->audio->menuBackgroundSong.Len) SDL_PutAudioStreamData(app->audio->menuBackgroundSong.stream, app->audio->menuBackgroundSong.Data, app->audio->menuBackgroundSong.Len);
+    if (SDL_GetAudioStreamQueued(app->audio->menuBackgroundSong.stream) < (int)app->audio->menuBackgroundSong.Len)
+        SDL_PutAudioStreamData(app->audio->menuBackgroundSong.stream, app->audio->menuBackgroundSong.Data, app->audio->menuBackgroundSong.Len);
     
 
     float t = SDL_GetTicks() * 0.002f;
@@ -76,6 +77,9 @@ void renderMenu(Game* game, App* app) {
 void renderGame(Game* game, App* app) {
     State* state = app->state;
     Font* fonts = app->fonts;
+
+    if (SDL_GetAudioStreamQueued(app->audio->fanAmbient.stream) < (int)app->audio->fanAmbient.Len)
+        SDL_PutAudioStreamData(app->audio->fanAmbient.stream, app->audio->fanAmbient.Data, app->audio->fanAmbient.Len);
     
     SDL_FRect gameBackgroundRect = {0, 0, static_cast<float>(app->state->winW), static_cast<float>(app->state->winH)};
     drawImage(app->renderer, app->state->gameBackgroundTexture, gameBackgroundRect,app, ViewSide::CENTER);
@@ -84,42 +88,44 @@ void renderGame(Game* game, App* app) {
 
     constexpr SDL_Color red = {255, 0, 0, 255};
     constexpr SDL_Color green = {0, 255, 0, 255};
+    constexpr SDL_Color yellow = {255, 255, 0, 255};
 
-    if (game->system.baitSystem){
-        if (fonts->baitSystem.color.g != green.g){
-            fonts->baitSystem.color = green;
-            buildText(app->renderer, fonts->font1, fonts->baitSystem);
-        }
-    }else{
-        if (fonts->baitSystem.color.r != red.r){
-            fonts->baitSystem.color = red;
-            buildText(app->renderer, fonts->font1, fonts->baitSystem);
-        }
+    SDL_Color baitColor;
+    SDL_Color echoColor;
+    SDL_Color trackColor;
+
+    /* BAIT */
+    if (game->system.type == RepairType::BAIT)
+        baitColor = yellow;
+    else if (game->system.baitSystem)
+        baitColor = green;
+    else
+        baitColor = red;
+    /* ECHO */
+    if (game->system.type == RepairType::ECHO)
+        echoColor = yellow;
+    else if (game->system.echoSystem)
+        echoColor = green;
+    else
+        echoColor = red;
+    /* TRACK */
+    if (game->system.type == RepairType::TRACK)
+        trackColor = yellow;
+    else if (game->system.trackingSystem)
+        trackColor = green;
+    else
+        trackColor = red;
+    /* REBOOT */
+    if (game->system.type == RepairType::REBOOT)
+    {
+        baitColor = yellow;
+        echoColor = yellow;
+        trackColor = yellow;
     }
 
-    if (game->system.echoSystem){
-        if (fonts->echoSystem.color.g != green.g){
-            fonts->echoSystem.color = green;
-            buildText(app->renderer, fonts->font1, fonts->echoSystem);
-        }
-    }else{
-        if (fonts->echoSystem.color.r != red.r){
-            fonts->echoSystem.color = red;
-            buildText(app->renderer, fonts->font1, fonts->echoSystem);
-        }
-    }
-
-    if (game->system.trackingSystem){
-        if (fonts->trackingSystem.color.g != green.g){
-            fonts->trackingSystem.color = green;
-            buildText(app->renderer, fonts->font1, fonts->trackingSystem);
-        }
-    }else{
-        if (fonts->trackingSystem.color.r != red.r){
-            fonts->trackingSystem.color = red;
-            buildText(app->renderer, fonts->font1, fonts->trackingSystem);
-        }
-    }
+    updateSystemColor(app->renderer, fonts->font1, fonts->baitSystem, baitColor);
+    updateSystemColor(app->renderer, fonts->font1, fonts->echoSystem, echoColor);
+    updateSystemColor(app->renderer, fonts->font1, fonts->trackingSystem, trackColor);
 
     for(int i = 0; i < game->GRID_H; i++) {
         for(int j = 0; j < game->GRID_W; j++){

@@ -36,4 +36,6 @@ void startNewGame(App* app);
 
 void loadGame(App* app);
 
+void updateSystemColor(SDL_Renderer* renderer, TTF_Font* font, Text& text, SDL_Color targetColor);
+
 void getNightConfig(App* app);

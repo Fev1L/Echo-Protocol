@@ -7,6 +7,8 @@
 
 #include "logic.h"
 
+#include "scene.h"
+
 void saveProgress(Game* game){
     std::ofstream file("save.dat");
     if (file.is_open()){
@@ -183,6 +185,7 @@ void startNewGame(App* app) {
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
     app->game->nightIntroTimer = 0.0f;
+    renderGame(app->game, app);
     app->gamestate = GameState::ENDSCREEN;
     getNightConfig(app);
 }
@@ -194,8 +197,20 @@ void loadGame(App* app) {
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
     app->game->nightIntroTimer = 0.0f;
+    renderGame(app->game, app);
     app->gamestate = GameState::ENDSCREEN;
+    SDL_ClearAudioStream(app->audio->fanAmbient.stream);
     getNightConfig(app);
+}
+//=================================================================
+void updateSystemColor(SDL_Renderer* renderer, TTF_Font* font, Text& text, SDL_Color targetColor){
+    if (text.color.r != targetColor.r ||
+        text.color.g != targetColor.g ||
+        text.color.b != targetColor.b)
+    {
+        text.color = targetColor;
+        buildText(renderer, font, text);
+    }
 }
 //=================================================================
 void getNightConfig(App* app){

@@ -210,6 +210,7 @@ struct Font {
 struct Audio {
     AudioSystem menuBackgroundSong;
     AudioSystem mouseClick;
+    AudioSystem fanAmbient;
 };
 
 struct App {
