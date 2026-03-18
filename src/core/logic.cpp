@@ -5,9 +5,9 @@
 //  Created by Fev1L on 17.01.2026.
 //
 
-#include "logic.h"
+#include "core.h"
 
-#include "scene.h"
+#include "scene/scene.h"
 
 void saveProgress(Game* game){
     std::ofstream file("save.dat");
@@ -27,30 +27,6 @@ void loadProgress(Game* game){
     else{
         game->currentNight = 1;
     }
-}
-//=================================================================
-void spawnMonster(Game* game){
-    Monster m;
-    int w = game->GRID_W;
-    int h = game->GRID_H;
-
-    do {
-        if (rand() % 2) {
-            m.x = rand() % w;
-            m.y = (rand() % 2) ? 0 : h - 1;
-        } else {
-            m.y = rand() % h;
-            m.x = (rand() % 2) ? 0 : w - 1;
-        }
-    } while (m.x == game->centerX && m.y == game->centerY);
-
-    m.present = true;
-    m.monsterLiveTime = 0.0f;
-    m.moveTimer = 0.0f;
-    m.visible = false;
-    m.visibleTime = 0.0f;
-    
-    game->monsters.push_back(m);
 }
 //=================================================================
 bool inBounds(int x, int y, int GRID_W, int GRID_H) {
@@ -76,23 +52,6 @@ std::vector<Move> getMoves(const Monster& m, Game* game) {
 //=================================================================
 inline int distance(int x1, int y1, int x2, int y2) {
     return abs(x1 - x2) + abs(y1 - y2);
-}
-//=================================================================
-void spawnNoise(Game* game, int gridX, int gridY) {
-    Noise n;
-    
-    if (game->noiseCooldown > 0.0f) return;
-
-    n.x = gridX;
-    n.y = gridY;
-    n.active = true;
-    n.timeLeft = 10.0f;
-    
-    game->noise.push_back(n);
-    
-    game->noiseCooldown = 10.0f * game->cfg.baitReload;
-    float r = static_cast<float>(rand()) / RAND_MAX;
-    if (r < game->cfg.systemBreakChance) game->system.baitSystem = false;
 }
 //=================================================================
 void getTarget(const Game* game, int monsterX, int monsterY, int& tx, int& ty) {
@@ -210,6 +169,53 @@ void updateSystemColor(SDL_Renderer* renderer, TTF_Font* font, Text& text, SDL_C
     {
         text.color = targetColor;
         buildText(renderer, font, text);
+    }
+}
+//=================================================================
+void updateGameClock(Game* game, float deltaTime) {
+    game->gameTime += deltaTime;
+
+    float gameMinutesPassed = (game->gameTime / game->cfg.REAL_SECONDS_PER_15_MIN) * 15.0f;
+    int totalMinutes = static_cast<int>(gameMinutesPassed);
+
+    game->hours   = totalMinutes / 60;
+    if(totalMinutes % 15 == 0)
+        game->minutes = totalMinutes % 60;
+}
+//=================================================================
+void updateRepair(Game* game, float dt){
+    if (!game->system.active)
+        return;
+
+    game->system.timer += dt;
+
+    if (game->system.timer >= game->system.duration){
+        game->system.active = false;
+
+        switch (game->system.type)
+        {
+        case RepairType::BAIT:
+            game->system.baitSystem = true;
+            break;
+
+        case RepairType::ECHO:
+            game->system.echoSystem = true;
+            break;
+
+        case RepairType::TRACK:
+            game->system.trackingSystem = true;
+            break;
+
+        case RepairType::REBOOT:
+            game->system.baitSystem = true;
+            game->system.echoSystem = true;
+            game->system.trackingSystem = true;
+            break;
+
+        default:
+            break;
+        }
+        game->system.type = RepairType::NONE;
     }
 }
 //=================================================================

@@ -5,7 +5,7 @@
 //  Created by Fev1L on 25.02.2026.
 //
 
-#include "init.h"
+#include "core.h"
 
 bool initApp(App* app){
     Game* game = app->game;

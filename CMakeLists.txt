@@ -16,11 +16,17 @@ file(GLOB_RECURSE SRC_FILES
 
 add_executable(EchoProtocol
         main.cpp
-        src/code/init.cpp
-        src/code/logic.cpp
-        src/code/render.cpp
-        src/code/scene.cpp
-        src/code/update.cpp
+        src/core/core.cpp
+        src/core/logic.cpp
+        src/core/render.cpp
+        src/scene/scene.cpp
+        src/scene/menu_scene.cpp
+        src/scene/game_scene.cpp
+        src/entities/entities.h
+        src/entities/monster.cpp
+        src/entities/bait.cpp
+        src/entities/echo.cpp
+        src/entities/camera.cpp
 )
 
 target_include_directories(EchoProtocol PRIVATE

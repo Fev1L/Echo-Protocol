@@ -6,10 +6,8 @@
 //
 
 #pragma once
-#include "types.h"
-#include "render.h"
-#include "logic.h"
-#include "update.h"
+#include "../types.h"
+#include "core/core.h"
 
 void renderMenu(Game* game, App* app);
 

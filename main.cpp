@@ -8,11 +8,9 @@
 #define SDL_MAIN_USE_CALLBACKS
 
 #include "types.h"
-#include "render.h"
-#include "logic.h"
-#include "scene.h"
-#include "update.h"
-#include "init.h"
+#include "scene/scene.h"
+#include "core/core.h"
+#include "entities/entities.h"
 
 //=================================================================
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]){

@@ -5,7 +5,7 @@
 //  Created by Fev1L on 11.01.2026.
 //
 
-#include "render.h"
+#include "core.h"
 
 SDL_FRect getTextScreenRect(SDL_Renderer* renderer, TTF_Font* font, const Text& text, const App* app) {
     int textW = 0;
