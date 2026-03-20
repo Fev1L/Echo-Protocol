@@ -57,8 +57,25 @@ void renderGame(Game* game, App* app) {
     updateSystemColor(app->renderer, fonts->font1, fonts->echoSystem, echoColor);
     updateSystemColor(app->renderer, fonts->font1, fonts->trackingSystem, trackColor);
 
+    bool echoDetectedMonster = false;
+
+    if (game->echo.active) {
+        for (const auto& monster : game->monsters) {
+            if (!monster.present) continue;
+
+            int mdx = monster.x - game->centerX;
+            int mdy = monster.y - game->centerY;
+            float monsterDist = sqrtf(mdx * mdx + mdy * mdy);
+
+            if (fabs(monsterDist - game->echo.radius) < 0.5f) {
+                echoDetectedMonster = true;
+                break;
+            }
+        }
+    }
+
     for(int i = 0; i < game->GRID_H; i++) {
-        for(int j = 0; j < game->GRID_W; j++){
+        for(int j = 0; j < game->GRID_W; j++) {
             int idx = i * game->GRID_W + j;
             Rectangle& cell = state->rooms[idx];
 
@@ -70,20 +87,18 @@ void renderGame(Game* game, App* app) {
             float lightG = 0.0f;
             float lightB = 0.0f;
 
-            for(const auto& noise : game->noise){
+            for (const auto& noise : game->noise) {
                 if (!noise.active) continue;
 
                 int dx = j - noise.x;
                 int dy = i - noise.y;
 
-                float dist2 = dx*dx + dy*dy;
+                float dist2 = dx * dx + dy * dy;
                 float r2 = noise.radius * noise.radius;
 
-                if(dist2 <= r2)
-                {
+                if (dist2 <= r2) {
                     float dist = sqrtf(dist2);
                     float t = 1.0f - (dist / noise.radius);
-
                     t = t * t;
 
                     lightR += 160.0f * t;
@@ -92,14 +107,17 @@ void renderGame(Game* game, App* app) {
                 }
             }
 
-            if (game->echo.active){
+            bool isEchoRingCell = false;
+
+            if (game->echo.active) {
                 int dx = j - game->centerX;
                 int dy = i - game->centerY;
 
-                float dist = sqrtf(dx*dx + dy*dy);
+                float dist = sqrtf(dx * dx + dy * dy);
                 float diff = fabs(dist - game->echo.radius);
 
-                if (diff < 1.0f){
+                if (diff < 1.0f) {
+                    isEchoRingCell = true;
                     float t = 1.0f - diff;
 
                     lightR += 255.0f * t;
@@ -119,16 +137,23 @@ void renderGame(Game* game, App* app) {
                 255
             };
 
-            for(const auto& monster : game->monsters){
-                if(monster.present && monster.visible &&
-                   i == monster.echoY && j == monster.echoX)
-                {
-                    color = {255,60,60,255};
+            if (game->system.trackingSystem) {
+                for (const auto& monster : game->monsters) {
+                    if (monster.present && monster.visible &&
+                        i == monster.echoY && j == monster.echoX) {
+                        color = {255, 60, 60, 255};
+                        break;
+                    }
+                }
+            } else {
+                if (echoDetectedMonster && isEchoRingCell) {
+                    color = {255, 60, 60, 255};
                 }
             }
 
-            if(i == game->centerY && j == game->centerX)
-                color = {0,255,0,255};
+            if (i == game->centerY && j == game->centerX) {
+                color = {0, 255, 0, 255};
+            }
 
             cell.color = color;
         }

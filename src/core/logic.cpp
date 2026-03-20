@@ -105,29 +105,47 @@ Move chooseMoveProb(const Monster& m, Game* game) {
 //=================================================================
 void checkEchoHit(Game* game, float deltaTime) {
     Echo& e = game->echo;
-    for(auto& m : game->monsters){
-        if (!e.active || !m.present) continue;
+
+    if (!e.active) {
+        for (auto& m : game->monsters) {
+            m.echoMarked = false;
+            if (m.visible) {
+                m.visibleTime -= deltaTime;
+                if (m.visibleTime <= 0.0f) {
+                    m.visible = false;
+                }
+            }
+        }
+        return;
+    }
+
+    for (auto& m : game->monsters) {
+        if (!m.present) continue;
 
         int dx = m.x - game->centerX;
         int dy = m.y - game->centerY;
-        float dist = sqrtf(dx*dx + dy*dy);
+        float dist = sqrtf(dx * dx + dy * dy);
 
-        if (fabs(dist - e.radius) < 0.5f) {
-            float r = static_cast<float>(rand()) / RAND_MAX;
-            if (r < game->cfg.systemBreakChance) game->system.trackingSystem = false;
-            m.visible = true;
-            m.visibleTime = 2.0f;
-            
-            m.echoX = m.x;
-            m.echoY = m.y;
+        if (!m.echoMarked && fabs(dist - e.radius) < 0.5f) {
             m.echoMarked = true;
+
+            float r = static_cast<float>(rand()) / RAND_MAX;
+            if (r < game->cfg.systemBreakChance) {
+                game->system.trackingSystem = false;
+            }
+
+            if (game->system.trackingSystem) {
+                m.visible = true;
+                m.visibleTime = 2.0f;
+                m.echoX = m.x;
+                m.echoY = m.y;
+            }
         }
 
         if (m.visible) {
             m.visibleTime -= deltaTime;
             if (m.visibleTime <= 0.0f) {
                 m.visible = false;
-                m.echoMarked = false;
             }
         }
     }

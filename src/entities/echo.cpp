@@ -30,6 +30,10 @@ void updateEcho(Game* game, float deltaTime) {
         if (e.radius >= maxRadius) {
             e.active = false;
             e.radius = 0.0f;
+
+            for (auto& m : game->monsters) {
+                m.echoMarked = false;
+            }
         }
     }
 }
