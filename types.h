@@ -138,6 +138,14 @@ struct AudioSystem {
     Uint32 Len = 0;
 };
 
+struct FlickerLight {
+    float timer = 0.0f;
+    float nextFlicker = 0.0f;
+    float flickerDuration = 0.0f;
+    float intensity = 1.0f;
+    bool flickering = false;
+};
+
 struct Menu {
     int selectedIndex = 0;
     float menuFade = 0.0f;
@@ -174,6 +182,7 @@ struct Game {
     Camera camera;
     System system;
     NightConfig cfg;
+    FlickerLight topLamp;
     
     Menu menu;
 };
@@ -190,6 +199,8 @@ struct State {
     SDL_Texture* gameBackgroundTextureRight;
     SDL_Texture* gameBackgroundTextureLeftClose;
     SDL_Texture* gameBackgroundTextureLeftOpen;
+    SDL_Texture* topLightTexture;
+    SDL_Texture* topRedTexture;
     std::vector <Rectangle> rooms;
 };
 

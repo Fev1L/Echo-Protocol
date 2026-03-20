@@ -26,3 +26,7 @@ void updateEcho(Game* game, float deltaTime);
 // CAMERA
 
 void updateCamera(Game* game, float deltaTime);
+
+// LAMP
+
+void updateTopLamp(Game* game, float deltaTime);

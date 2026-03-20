@@ -16,6 +16,10 @@ void renderGame(Game* game, App* app) {
     drawImage(app->renderer, app->state->gameBackgroundTextureRight, gameBackgroundRect,app, ViewSide::RIGHT);
     drawImage(app->renderer, app->state->gameBackgroundTextureLeftClose, gameBackgroundRect,app, ViewSide::LEFT);
 
+    SDL_SetRenderDrawBlendMode(app->renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 90);
+    SDL_RenderFillRect(app->renderer, NULL);
+
     constexpr SDL_Color red = {255, 0, 0, 255};
     constexpr SDL_Color green = {0, 255, 0, 255};
     constexpr SDL_Color yellow = {255, 255, 0, 255};
@@ -181,4 +185,16 @@ void renderGame(Game* game, App* app) {
     drawText(app->renderer, fonts->echoSystem, app);
     drawText(app->renderer, fonts->trackingSystem, app);
     drawText(app->renderer, fonts->rebootAll, app);
+
+    Uint8 topAlpha = (Uint8)(game->topLamp.intensity * 140.0f);
+
+    SDL_FRect topLightRect = {
+        app->state->winW * 0.18f,
+        -app->state->winH * 0.08f,
+        app->state->winW * 0.64f,
+        app->state->winH * 0.42f
+    };
+
+    SDL_SetTextureAlphaMod(app->state->topLightTexture, topAlpha);
+    SDL_RenderTexture(app->renderer, app->state->topLightTexture, NULL, &topLightRect);
 }

@@ -154,6 +154,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         checkEchoHit(game, app->deltaTime);
         updateMonsters(game, app->deltaTime);
         updateRepair(game, app->deltaTime);
+        updateTopLamp(game, app->deltaTime);
     }
     if (app->gamestate == GameState::ENDSCREEN){
         game->nightIntroTimer += app->deltaTime;

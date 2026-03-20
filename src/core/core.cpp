@@ -63,9 +63,13 @@ bool initApp(App* app){
     app->state->gameBackgroundTextureRight = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundRight.png");
     app->state->gameBackgroundTextureLeftClose = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftClose.png");
     app->state->gameBackgroundTextureLeftOpen = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftOpen.png");
+    app->state->topLightTexture = IMG_LoadTexture(app->renderer, "Assets/lampTopYellow.png");
+    app->state->topRedTexture = IMG_LoadTexture(app->renderer, "Assets/lampTopRed.png");
     game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
     game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
     SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);
+    SDL_SetTextureBlendMode(app->state->topLightTexture, SDL_BLENDMODE_ADD);
+    SDL_SetTextureBlendMode(app->state->topRedTexture, SDL_BLENDMODE_ADD);
     //=================IMAGE=================
     
     //=================RECT=================

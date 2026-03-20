@@ -27,6 +27,7 @@ add_executable(EchoProtocol
         src/entities/bait.cpp
         src/entities/echo.cpp
         src/entities/camera.cpp
+        src/entities/lamp.cpp
 )
 
 target_include_directories(EchoProtocol PRIVATE
