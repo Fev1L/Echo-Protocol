@@ -55,6 +55,11 @@ bool initApp(App* app){
     audio->fanAmbient.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->fanAmbient.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->fanAmbient.stream);
     SDL_SetAudioStreamGain(app->audio->fanAmbient.stream, 2.0f);
+
+    SDL_LoadWAV("Assets/sounds/alarm.wav", &audio->alarmSound.spec, &audio->alarmSound.Data, &audio->alarmSound.Len);
+    audio->alarmSound.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->alarmSound.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->alarmSound.stream);
+    SDL_SetAudioStreamGain(audio->alarmSound.stream, 2.0f);
     //=================AUDIO=================
     
     //=================IMAGE=================

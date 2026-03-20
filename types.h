@@ -175,6 +175,8 @@ struct Game {
     float nightIntroTimer = 0.0f;
     float nightIntroDuration = 4.0f;
     float noiseCooldown = 0.0f;
+    bool alarmActive = false;
+    float alarmTimer = 0.0f;
     
     std::vector<Monster> monsters;
     std::vector<Noise> noise;
@@ -222,6 +224,7 @@ struct Audio {
     AudioSystem menuBackgroundSong;
     AudioSystem mouseClick;
     AudioSystem fanAmbient;
+    AudioSystem alarmSound;
 };
 
 struct App {

@@ -237,70 +237,20 @@ void updateRepair(Game* game, float dt){
     }
 }
 //=================================================================
-void getNightConfig(App* app){
-    NightConfig& cfg = app->game->cfg;
-    switch(app->game->currentNight){
-        case 1:
-            cfg.monsterCount = 1;
-            cfg.monsterMoveInterval = 1.0f;
-            cfg.echoInterval = 2.5f;
-            cfg.systemBreakChance = 0.0f;
-            cfg.baitReload = 1.5f;
-            cfg.REAL_SECONDS_PER_15_MIN = 5.0f;
-            break;
+bool hasBrokenSystem(const Game* game) {
+    return !game->system.baitSystem ||
+           !game->system.echoSystem ||
+           !game->system.trackingSystem;
+}
+//=================================================================
+void updateAlarm(Game* game, float deltaTime) {
+    game->alarmActive = !game->system.baitSystem ||
+                        !game->system.echoSystem ||
+                        !game->system.trackingSystem;
 
-        case 2:
-            cfg.monsterCount = 1;
-            cfg.monsterMoveInterval = 1.0f;
-            cfg.echoInterval = 2.0f;
-            cfg.systemBreakChance = 0.05f;
-            cfg.baitReload = 1.5f;
-            cfg.REAL_SECONDS_PER_15_MIN = 10.0f;
-            break;
-
-        case 3:
-            cfg.monsterCount = 2;
-            cfg.monsterMoveInterval = 0.9f;
-            cfg.echoInterval = 1.5f;
-            cfg.systemBreakChance = 0.10f;
-            cfg.baitReload = 1.0f;
-            cfg.REAL_SECONDS_PER_15_MIN = 20.0f;
-            break;
-
-        case 4:
-            cfg.monsterCount = 3;
-            cfg.monsterMoveInterval = 0.8f;
-            cfg.echoInterval = 1.2f;
-            cfg.systemBreakChance = 0.15f;
-            cfg.baitReload = 0.8f;
-            cfg.REAL_SECONDS_PER_15_MIN = 30.0f;
-            break;
-
-        case 5:
-            cfg.monsterCount = 4;
-            cfg.monsterMoveInterval = 0.7f;
-            cfg.echoInterval = 1.0f;
-            cfg.systemBreakChance = 0.2f;
-            cfg.baitReload = 0.5f;
-            cfg.REAL_SECONDS_PER_15_MIN = 40.0f;
-            break;
-
-        case 6:
-            cfg.monsterCount = 5;
-            cfg.monsterMoveInterval = 0.6f;
-            cfg.echoInterval = 1.0f;
-            cfg.systemBreakChance = 0.25f;
-            cfg.baitReload = 0.3f;
-            cfg.REAL_SECONDS_PER_15_MIN = 50.0f;
-            break;
-
-        case 7:
-            cfg.monsterCount = 5;
-            cfg.monsterMoveInterval = 0.5f;
-            cfg.echoInterval = 0.5f;
-            cfg.systemBreakChance = 0.3f;
-            cfg.baitReload = 0.3f;
-            cfg.REAL_SECONDS_PER_15_MIN = 60.0f;
-            break;
+    if (game->alarmActive) {
+        game->alarmTimer += deltaTime;
+    } else {
+        game->alarmTimer = 0.0f;
     }
 }

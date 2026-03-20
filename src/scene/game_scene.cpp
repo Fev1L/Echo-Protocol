@@ -11,6 +11,18 @@ void renderGame(Game* game, App* app) {
     if (SDL_GetAudioStreamQueued(app->audio->fanAmbient.stream) < (int)app->audio->fanAmbient.Len)
         SDL_PutAudioStreamData(app->audio->fanAmbient.stream, app->audio->fanAmbient.Data, app->audio->fanAmbient.Len);
 
+    if (game->alarmActive) {
+        if (SDL_GetAudioStreamQueued(app->audio->alarmSound.stream) <
+            (int)app->audio->alarmSound.Len)
+        {
+            SDL_PutAudioStreamData(app->audio->alarmSound.stream,
+                                   app->audio->alarmSound.Data,
+                                   app->audio->alarmSound.Len);
+        }
+    } else {
+        SDL_ClearAudioStream(app->audio->alarmSound.stream);
+    }
+
     SDL_FRect gameBackgroundRect = {0, 0, static_cast<float>(app->state->winW), static_cast<float>(app->state->winH)};
     drawImage(app->renderer, app->state->gameBackgroundTexture, gameBackgroundRect,app, ViewSide::CENTER);
     drawImage(app->renderer, app->state->gameBackgroundTextureRight, gameBackgroundRect,app, ViewSide::RIGHT);
@@ -195,6 +207,17 @@ void renderGame(Game* game, App* app) {
         app->state->winH * 0.42f
     };
 
-    SDL_SetTextureAlphaMod(app->state->topLightTexture, topAlpha);
-    SDL_RenderTexture(app->renderer, app->state->topLightTexture, NULL, &topLightRect);
+    float t = SDL_GetTicks() * 0.001f;
+
+    SDL_Texture* lampTexture = app->state->topLightTexture;
+    Uint8 lampAlpha = (Uint8)(game->topLamp.intensity * 115.0f);
+
+    if (game->alarmActive) {
+        float pulse = (sin(t * 12.0f) > 0.0f) ? 1.0f : 0.35f;
+        lampAlpha = (Uint8)(50 + pulse * 150);
+        lampTexture = app->state->topRedTexture;
+    }
+
+    SDL_SetTextureAlphaMod(lampTexture, lampAlpha);
+    SDL_RenderTexture(app->renderer, lampTexture, NULL, &topLightRect);
 }

@@ -42,6 +42,10 @@ void updateGameClock(Game* game, float deltaTime);
 
 void updateRepair(Game* game, float dt);
 
+bool hasBrokenSystem(const Game* game);
+
+void updateAlarm(Game* game, float deltaTime);
+
 // RENDER
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);

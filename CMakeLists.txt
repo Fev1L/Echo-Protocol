@@ -28,6 +28,7 @@ add_executable(EchoProtocol
         src/entities/echo.cpp
         src/entities/camera.cpp
         src/entities/lamp.cpp
+        src/core/nightConfig.cpp
 )
 
 target_include_directories(EchoProtocol PRIVATE
