@@ -60,6 +60,34 @@ bool initApp(App* app){
     audio->alarmSound.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->alarmSound.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->alarmSound.stream);
     SDL_SetAudioStreamGain(audio->alarmSound.stream, 2.0f);
+
+    SDL_LoadWAV("Assets/sounds/scare1.wav", &audio->scare1.spec, &audio->scare1.Data, &audio->scare1.Len);
+    audio->scare1.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare1.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare1.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare2.wav", &audio->scare2.spec, &audio->scare2.Data, &audio->scare2.Len);
+    audio->scare2.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare2.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare2.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare3.wav", &audio->scare3.spec, &audio->scare3.Data, &audio->scare3.Len);
+    audio->scare3.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare3.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare3.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare4.wav", &audio->scare4.spec, &audio->scare4.Data, &audio->scare4.Len);
+    audio->scare4.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare4.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare4.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare5.wav", &audio->scare5.spec, &audio->scare5.Data, &audio->scare5.Len);
+    audio->scare5.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare5.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare5.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare6.wav", &audio->scare6.spec, &audio->scare6.Data, &audio->scare6.Len);
+    audio->scare6.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare6.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare6.stream);
+
+    SDL_LoadWAV("Assets/sounds/scare7.wav", &audio->scare7.spec, &audio->scare7.Data, &audio->scare7.Len);
+    audio->scare7.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare7.spec, NULL, NULL);
+    SDL_ResumeAudioStreamDevice(audio->scare7.stream);
     //=================AUDIO=================
     
     //=================IMAGE=================

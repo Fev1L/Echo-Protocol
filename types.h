@@ -177,6 +177,8 @@ struct Game {
     float noiseCooldown = 0.0f;
     bool alarmActive = false;
     float alarmTimer = 0.0f;
+    float scareTimer = 0.0f;
+    float nextScareTime = 0.0f;
     
     std::vector<Monster> monsters;
     std::vector<Noise> noise;
@@ -225,6 +227,14 @@ struct Audio {
     AudioSystem mouseClick;
     AudioSystem fanAmbient;
     AudioSystem alarmSound;
+
+    AudioSystem scare1;
+    AudioSystem scare2;
+    AudioSystem scare3;
+    AudioSystem scare4;
+    AudioSystem scare5;
+    AudioSystem scare6;
+    AudioSystem scare7;
 };
 
 struct App {

@@ -165,6 +165,8 @@ void startNewGame(App* app) {
     renderGame(app->game, app);
     app->gamestate = GameState::ENDSCREEN;
     getNightConfig(app);
+    app->game->scareTimer = 0.0f;
+    app->game->nextScareTime = 40.0f + static_cast<float>(rand() % 60);
 }
 //=================================================================
 void loadGame(App* app) {
@@ -178,6 +180,8 @@ void loadGame(App* app) {
     app->gamestate = GameState::ENDSCREEN;
     SDL_ClearAudioStream(app->audio->fanAmbient.stream);
     getNightConfig(app);
+    app->game->scareTimer = 0.0f;
+    app->game->nextScareTime = 40.0f + static_cast<float>(rand() % 60);
 }
 //=================================================================
 void updateSystemColor(SDL_Renderer* renderer, TTF_Font* font, Text& text, SDL_Color targetColor){
@@ -252,5 +256,70 @@ void updateAlarm(Game* game, float deltaTime) {
         game->alarmTimer += deltaTime;
     } else {
         game->alarmTimer = 0.0f;
+    }
+}
+//=================================================================
+void playRandomScareSound(App* app) {
+    int pick = rand() % 7;
+
+    switch (pick) {
+    case 0:
+        SDL_PutAudioStreamData(app->audio->scare1.stream, app->audio->scare1.Data, app->audio->scare1.Len);
+        break;
+    case 1:
+        SDL_PutAudioStreamData(app->audio->scare2.stream, app->audio->scare2.Data, app->audio->scare2.Len);
+        break;
+    case 2:
+        SDL_PutAudioStreamData(app->audio->scare3.stream, app->audio->scare3.Data, app->audio->scare3.Len);
+        break;
+    case 3:
+        SDL_PutAudioStreamData(app->audio->scare4.stream, app->audio->scare4.Data, app->audio->scare4.Len);
+        break;
+    case 4:
+        SDL_PutAudioStreamData(app->audio->scare5.stream, app->audio->scare5.Data, app->audio->scare5.Len);
+        break;
+    case 5:
+        SDL_PutAudioStreamData(app->audio->scare6.stream, app->audio->scare6.Data, app->audio->scare6.Len);
+        break;
+    case 6:
+        SDL_PutAudioStreamData(app->audio->scare7.stream, app->audio->scare7.Data, app->audio->scare7.Len);
+        break;
+    }
+}
+
+void updateScareSounds(App* app, float deltaTime) {
+    Game* game = app->game;
+
+    game->scareTimer += deltaTime;
+
+    if (game->scareTimer >= game->nextScareTime) {
+        float baseChance = 0.35f;
+        float bonusChance = 0.0f;
+
+        for (const auto& m : game->monsters) {
+            if (!m.present) continue;
+
+            int d = abs(m.x - game->centerX) + abs(m.y - game->centerY);
+
+            if (d < 20) {
+                bonusChance += 0.10f;
+            }
+            if (d < 12) {
+                bonusChance += 0.15f;
+            }
+            if (d < 6) {
+                bonusChance += 0.20f;
+            }
+        }
+
+        float finalChance = SDL_clamp(baseChance + bonusChance, 0.0f, 0.9f);
+        float roll = static_cast<float>(rand()) / RAND_MAX;
+
+        if (roll < finalChance) {
+            playRandomScareSound(app);
+        }
+
+        game->scareTimer = 0.0f;
+        game->nextScareTime = 10.0f + static_cast<float>(rand() % 16);
     }
 }

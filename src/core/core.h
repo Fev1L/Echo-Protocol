@@ -46,6 +46,8 @@ bool hasBrokenSystem(const Game* game);
 
 void updateAlarm(Game* game, float deltaTime);
 
+void updateScareSounds(App* app, float deltaTime);
+
 // RENDER
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);
