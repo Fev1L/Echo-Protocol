@@ -162,6 +162,20 @@ struct Menu {
     Text customGame;
 };
 
+struct CustomGame {
+    int customSelected = 0;
+
+    Text customTitle;
+    Text customMonsterCount;
+    Text customMoveInterval;
+    Text customEchoInterval;
+    Text customBreakChance;
+    Text customBaitReload;
+    Text customTimeSpeed;
+    Text customStart;
+    Text customBack;
+};
+
 struct Game {
     int GRID_W = 121;
     int GRID_H = 71;
@@ -190,6 +204,8 @@ struct Game {
 
     float tutorialTimer = 0.0f;
     int tutorialStep = 0;
+
+    bool isCustomGame = false;
     
     std::vector<Monster> monsters;
     std::vector<Noise> noise;
@@ -197,9 +213,11 @@ struct Game {
     Camera camera;
     System system;
     NightConfig cfg;
+    NightConfig customCfg;
     FlickerLight topLamp;
     
     Menu menu;
+    CustomGame customGame;
 };
 
 struct State {

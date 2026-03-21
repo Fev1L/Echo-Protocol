@@ -48,6 +48,147 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
         return SDL_APP_SUCCESS;
     }else if (event->type == SDL_EVENT_KEY_DOWN) {
         SDL_Keycode key = event->key.key;
+
+        if (app->gamestate == GameState::CUSTOMGAME && event->type == SDL_EVENT_KEY_DOWN) {
+            if (key == SDLK_W && game->customGame.customSelected > 0){
+                game->customGame.customSelected--;
+                refreshCustomGameTexts(app);
+            }
+
+            if (key == SDLK_S && game->customGame.customSelected < 5){
+                game->customGame.customSelected++;
+                refreshCustomGameTexts(app);
+            }
+
+            if (key == SDLK_A) {
+                switch (game->customGame.customSelected) {
+                    case 0:
+                        if (game->customCfg.monsterCount > 1)
+                        {
+                            game->customCfg.monsterCount--;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 1:
+                        if (game->customCfg.monsterMoveInterval > 0.2f)
+                        {
+                            game->customCfg.monsterMoveInterval -= 0.1f;
+                            game->customCfg.monsterMoveInterval = SDL_clamp(game->customCfg.monsterMoveInterval, 0.2f, 3.0f);
+                            game->customCfg.monsterMoveInterval = std::round(game->customCfg.monsterMoveInterval * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 2:
+                        if (game->customCfg.echoInterval > 0.2f)
+                        {
+                            game->customCfg.echoInterval -= 0.1f;
+                            game->customCfg.echoInterval = SDL_clamp(game->customCfg.echoInterval, 0.2f, 3.0f);
+                            game->customCfg.echoInterval = std::round(game->customCfg.echoInterval * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 3:
+                        if (game->customCfg.systemBreakChance > 0.0f)
+                        {
+                            game->customCfg.systemBreakChance -= 0.05f;
+                            game->customCfg.systemBreakChance = SDL_clamp(game->customCfg.systemBreakChance, 0.0f, 1.0f);
+                            game->customCfg.systemBreakChance = std::round(game->customCfg.systemBreakChance * 100.0f) / 100.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 4:
+                        if (game->customCfg.baitReload > 0.2f)
+                        {
+                            game->customCfg.baitReload -= 0.1f;
+                            game->customCfg.baitReload = SDL_clamp(game->customCfg.baitReload, 0.2f, 3.0f);
+                            game->customCfg.baitReload = std::round(game->customCfg.baitReload * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 5:
+                        if (game->customCfg.REAL_SECONDS_PER_15_MIN > 5.0f)
+                        {
+                            game->customCfg.REAL_SECONDS_PER_15_MIN -= 5.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                }
+            }
+
+            if (key == SDLK_D) {
+                switch (game->customGame.customSelected) {
+                    case 0:
+                        if (game->customCfg.monsterCount < 10)
+                        {
+                            game->customCfg.monsterCount++;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 1:
+                        if (game->customCfg.monsterMoveInterval < 3.0f)
+                        {
+                            game->customCfg.monsterMoveInterval += 0.1f;
+                            game->customCfg.monsterMoveInterval = SDL_clamp(game->customCfg.monsterMoveInterval, 0.2f, 3.0f);
+                            game->customCfg.monsterMoveInterval = std::round(game->customCfg.monsterMoveInterval * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 2:
+                        if (game->customCfg.echoInterval < 3.0f)
+                        {
+                            game->customCfg.echoInterval += 0.1f;
+                            game->customCfg.echoInterval = SDL_clamp(game->customCfg.echoInterval, 0.2f, 3.0f);
+                            game->customCfg.echoInterval = std::round(game->customCfg.echoInterval * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 3:
+                        if (game->customCfg.systemBreakChance < 1.0f)
+                        {
+                            game->customCfg.systemBreakChance += 0.05f;
+                            game->customCfg.systemBreakChance = SDL_clamp(game->customCfg.systemBreakChance, 0.0f, 1.0f);
+                            game->customCfg.systemBreakChance = std::round(game->customCfg.systemBreakChance * 100.0f) / 100.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 4:
+                        if (game->customCfg.baitReload < 3.0f)
+                        {
+                            game->customCfg.baitReload += 0.1f;
+                            game->customCfg.baitReload = SDL_clamp(game->customCfg.baitReload, 0.2f, 3.0f);
+                            game->customCfg.baitReload = std::round(game->customCfg.baitReload * 10.0f) / 10.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                    case 5:
+                        if (game->customCfg.REAL_SECONDS_PER_15_MIN < 120.0f)
+                        {
+                            game->customCfg.REAL_SECONDS_PER_15_MIN += 5.0f;
+                            refreshCustomGameTexts(app);
+                        }
+                        break;
+                }
+            }
+
+            if (key == SDLK_RETURN) {
+                resetGame(app);
+                app->game->cfg = app->game->customCfg;
+                app->game->isCustomGame = true;
+                app->game->nightIntroTimer = 0.0f;
+                app->gamestate = GameState::ENDSCREEN;
+                app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
+        {255,255,255,255},"Night", "NIGHT ???", ViewSide::CENTER};
+                buildText(app->renderer, app->fonts->font1, app->fonts->night);
+                app->fonts->endGameText.textIn = "NIGHT ???";
+                buildText(app->renderer, app->fonts->font1, app->fonts->endGameText);
+            }
+
+            if (key == SDLK_ESCAPE) {
+                app->gamestate = GameState::MENU;
+            }
+
+            return SDL_APP_CONTINUE;
+        }
         if (key == SDLK_ESCAPE)
             return SDL_APP_SUCCESS;
         if (key == SDLK_A && game->viewAngleTarget >= 0) {
@@ -62,37 +203,37 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->targetView = ViewSide::CENTER;
             game->viewAngleTarget = 0.0f;
         }
-        if (key == SDLK_T) {
-            game->system.echoSystem = false;
-            game->system.baitSystem = false;
-            game->system.trackingSystem = false;
-        }
-        if (key == SDLK_Z) {
-            game->currentNight++;
-            saveProgress(app->game);
-            loadGame(app);
-        }
-        if (key == SDLK_X) {
-            game->currentNight--;
-            saveProgress(app->game);
-            loadGame(app);
-        }
-        if (key == SDLK_C) {
-            app->gamestate = GameState::WINSCREEN;
-            game->win = true;
-            saveProgress(app->game);
-            resetGame(app);
-            loadProgress(app->game);
-            return SDL_APP_CONTINUE;
-        }
-        if (key == SDLK_V) {
-            app->gamestate = GameState::MENU;
-            game->win = false;
-            saveProgress(app->game);
-            resetGame(app);
-            loadProgress(app->game);
-            return SDL_APP_CONTINUE;
-        }
+        // if (key == SDLK_T) {
+        //     game->system.echoSystem = false;
+        //     game->system.baitSystem = false;
+        //     game->system.trackingSystem = false;
+        // }
+        // if (key == SDLK_Z) {
+        //     game->currentNight++;
+        //     saveProgress(app->game);
+        //     loadGame(app);
+        // }
+        // if (key == SDLK_X) {
+        //     game->currentNight--;
+        //     saveProgress(app->game);                FOR DEBUG
+        //     loadGame(app);
+        // }
+        // if (key == SDLK_C) {
+        //     app->gamestate = GameState::WINSCREEN;
+        //     game->win = true;
+        //     saveProgress(app->game);
+        //     resetGame(app);
+        //     loadProgress(app->game);
+        //     return SDL_APP_CONTINUE;
+        // }
+        // if (key == SDLK_V) {
+        //     app->gamestate = GameState::MENU;
+        //     game->win = false;
+        //     saveProgress(app->game);
+        //     resetGame(app);
+        //     loadProgress(app->game);
+        //     return SDL_APP_CONTINUE;
+        // }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         if (game->currentView == ViewSide::CENTER && game->system.baitSystem)
         {
@@ -140,7 +281,10 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
         }
         if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight){
+            resetCustomConfig(game);
+            game->isCustomGame = true;
             app->gamestate = GameState::CUSTOMGAME;
+            refreshCustomGameTexts(app);
             SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
         }
 
@@ -269,7 +413,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     // frames++;
     //
     // if(timer >= 1.0f){
-    //     SDL_Log("FPS: %d", frames);
+    //     SDL_Log("FPS: %d", frames);      FPS DEBUG
     //     frames = 0;
     //     timer = 0;
     // }

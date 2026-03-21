@@ -135,6 +135,25 @@ bool initApp(App* app){
 
     fonts->loseText = {layoutText(0.39f, 0.42f, state->winW, state->winH),{180, 180, 180, 255},"retry","SIGNAL LOST",ViewSide::CENTER};
     buildText(app->renderer, fonts->font2, fonts->loseText);
+
+    game->customGame.customTitle = {layoutText(0.38f, 0.10f, app->state->winW, app->state->winH), {255,255,255,255}, "title", "CUSTOM NIGHT", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font2, game->customGame.customTitle);
+    game->customGame.customMonsterCount = {layoutText(0.20f, 0.25f, app->state->winW, app->state->winH), {255,255,255,255}, "mc", "MONSTER COUNT: " + std::to_string(game->customCfg.monsterCount), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customMonsterCount);
+    game->customGame.customMoveInterval = {layoutText(0.20f, 0.33f, app->state->winW, app->state->winH), {255,255,255,255}, "mm", "MOVE INTERVAL: " + std::to_string(game->customCfg.monsterMoveInterval), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customMoveInterval);
+    game->customGame.customEchoInterval = {layoutText(0.20f, 0.41f, app->state->winW, app->state->winH), {255,255,255,255}, "ei", "ECHO INTERVAL: " + std::to_string(game->customCfg.echoInterval), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customEchoInterval);
+    game->customGame.customBreakChance = {layoutText(0.20f, 0.49f, app->state->winW, app->state->winH), {255,255,255,255}, "bc", "BREAK CHANCE: " + std::to_string(game->customCfg.systemBreakChance), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customBreakChance);
+    game->customGame.customBaitReload = {layoutText(0.20f, 0.57f, app->state->winW, app->state->winH), {255,255,255,255}, "br", "BAIT RELOAD: " + std::to_string(game->customCfg.baitReload), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customBaitReload);
+    game->customGame.customTimeSpeed = {layoutText(0.20f, 0.65f, app->state->winW, app->state->winH), {255,255,255,255}, "ts", "TIME SPEED: " + std::to_string(game->customCfg.REAL_SECONDS_PER_15_MIN), ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customTimeSpeed);
+    game->customGame.customStart = {layoutText(0.42f, 0.80f, app->state->winW, app->state->winH), {0,255,0,255}, "start", "START", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font2, game->customGame.customStart);
+    game->customGame.customBack  = {layoutText(0.43f, 0.87f, app->state->winW, app->state->winH), {255,255,255,255}, "back", "BACK", ViewSide::CENTER};
+    buildText(app->renderer, fonts->font1, game->customGame.customBack);
     //=================RECT=================
     
     return true;

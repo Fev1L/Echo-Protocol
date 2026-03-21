@@ -48,6 +48,10 @@ void updateAlarm(Game* game, float deltaTime);
 
 void updateScareSounds(App* app, float deltaTime);
 
+void resetCustomConfig(Game* game);
+
+void refreshCustomGameTexts(App* app);
+
 // RENDER
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);

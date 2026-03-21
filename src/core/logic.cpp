@@ -180,6 +180,8 @@ void resetGame(App* app){
 void startNewGame(App* app) {
     resetGame(app);
     app->game->currentNight = 1;
+    app->fonts->endGameText.textIn = "NIGHT " + std::to_string(app->game->currentNight);
+    buildText(app->renderer, app->fonts->font1, app->fonts->endGameText);
     app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
@@ -195,6 +197,8 @@ void startNewGame(App* app) {
 void loadGame(App* app) {
     resetGame(app);
     loadProgress(app->game);
+    app->fonts->endGameText.textIn = "NIGHT " + std::to_string(app->game->currentNight);
+    buildText(app->renderer, app->fonts->font1, app->fonts->endGameText);
     app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
@@ -345,4 +349,76 @@ void updateScareSounds(App* app, float deltaTime) {
         game->scareTimer = 0.0f;
         game->nextScareTime = 10.0f + static_cast<float>(rand() % 16);
     }
+}
+//=================================================================
+void resetCustomConfig(Game* game) {
+    game->customCfg.monsterCount = 3;
+    game->customCfg.monsterMoveInterval = 0.8f;
+    game->customCfg.echoInterval = 1.2f;
+    game->customCfg.systemBreakChance = 0.15f;
+    game->customCfg.baitReload = 0.8f;
+    game->customCfg.REAL_SECONDS_PER_15_MIN = 30.0f;
+}
+//=================================================================
+std::string formatFloat(float value, int precision = 1) {
+    std::ostringstream ss;
+    ss << std::fixed << std::setprecision(precision) << value;
+    return ss.str();
+}
+
+void refreshCustomGameTexts(App* app) {
+    Game* game = app->game;
+
+    SDL_Color normal   = {255, 255, 255, 255};
+    SDL_Color selected = {255, 255,   0, 255};
+
+    game->customGame.customTitle.textIn = "CUSTOM NIGHT";
+    game->customGame.customTitle.color = normal;
+    buildText(app->renderer, app->fonts->font2, game->customGame.customTitle);
+
+    game->customGame.customMonsterCount.textIn =
+        "MONSTER COUNT: " + std::to_string(game->customCfg.monsterCount);
+    game->customGame.customMonsterCount.color =
+        (game->customGame.customSelected == 0) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customMonsterCount);
+
+    game->customGame.customMoveInterval.textIn =
+        "MOVE INTERVAL: " + formatFloat(game->customCfg.monsterMoveInterval, 1);
+    game->customGame.customMoveInterval.color =
+        (game->customGame.customSelected == 1) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customMoveInterval);
+
+    game->customGame.customEchoInterval.textIn =
+        "ECHO INTERVAL: " + formatFloat(game->customCfg.echoInterval, 1);
+    game->customGame.customEchoInterval.color =
+        (game->customGame.customSelected == 2) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customEchoInterval);
+
+    game->customGame.customBreakChance.textIn =
+        "BREAK CHANCE: " + formatFloat(game->customCfg.systemBreakChance, 2);
+    game->customGame.customBreakChance.color =
+        (game->customGame.customSelected == 3) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customBreakChance);
+
+    game->customGame.customBaitReload.textIn =
+        "BAIT RELOAD: " + formatFloat(game->customCfg.baitReload, 1);
+    game->customGame.customBaitReload.color =
+        (game->customGame.customSelected == 4) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customBaitReload);
+
+    game->customGame.customTimeSpeed.textIn =
+        "TIME SPEED: " + formatFloat(game->customCfg.REAL_SECONDS_PER_15_MIN, 1);
+    game->customGame.customTimeSpeed.color =
+        (game->customGame.customSelected == 5) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customTimeSpeed);
+
+    game->customGame.customStart.textIn = "START";
+    game->customGame.customStart.color =
+        (game->customGame.customSelected == 6) ? selected : normal;
+    buildText(app->renderer, app->fonts->font2, game->customGame.customStart);
+
+    game->customGame.customBack.textIn = "BACK";
+    game->customGame.customBack.color =
+        (game->customGame.customSelected == 7) ? selected : normal;
+    buildText(app->renderer, app->fonts->font1, game->customGame.customBack);
 }

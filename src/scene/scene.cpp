@@ -8,13 +8,27 @@
 #include "scene.h"
 
 void renderCustomgame(Game* game, App* app) {
-    
+    SDL_SetRenderDrawColor(app->renderer, 8, 8, 8, 255);
+    SDL_RenderFillRect(app->renderer, NULL);
+
+    SDL_Color normal = {255,255,255,255};
+    SDL_Color selected = {255,255,0,255};
+
+    drawText(app->renderer, game->customGame.customTitle, app);
+
+    drawText(app->renderer,  game->customGame.customMonsterCount, app);
+    drawText(app->renderer,  game->customGame.customMoveInterval, app);
+    drawText(app->renderer,  game->customGame.customEchoInterval, app);
+    drawText(app->renderer,  game->customGame.customBreakChance, app);
+    drawText(app->renderer,  game->customGame.customBaitReload, app);
+    drawText(app->renderer,  game->customGame.customTimeSpeed, app);
+
+    drawText(app->renderer, game->customGame.customStart, app);
+    drawText(app->renderer, game->customGame.customBack, app);
 }
 
 void renderEndgame(Game* game, App* app) {
     SDL_SetRenderDrawColor(app->renderer, 2, 2, 2, 255);
-    app->fonts->endGameText.textIn = "NIGHT " + std::to_string(game->currentNight);
-    buildText(app->renderer, app->fonts->font1, app->fonts->endGameText);
 
     drawText(app->renderer, app->fonts->endGameText, app);
 }
