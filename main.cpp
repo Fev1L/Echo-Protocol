@@ -366,6 +366,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
         case GameState::TUTORIAL:
             renderTutorial(game, app);
+            updateTutorialText(app);
             break;
         case GameState::PLAYING:
             renderGame(game, app);

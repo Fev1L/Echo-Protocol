@@ -105,30 +105,10 @@ void renderTutorial(Game* game, App* app) {
     SDL_SetRenderDrawColor(app->renderer, 5, 5, 5, 255);
     SDL_RenderFillRect(app->renderer, NULL);
 
-    Text tutorialText;
-    tutorialText.rect = layoutText(0.35f, 0.46f, app->state->winW, app->state->winH);
-    tutorialText.color = {255, 255, 255, 255};
-    tutorialText.label = "tutorial";
-    tutorialText.side = ViewSide::CENTER;
+    app->fonts->tutorialText.rect = layoutText(0.35f, 0.46f, app->state->winW, app->state->winH);
+    app->fonts->tutorialText.color = {255, 255, 255, 255};
+    app->fonts->tutorialText.label = "tutorial";
+    app->fonts->tutorialText.side = ViewSide::CENTER;
 
-    switch (game->tutorialStep) {
-    case 0:
-        tutorialText.textIn = "USE A AND D TO SWITCH BETWEEN SCREENS";
-        buildText(app->renderer, app->fonts->font1, tutorialText);
-        break;
-    case 1:
-        tutorialText.textIn = "CLICK THE GRID TO DISTRACT THE MONSTER";
-        buildText(app->renderer, app->fonts->font1, tutorialText);
-        break;
-    case 2:
-        tutorialText.textIn = "REPAIR SYSTEMS BEFORE IT IS TOO LATE";
-        buildText(app->renderer, app->fonts->font1, tutorialText);
-        break;
-    default:
-        tutorialText.textIn = "";
-        buildText(app->renderer, app->fonts->font1, tutorialText);
-        break;
-    }
-
-    drawText(app->renderer, tutorialText, app);
+    drawText(app->renderer, app->fonts->tutorialText, app);
 }

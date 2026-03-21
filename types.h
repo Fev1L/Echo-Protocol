@@ -204,6 +204,7 @@ struct Game {
 
     float tutorialTimer = 0.0f;
     int tutorialStep = 0;
+    int lastTutorialStep = -1;
 
     bool isCustomGame = false;
     
@@ -252,7 +253,7 @@ struct Font {
     Text winTitle;
     Text winSubtitle;
     Text loseText;
-
+    Text tutorialText;
 };
 
 struct Audio {

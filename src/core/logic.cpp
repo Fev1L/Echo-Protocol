@@ -422,3 +422,27 @@ void refreshCustomGameTexts(App* app) {
         (game->customGame.customSelected == 7) ? selected : normal;
     buildText(app->renderer, app->fonts->font1, game->customGame.customBack);
 }
+//=================================================================
+void updateTutorialText(App* app) {
+    Game* game = app->game;
+
+    if (game->tutorialStep == game->lastTutorialStep) return;
+
+    switch (game->tutorialStep) {
+    case 0:
+        app->fonts->tutorialText.textIn = "USE A AND D TO SWITCH BETWEEN SCREENS";
+        break;
+    case 1:
+        app->fonts->tutorialText.textIn = "CLICK THE GRID TO DISTRACT THE MONSTER";
+        break;
+    case 2:
+        app->fonts->tutorialText.textIn = "REPAIR SYSTEMS BEFORE IT IS TOO LATE";
+        break;
+    default:
+        app->fonts->tutorialText.textIn = "";
+        break;
+    }
+
+    buildText(app->renderer, app->fonts->font1, app->fonts->tutorialText);
+    game->lastTutorialStep = game->tutorialStep;
+}

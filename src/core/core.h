@@ -52,6 +52,8 @@ void resetCustomConfig(Game* game);
 
 void refreshCustomGameTexts(App* app);
 
+void updateTutorialText(App* app);
+
 // RENDER
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);
