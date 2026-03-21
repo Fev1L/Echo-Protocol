@@ -176,6 +176,20 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         game->menu.menuFade += app->deltaTime * 1.5f;
         game->menu.menuFade = SDL_clamp(game->menu.menuFade, 0.0f, 1.0f);
     }
+    if (app->gamestate == GameState::TUTORIAL) {
+        game->tutorialTimer += app->deltaTime;
+
+        if (game->tutorialTimer >= 5.0f) {
+            game->tutorialTimer = 0.0f;
+            game->tutorialStep++;
+        }
+
+        if (game->tutorialStep > 2) {
+            game->tutorialStep = 0;
+            game->nightIntroTimer = 0.0f;
+            app->gamestate = GameState::ENDSCREEN;
+        }
+    }
     if(app->gamestate == GameState::PLAYING){
         updateGameClock(game, app->deltaTime);
         updateCamera(game, app->deltaTime);
@@ -205,6 +219,9 @@ SDL_AppResult SDL_AppIterate(void* appstate){
     switch (app->gamestate) {
         case GameState::MENU:
             renderMenu(game, app);
+            break;
+        case GameState::TUTORIAL:
+            renderTutorial(game, app);
             break;
         case GameState::PLAYING:
             renderGame(game, app);

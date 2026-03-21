@@ -21,6 +21,7 @@
 
 enum class GameState {
     MENU,
+    TUTORIAL,
     PLAYING,
     ENDSCREEN,
     CUSTOMGAME,
@@ -186,6 +187,9 @@ struct Game {
     float loseTimer = 0.0f;
     bool loseSoundPlayed = false;
     bool loseCanExit = false;
+
+    float tutorialTimer = 0.0f;
+    int tutorialStep = 0;
     
     std::vector<Monster> monsters;
     std::vector<Noise> noise;

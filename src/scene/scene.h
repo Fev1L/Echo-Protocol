@@ -21,3 +21,5 @@ void renderEndgame(Game* game, App* app);
 void renderWinScreen(Game* game, App* app);
 
 void renderLoseScreen(Game* game, App* app);
+
+void renderTutorial(Game* game, App* app);

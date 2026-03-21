@@ -183,9 +183,10 @@ void startNewGame(App* app) {
     app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);
+    app->game->tutorialTimer = 0.0f;
+    app->game->tutorialStep = 0;
     app->game->nightIntroTimer = 0.0f;
-    renderGame(app->game, app);
-    app->gamestate = GameState::ENDSCREEN;
+    app->gamestate = GameState::TUTORIAL;
     getNightConfig(app);
     app->game->scareTimer = 0.0f;
     app->game->nextScareTime = 40.0f + static_cast<float>(rand() % 60);
