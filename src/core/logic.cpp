@@ -13,6 +13,7 @@ void saveProgress(Game* game){
     std::ofstream file("save.dat");
     if (file.is_open()){
         file << game->currentNight << std::endl;
+        file << game->win << std::endl;
         file.close();
     }
 }
@@ -22,10 +23,12 @@ void loadProgress(Game* game){
 
     if (file.is_open()){
         file >> game->currentNight;
+        file >> game->win;
         file.close();
     }
     else{
         game->currentNight = 1;
+        game->win = false;
     }
 }
 //=================================================================
@@ -152,12 +155,31 @@ void checkEchoHit(Game* game, float deltaTime) {
 }
 //=================================================================
 void resetGame(App* app){
-    *app->game = Game();
+    Game* game = app->game;
+
+    game->gameTime = 0.0f;
+    game->hours = 0;
+    game->minutes = 0;
+    game->currentView = ViewSide::CENTER;
+    game->targetView = ViewSide::CENTER;
+    game->viewAngle = 0.0f;
+    game->viewAngleTarget = 0.0f;
+    game->nightIntroTimer = 0.0f;
+    game->noiseCooldown = 0.0f;
+
+    game->monsters.clear();
+    game->noise.clear();
+
+    game->echo = Echo();
+    game->camera = Camera();
+    game->system = System();
     SDL_ClearAudioStream(app->audio->menuBackgroundSong.stream);
+    SDL_ClearAudioStream(app->audio->fanAmbient.stream);
 }
 //=================================================================
 void startNewGame(App* app) {
     resetGame(app);
+    app->game->currentNight = 1;
     app->fonts->night = {{layoutText(0.006f, 0.009f, app->state->winW, app->state->winH)},
         {255,255,255,255},"Night", "NIGHT " + std::to_string(app->game->currentNight), ViewSide::CENTER};
     buildText(app->renderer, app->fonts->font1, app->fonts->night);

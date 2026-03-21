@@ -172,6 +172,7 @@ struct Game {
     float viewAngle = 0.0f; 
     float viewAngleTarget = 0.0f;
     int currentNight = 1;
+    bool win = false;
     float nightIntroTimer = 0.0f;
     float nightIntroDuration = 4.0f;
     float noiseCooldown = 0.0f;

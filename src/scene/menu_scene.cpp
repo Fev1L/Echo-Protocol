@@ -52,7 +52,7 @@ void renderMenu(Game* game, App* app) {
     drawText(app->renderer, game->menu.newGame, app);
     drawText(app->renderer, game->menu.continueGame, app);
     drawText(app->renderer, game->menu.continueGameNight, app);
-    if(game->currentNight >= 8) drawText(app->renderer, game->menu.customGame, app);
+    if(game->win == true) drawText(app->renderer, game->menu.customGame, app);
 
     SDL_FRect baseLampRect = {layout(Anchor::TOP_LEFT, 0.277f, 0.390f, 0.65f, 0.199f, app->state->winW, app->state->winH)};
     SDL_FRect lampRect;

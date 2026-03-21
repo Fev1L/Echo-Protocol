@@ -77,6 +77,22 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             saveProgress(app->game);
             loadGame(app);
         }
+        if (key == SDLK_C) {
+            app->gamestate = GameState::MENU;
+            game->win = true;
+            saveProgress(app->game);
+            resetGame(app);
+            loadProgress(app->game);
+            return SDL_APP_CONTINUE;
+        }
+        if (key == SDLK_V) {
+            app->gamestate = GameState::MENU;
+            game->win = false;
+            saveProgress(app->game);
+            resetGame(app);
+            loadProgress(app->game);
+            return SDL_APP_CONTINUE;
+        }
     }else if(event->type == SDL_EVENT_MOUSE_BUTTON_DOWN){
         if (game->currentView == ViewSide::CENTER && game->system.baitSystem)
         {
@@ -190,10 +206,15 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
     }
     
-    if (game->hours >= 8){
-        game->currentNight++;
-        saveProgress(app->game);
-        loadGame(app);
+    if (game->hours >= 8) {
+        if (game->currentNight < 7) {
+            game->currentNight++;
+            saveProgress(app->game);
+            loadGame(app);
+        } else {
+            game->win = true;
+            app->gamestate = GameState::MENU;
+        }
     }
 
     // static float timer = 0;
