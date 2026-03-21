@@ -149,6 +149,14 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             resetGame(app);
             loadProgress(app->game);
         }
+
+        if (app->gamestate == GameState::LOSESCREEN) {
+            if (game->loseCanExit && event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+                loadGame(app);
+                app->gamestate = GameState::ENDSCREEN;
+            }
+            return SDL_APP_CONTINUE;
+        }
     }
     
     return SDL_APP_CONTINUE;
@@ -187,6 +195,9 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             app->gamestate = GameState::PLAYING;
         }
     }
+    if (app->gamestate == GameState::LOSESCREEN) {
+        game->loseTimer += app->deltaTime;
+    }
     
     SDL_SetRenderDrawColor(app->renderer, 11, 16, 20, 255);
     SDL_RenderClear(app->renderer);
@@ -200,7 +211,12 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             for(auto& monster : game->monsters){
                 if(monster.present && monster.x == game->centerX && monster.y == game->centerY){
                     saveProgress(app->game);
-                    loadGame(app);
+                    game->loseTimer = 0.0f;
+                    game->loseSoundPlayed = false;
+                    game->loseCanExit = false;
+                    app->gamestate = GameState::LOSESCREEN;
+                    SDL_ClearAudioStream(app->audio->fanAmbient.stream);
+                    break;
                 }
             }
             break;
@@ -212,6 +228,9 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             break;
         case GameState::WINSCREEN:
             renderWinScreen(game, app);
+            break;
+        case GameState::LOSESCREEN:
+            renderLoseScreen(game, app);
             break;
     }
     

@@ -198,8 +198,6 @@ void renderGame(Game* game, App* app) {
     drawText(app->renderer, fonts->trackingSystem, app);
     drawText(app->renderer, fonts->rebootAll, app);
 
-    Uint8 topAlpha = (Uint8)(game->topLamp.intensity * 140.0f);
-
     SDL_FRect topLightRect = {
         app->state->winW * 0.18f,
         -app->state->winH * 0.08f,

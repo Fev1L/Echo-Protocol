@@ -24,7 +24,8 @@ enum class GameState {
     PLAYING,
     ENDSCREEN,
     CUSTOMGAME,
-    WINSCREEN
+    WINSCREEN,
+    LOSESCREEN
 };
 
 enum class ViewSide {
@@ -181,6 +182,10 @@ struct Game {
     float alarmTimer = 0.0f;
     float scareTimer = 0.0f;
     float nextScareTime = 0.0f;
+
+    float loseTimer = 0.0f;
+    bool loseSoundPlayed = false;
+    bool loseCanExit = false;
     
     std::vector<Monster> monsters;
     std::vector<Noise> noise;
@@ -224,6 +229,8 @@ struct Font {
     Text endGameText;
     Text winTitle;
     Text winSubtitle;
+    Text loseText;
+
 };
 
 struct Audio {

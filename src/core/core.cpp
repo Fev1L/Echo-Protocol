@@ -126,12 +126,15 @@ bool initApp(App* app){
     fonts->hours = {{layoutText(0.006f, 0.029f, state->winW, state->winH)}, {255,255,255,255},"Hours", "HOURS", ViewSide::CENTER};
     buildText(app->renderer, fonts->font1, fonts->hours);
 
-    app->fonts->endGameText = {{layoutText(0.45f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
+    app->fonts->endGameText = {{layoutText(0.46f, 0.5f, app->state->winW, app->state->winH)}, {255,255,255,255},"endGame", "NIGHT " + std::to_string(game->currentNight), ViewSide::CENTER};
 
     fonts->winTitle = {{layoutText(0.266f, 0.435f, state->winW, state->winH)}, {255,255,255,255}, "winTitle", "THANK YOU FOR PLAYING", ViewSide::CENTER};
     buildText(app->renderer, fonts->font2, fonts->winTitle);
     fonts->winSubtitle = {{layoutText(0.284f, 0.492f, state->winW, state->winH)}, {180,180,180,255}, "winSubtitle", "You survived all 7 nights", ViewSide::CENTER};
     buildText(app->renderer, fonts->font2, fonts->winSubtitle);
+
+    fonts->loseText = {layoutText(0.39f, 0.42f, state->winW, state->winH),{180, 180, 180, 255},"retry","SIGNAL LOST",ViewSide::CENTER};
+    buildText(app->renderer, fonts->font2, fonts->loseText);
     //=================RECT=================
     
     return true;
