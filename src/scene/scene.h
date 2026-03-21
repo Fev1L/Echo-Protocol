@@ -16,3 +16,5 @@ void renderGame(Game* game, App* app);
 void renderCustomgame(Game* game, App* app);
 
 void renderEndgame(Game* game, App* app);
+
+void renderWinScreen(Game* game, App* app);

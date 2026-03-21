@@ -23,7 +23,8 @@ enum class GameState {
     MENU,
     PLAYING,
     ENDSCREEN,
-    CUSTOMGAME
+    CUSTOMGAME,
+    WINSCREEN
 };
 
 enum class ViewSide {
@@ -221,6 +222,8 @@ struct Font {
     Text trackingSystem;
     Text rebootAll;
     Text endGameText;
+    Text winTitle;
+    Text winSubtitle;
 };
 
 struct Audio {

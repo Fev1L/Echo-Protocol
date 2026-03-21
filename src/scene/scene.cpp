@@ -18,3 +18,10 @@ void renderEndgame(Game* game, App* app) {
 
     drawText(app->renderer, app->fonts->endGameText, app);
 }
+
+void renderWinScreen(Game* game, App* app) {
+    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
+
+    drawText(app->renderer, app->fonts->winTitle, app);
+    drawText(app->renderer, app->fonts->winSubtitle, app);
+}

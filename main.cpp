@@ -78,7 +78,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             loadGame(app);
         }
         if (key == SDLK_C) {
-            app->gamestate = GameState::MENU;
+            app->gamestate = GameState::WINSCREEN;
             game->win = true;
             saveProgress(app->game);
             resetGame(app);
@@ -143,6 +143,12 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             app->gamestate = GameState::CUSTOMGAME;
             SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
         }
+
+        if (app->gamestate == GameState::WINSCREEN && event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+            app->gamestate = GameState::MENU;
+            resetGame(app);
+            loadProgress(app->game);
+        }
     }
     
     return SDL_APP_CONTINUE;
@@ -204,6 +210,9 @@ SDL_AppResult SDL_AppIterate(void* appstate){
         case GameState::ENDSCREEN:
             renderEndgame(game, app);
             break;
+        case GameState::WINSCREEN:
+            renderWinScreen(game, app);
+            break;
     }
     
     if (game->hours >= 8) {
@@ -213,7 +222,7 @@ SDL_AppResult SDL_AppIterate(void* appstate){
             loadGame(app);
         } else {
             game->win = true;
-            app->gamestate = GameState::MENU;
+            app->gamestate = GameState::WINSCREEN;
         }
     }
 
