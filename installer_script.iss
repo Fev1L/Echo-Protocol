@@ -10,6 +10,9 @@ SolidCompression=yes
 WizardStyle=modern
 DisableProgramGroupPage=yes
 
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+
 [Files]
 ; exe
 Source: "build\Release\EchoProtocol.exe"; DestDir: "{app}"; Flags: ignoreversion
