@@ -19,9 +19,9 @@ Source: "build\Release\EchoProtocol.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Assets
 Source: "assets\*"; DestDir: "{app}\assets"; Flags: recursesubdirs createallsubdirs
 ; DLL SDL3
-Source: "build\external\SDL\Release\SDL3.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\external\SDL_ttf\Release\SDL3_ttf.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "build\external\SDL_image\Release\SDL3_image.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "build\external\SDL\Release\SDL3.dll"; DestDir: "{app}"; Flags: ignoreversion ignoremissing
+Source: "build\external\SDL_ttf\Release\SDL3_ttf.dll"; DestDir: "{app}"; Flags: ignoreversion ignoremissing
+Source: "build\external\SDL_image\Release\SDL3_image.dll"; DestDir: "{app}"; Flags: ignoreversion ignoremissing
 
 [Icons]
 Name: "{group}\EchoProtocol"; Filename: "{app}\EchoProtocol.exe"

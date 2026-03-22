@@ -55,7 +55,6 @@ jobs:
           mkdir -p build/dmg_content
           
           cp -a build/EchoProtocol.app build/dmg_content/
-          
           ln -s /Applications build/dmg_content/Applications
           
           hdiutil create -volname "EchoProtocol" \
@@ -63,11 +62,25 @@ jobs:
             -ov -format UDZO \
             build/installer/EchoProtocol.dmg
 
-      - name: Upload Artifacts
+      - name: Upload Windows artifacts
+        if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: EchoProtocol-${{ runner.os }}
+          name: EchoProtocol-Windows
           path: |
             build/Release/EchoProtocol.exe
-            build/EchoProtocol.app
             build/installer/*
+
+      - name: Upload macOS artifacts
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-macOS
+          path: build/EchoProtocol.app
+
+      - name: Upload Linux artifacts
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-Linux
+          path: build/EchoProtocol
