@@ -64,13 +64,35 @@ jobs:
             -ov -format UDZO \
             build/installer/EchoProtocol.dmg
 
-      - name: Package Linux binary
+      - name: Package Linux AppImage
         if: runner.os == 'Linux'
         run: |
-          mkdir -p build/installer/Linux/EchoProtocol
-          cp build/EchoProtocol build/installer/Linux/EchoProtocol/
-          cp -r assets build/installer/Linux/EchoProtocol/
-          tar -czf build/installer/EchoProtocol-linux.tar.gz -C build/installer/Linux EchoProtocol
+          mkdir -p build/AppDir/usr/bin
+          mkdir -p build/AppDir/usr/share/icons
+          mkdir -p build/AppDir/usr/share/applications
+
+          cp build/EchoProtocol build/AppDir/usr/bin/
+          cp -r assets build/AppDir/usr/
+
+          cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<EOL
+          [Desktop Entry]
+          Name=EchoProtocol
+          Exec=EchoProtocol
+          Icon=LOGO
+          Type=Application
+          Categories=Game;
+          EOL
+
+          cp assets/LOGO.png build/AppDir/usr/share/icons/LOGO.png
+
+          curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/AppRun-x86_64
+          chmod +x AppRun-x86_64
+          mv AppRun-x86_64 build/AppDir/
+
+          curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+          ./appimagetool-x86_64.AppImage build/AppDir build/EchoProtocol.AppImage
 
       - name: Upload Windows artifacts
         if: runner.os == 'Windows'
@@ -91,4 +113,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: EchoProtocol-Linux
-          path: build/installer/EchoProtocol-linux.tar.gz
+          path: build/EchoProtocol.AppImage
