@@ -51,10 +51,16 @@ jobs:
       - name: Create macOS DMG
         if: runner.os == 'macOS'
         run: |
-          mkdir -p build/installer
-          hdiutil create -volname "EchoProtocol" \
-            -srcfolder build/EchoProtocol.app \
-            -ov -format UDZO build/installer/EchoProtocol.dmg
+          DMG_SRC="build/dmg_src"
+          DMG_OUT="build/installer/EchoProtocol.dmg"
+
+          rm -rf "$DMG_SRC"
+          mkdir -p "$DMG_SRC"
+
+          cp -R build/EchoProtocol.app "$DMG_SRC/"
+
+          ln -s /Applications "$DMG_SRC/Applications"
+          hdiutil create -volname "EchoProtocol" -srcfolder "$DMG_SRC" -ov -format UDZO "$DMG_OUT"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

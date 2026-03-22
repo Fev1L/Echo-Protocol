@@ -26,7 +26,7 @@ set(SRC_FILES
 )
 
 set(APP_ICON_MACOS "${CMAKE_SOURCE_DIR}/resources/iconApp.icns")
-set(APP_ICON_WINDOWS "${CMAKE_SOURCE_DIR}/resources/iconApp.rc")
+set(APP_ICON_WINDOWS "${CMAKE_SOURCE_DIR}/resources/icon.rc")
 
 if(APPLE)
     set_source_files_properties(${APP_ICON_MACOS} PROPERTIES
@@ -67,7 +67,7 @@ target_compile_definitions(EchoProtocol PRIVATE SDL_MAIN_USE_CALLBACKS=1)
 if(APPLE)
     set_target_properties(EchoProtocol PROPERTIES
             MACOSX_BUNDLE TRUE
-            MACOSX_BUNDLE_BUNDLE_NAME "EchoProtocol"
+            MACOSX_BUNDLE_BUNDLE_NAME "Echo Protocol"
             MACOSX_BUNDLE_GUI_IDENTIFIER "com.fevil.echoprotocol"
             MACOSX_BUNDLE_BUNDLE_VERSION "1.0"
             MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0"
