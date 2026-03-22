@@ -446,3 +446,13 @@ void updateTutorialText(App* app) {
     buildText(app->renderer, app->fonts->font1, app->fonts->tutorialText);
     game->lastTutorialStep = game->tutorialStep;
 }
+//=================================================================
+std::string getAssetPath(const std::string& relativePath) {
+    const char* base = SDL_GetBasePath();
+    if (!base) {
+        SDL_Log("SDL_GetBasePath failed: %s", SDL_GetError());
+        return relativePath;
+    }
+
+    return std::string(base) + relativePath;
+    }

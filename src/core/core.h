@@ -54,6 +54,8 @@ void refreshCustomGameTexts(App* app);
 
 void updateTutorialText(App* app);
 
+std::string getAssetPath(const std::string& relativePath);
+
 // RENDER
 
 void drawRectangle(SDL_Renderer* renderer,const Rectangle &rct, App* app);

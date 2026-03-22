@@ -1,4 +1,4 @@
-name: Build EchoProtocol
+name: Build EchoProtocol + Installer
 
 on: [push, pull_request]
 
@@ -11,13 +11,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Setup MSYS2 & Inno Setup (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install innosetup -y
+          ridk exec pacman -S --noconfirm make
 
       - name: Install Dependencies (Linux)
         if: runner.os == 'Linux'
@@ -30,17 +36,31 @@ jobs:
             libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
             libdbus-1-dev libibus-1.0-dev libudev-dev \
             libfreetype-dev libharfbuzz-dev libpng-dev libjpeg-dev libwebp-dev libtiff-dev libavif-dev
+
       - name: Configure CMake
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel 2
 
+      - name: Create Windows Installer
+        if: runner.os == 'Windows'
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
+
+      - name: Create macOS DMG
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p build/installer
+          hdiutil create -volname "EchoProtocol" \
+            -srcfolder build/EchoProtocol.app \
+            -ov -format UDZO build/installer/EchoProtocol.dmg
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: EchoProtocol-${{ runner.os }}
           path: |
-            build/EchoProtocol*
             build/Release/EchoProtocol.exe
-            build/*.app
+            build/EchoProtocol.app
+            build/installer/*

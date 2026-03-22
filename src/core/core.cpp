@@ -34,7 +34,7 @@ bool initApp(App* app){
     
     //=================FONTS=================
     const std::string basePath = SDL_GetBasePath();
-    std::string fontPath = basePath + "Assets/Inter_28pt-Regular.ttf";
+    std::string fontPath = basePath + "assets/Inter_28pt-Regular.ttf";
     std::string fontPath1 = basePath + "Assets/Inter_28pt-ExtraBold.ttf";
     fonts->font1 = TTF_OpenFont(fontPath.c_str(), 24);
     fonts->font2 = TTF_OpenFont(fontPath.c_str(), 64);
@@ -42,64 +42,64 @@ bool initApp(App* app){
     //=================FONTS=================
     
     //=================AUDIO=================
-    SDL_LoadWAV("assets/sounds/menuBackgroundSong.wav", &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/menuBackgroundSong.wav").c_str(), &audio->menuBackgroundSong.spec, &audio->menuBackgroundSong.Data, &audio->menuBackgroundSong.Len);
     audio->menuBackgroundSong.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->menuBackgroundSong.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->menuBackgroundSong.stream);
     
-    SDL_LoadWAV("assets/sounds/mouseClick.wav", &audio->mouseClick.spec, &audio->mouseClick.Data, &audio->mouseClick.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/mouseClick.wav").c_str(), &audio->mouseClick.spec, &audio->mouseClick.Data, &audio->mouseClick.Len);
     audio->mouseClick.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->mouseClick.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->mouseClick.stream);
     SDL_SetAudioStreamGain(app->audio->mouseClick.stream, 0.5f);
 
-    SDL_LoadWAV("assets/sounds/fanAmbient.wav", &audio->fanAmbient.spec, &audio->fanAmbient.Data, &audio->fanAmbient.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/fanAmbient.wav").c_str(), &audio->fanAmbient.spec, &audio->fanAmbient.Data, &audio->fanAmbient.Len);
     audio->fanAmbient.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->fanAmbient.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->fanAmbient.stream);
     SDL_SetAudioStreamGain(app->audio->fanAmbient.stream, 2.0f);
 
-    SDL_LoadWAV("Assets/sounds/alarm.wav", &audio->alarmSound.spec, &audio->alarmSound.Data, &audio->alarmSound.Len);
+    SDL_LoadWAV("assets/sounds/alarm.wav", &audio->alarmSound.spec, &audio->alarmSound.Data, &audio->alarmSound.Len);
     audio->alarmSound.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->alarmSound.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->alarmSound.stream);
     SDL_SetAudioStreamGain(audio->alarmSound.stream, 2.0f);
 
-    SDL_LoadWAV("Assets/sounds/scare1.wav", &audio->scare1.spec, &audio->scare1.Data, &audio->scare1.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare1.wav").c_str(), &audio->scare1.spec, &audio->scare1.Data, &audio->scare1.Len);
     audio->scare1.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare1.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare1.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare2.wav", &audio->scare2.spec, &audio->scare2.Data, &audio->scare2.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare2.wav").c_str(), &audio->scare2.spec, &audio->scare2.Data, &audio->scare2.Len);
     audio->scare2.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare2.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare2.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare3.wav", &audio->scare3.spec, &audio->scare3.Data, &audio->scare3.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare3.wav").c_str(), &audio->scare3.spec, &audio->scare3.Data, &audio->scare3.Len);
     audio->scare3.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare3.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare3.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare4.wav", &audio->scare4.spec, &audio->scare4.Data, &audio->scare4.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare4.wav").c_str(), &audio->scare4.spec, &audio->scare4.Data, &audio->scare4.Len);
     audio->scare4.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare4.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare4.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare5.wav", &audio->scare5.spec, &audio->scare5.Data, &audio->scare5.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare5.wav").c_str(), &audio->scare5.spec, &audio->scare5.Data, &audio->scare5.Len);
     audio->scare5.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare5.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare5.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare6.wav", &audio->scare6.spec, &audio->scare6.Data, &audio->scare6.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare6.wav").c_str(), &audio->scare6.spec, &audio->scare6.Data, &audio->scare6.Len);
     audio->scare6.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare6.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare6.stream);
 
-    SDL_LoadWAV("Assets/sounds/scare7.wav", &audio->scare7.spec, &audio->scare7.Data, &audio->scare7.Len);
+    SDL_LoadWAV(getAssetPath("assets/sounds/scare7.wav").c_str(), &audio->scare7.spec, &audio->scare7.Data, &audio->scare7.Len);
     audio->scare7.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audio->scare7.spec, NULL, NULL);
     SDL_ResumeAudioStreamDevice(audio->scare7.stream);
     //=================AUDIO=================
     
     //=================IMAGE=================
-    game->menu.menuBackground = IMG_LoadTexture(app->renderer, "Assets/menu.png");
-    app->state->gameBackgroundTexture = IMG_LoadTexture(app->renderer, "Assets/gameBackground.png");
-    app->state->gameBackgroundTextureRight = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundRight.png");
-    app->state->gameBackgroundTextureLeftClose = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftClose.png");
-    app->state->gameBackgroundTextureLeftOpen = IMG_LoadTexture(app->renderer, "Assets/gameBackgroundLeftOpen.png");
-    app->state->topLightTexture = IMG_LoadTexture(app->renderer, "Assets/lampTopYellow.png");
-    app->state->topRedTexture = IMG_LoadTexture(app->renderer, "Assets/lampTopRed.png");
-    game->menu.menuLogo = IMG_LoadTexture(app->renderer, "Assets/LOGO.png");
-    game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, "Assets/lampGlowTexture.png");
+    game->menu.menuBackground = IMG_LoadTexture(app->renderer, getAssetPath("assets/menu.png").c_str());
+    app->state->gameBackgroundTexture = IMG_LoadTexture(app->renderer, getAssetPath("assets/gameBackground.png").c_str());
+    app->state->gameBackgroundTextureRight = IMG_LoadTexture(app->renderer, getAssetPath("assets/gameBackgroundRight.png").c_str());
+    app->state->gameBackgroundTextureLeftClose = IMG_LoadTexture(app->renderer, getAssetPath("assets/gameBackgroundLeftClose.png").c_str());
+    app->state->gameBackgroundTextureLeftOpen = IMG_LoadTexture(app->renderer, getAssetPath("assets/gameBackgroundLeftOpen.png").c_str());
+    app->state->topLightTexture = IMG_LoadTexture(app->renderer, getAssetPath("assets/lampTopYellow.png").c_str());
+    app->state->topRedTexture = IMG_LoadTexture(app->renderer, getAssetPath("assets/lampTopRed.png").c_str());
+    game->menu.menuLogo = IMG_LoadTexture(app->renderer, getAssetPath("assets/LOGO.png").c_str());
+    game->menu.lampGlowTexture = IMG_LoadTexture(app->renderer, getAssetPath("assets/lampGlowTexture.png").c_str());
     SDL_SetTextureBlendMode(game->menu.lampGlowTexture, SDL_BLENDMODE_ADD);
     SDL_SetTextureBlendMode(app->state->topLightTexture, SDL_BLENDMODE_ADD);
     SDL_SetTextureBlendMode(app->state->topRedTexture, SDL_BLENDMODE_ADD);
