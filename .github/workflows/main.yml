@@ -19,17 +19,24 @@ jobs:
         with:
           submodules: recursive
 
+      # --------------------------------------
+      # Windows: MSYS2 + Inno Setup
+      # --------------------------------------
       - name: Setup MSYS2 & Inno Setup (Windows)
         if: runner.os == 'Windows'
         run: |
           choco install innosetup -y
           ridk exec pacman -S --noconfirm make
 
+      # --------------------------------------
+      # Linux dependencies
+      # --------------------------------------
       - name: Install Dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            build-essential cmake \
             libasound2-dev libpulse-dev libx11-dev libxext-dev \
             libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev \
             libxss-dev libxtst-dev libwayland-dev libxkbcommon-dev \
@@ -37,17 +44,26 @@ jobs:
             libdbus-1-dev libibus-1.0-dev libudev-dev \
             libfreetype-dev libharfbuzz-dev libpng-dev libjpeg-dev libwebp-dev libtiff-dev libavif-dev
 
+      # --------------------------------------
+      # Configure & build
+      # --------------------------------------
       - name: Configure CMake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
       - name: Build
-        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel 2
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
+      # --------------------------------------
+      # Windows: Create installer (.exe)
+      # --------------------------------------
       - name: Create Windows Installer
         if: runner.os == 'Windows'
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
 
+      # --------------------------------------
+      # macOS: Create .dmg
+      # --------------------------------------
       - name: Create macOS DMG
         if: runner.os == 'macOS'
         run: |
@@ -55,6 +71,7 @@ jobs:
           mkdir -p build/dmg_content
           
           cp -a build/EchoProtocol.app build/dmg_content/
+          
           ln -s /Applications build/dmg_content/Applications
           
           hdiutil create -volname "EchoProtocol" \
@@ -62,25 +79,27 @@ jobs:
             -ov -format UDZO \
             build/installer/EchoProtocol.dmg
 
-      - name: Upload Windows artifacts
-        if: runner.os == 'Windows'
+      # --------------------------------------
+      # Linux: Create tar.gz portable package
+      # --------------------------------------
+      - name: Package Linux binary
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p build/installer/Linux/EchoProtocol
+          cp build/EchoProtocol build/installer/Linux/EchoProtocol/
+          cp -r assets build/installer/Linux/EchoProtocol/
+          tar -czf build/installer/EchoProtocol-linux.tar.gz -C build/installer/Linux EchoProtocol
+
+      # --------------------------------------
+      # Upload artifacts
+      # --------------------------------------
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EchoProtocol-Windows
+          name: EchoProtocol-${{ runner.os }}
           path: |
             build/Release/EchoProtocol.exe
-            build/installer/*
-
-      - name: Upload macOS artifacts
-        if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
-        with:
-          name: EchoProtocol-macOS
-          path: build/EchoProtocol.app
-
-      - name: Upload Linux artifacts
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v4
-        with:
-          name: EchoProtocol-Linux
-          path: build/EchoProtocol
+            build/EchoProtocol.app
+            build/installer/EchoProtocol-linux.tar.gz
+            build/installer/EchoProtocol.dmg
+            build/installer/*.exe
