@@ -67,26 +67,21 @@ jobs:
       - name: Package Linux AppImage
         if: runner.os == 'Linux'
         run: |
+          # Створюємо структуру AppDir
           mkdir -p build/AppDir/usr/bin
+          mkdir -p build/AppDir/usr/share/applications
+          mkdir -p build/AppDir/usr/share/icons/hicolor/256x256/apps
+      
           cp build/EchoProtocol build/AppDir/usr/bin/
           cp -r assets build/AppDir/usr/
       
-          mkdir -p build/AppDir/usr/share/applications
-          cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<EOL
-          [Desktop Entry]
-          Name=EchoProtocol
-          Exec=EchoProtocol
-          Icon=LOGO
-          Type=Application
-          Categories=Game;
-          EOL
+          cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<'EOF'[Desktop Entry]Name=EchoProtocolExec=EchoProtocolIcon=LOGOType=ApplicationCategories=Game;EOF
       
-          mkdir -p build/AppDir/usr/share/icons
-          cp assets/LOGO.png build/AppDir/usr/share/icons/LOGO.png
+          cp assets/LOGO.png build/AppDir/usr/share/icons/hicolor/256x256/apps/LOGO.png
       
           curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
-
+      
           ./appimagetool-x86_64.AppImage build/AppDir build/EchoProtocol.AppImage --no-appstream
 
       - name: Upload Windows artifacts
