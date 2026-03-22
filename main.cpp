@@ -272,15 +272,15 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
             game->system.type = RepairType::REBOOT;
         }
         
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY)){
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.newGame, app, mouseX, mouseY) && app->gamestate == GameState::MENU){
             startNewGame(app);
             SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
         }
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)){
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.continueGame, app, mouseX, mouseY)&& app->gamestate == GameState::MENU){
             loadGame(app);
             SDL_PutAudioStreamData(app->audio->mouseClick.stream, app->audio->mouseClick.Data, app->audio->mouseClick.Len);
         }
-        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight){
+        if (isTextClicked(app->renderer, app->fonts->font2, game->menu.customGame, app, mouseX, mouseY) && game->currentNight && app->gamestate == GameState::MENU && game->win == true) {
             resetCustomConfig(game);
             game->isCustomGame = true;
             app->gamestate = GameState::CUSTOMGAME;
@@ -309,7 +309,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event){
 SDL_AppResult SDL_AppIterate(void* appstate){
     App* app = (App*)appstate;
     Game* game = app->game;
-    
+
     Uint64 now = SDL_GetPerformanceCounter();
     app->deltaTime = (double)(now - app->lastCounter) / (double)SDL_GetPerformanceFrequency();
     app->lastCounter = now;
