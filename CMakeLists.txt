@@ -14,7 +14,7 @@ file(GLOB_RECURSE SRC_FILES
         src/*.cpp
 )
 
-add_executable(EchoProtocol
+add_executable(EchoProtocol MACOSX_BUNDLE WIN32
         main.cpp
         src/core/core.cpp
         src/core/logic.cpp
