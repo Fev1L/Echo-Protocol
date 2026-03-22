@@ -16,7 +16,7 @@ cp build/EchoProtocol build/AppDir/usr/bin/
 cp -r assets build/AppDir/usr/
 
 mkdir -p build/AppDir/usr/share/applications
-cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<EOF
+cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<'EOF'
 [Desktop Entry]
 Name=EchoProtocol
 Exec=EchoProtocol
@@ -24,6 +24,8 @@ Icon=LOGO
 Type=Application
 Categories=Game;
 EOF
+
+chmod 644 build/AppDir/usr/share/applications/echo-protocol.desktop
 
 mkdir -p build/AppDir/usr/share/icons
 cp assets/LOGO.png build/AppDir/usr/share/icons/LOGO.png
