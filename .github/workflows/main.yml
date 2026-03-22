@@ -70,20 +70,25 @@ jobs:
           # Створюємо структуру AppDir
           mkdir -p build/AppDir/usr/bin
           mkdir -p build/AppDir/usr/share/applications
-          mkdir -p build/AppDir/usr/share/icons/hicolor/256x256/apps
-      
+          mkdir -p build/AppDir/usr/share/icons
+
           cp build/EchoProtocol build/AppDir/usr/bin/
           cp -r assets build/AppDir/usr/
       
-          cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<'EOF'[Desktop Entry]Name=EchoProtocolExec=EchoProtocolIcon=LOGOType=ApplicationCategories=Game;EOF
+          echo '[Desktop Entry]' > build/AppDir/usr/share/applications/echo-protocol.desktop
+          echo 'Name=EchoProtocol' >> build/AppDir/usr/share/applications/echo-protocol.desktop
+          echo 'Exec=EchoProtocol' >> build/AppDir/usr/share/applications/echo-protocol.desktop
+          echo 'Icon=LOGO' >> build/AppDir/usr/share/applications/echo-protocol.desktop
+          echo 'Type=Application' >> build/AppDir/usr/share/applications/echo-protocol.desktop
+          echo 'Categories=Game;' >> build/AppDir/usr/share/applications/echo-protocol.desktop
       
-          cp assets/LOGO.png build/AppDir/usr/share/icons/hicolor/256x256/apps/LOGO.png
+          cp assets/LOGO.png build/AppDir/usr/share/icons/LOGO.png
       
           curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
       
           ./appimagetool-x86_64.AppImage build/AppDir build/EchoProtocol.AppImage --no-appstream
-
+    
       - name: Upload Windows artifacts
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
