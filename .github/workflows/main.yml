@@ -46,7 +46,7 @@ jobs:
       - name: Create Windows Installer
         if: runner.os == 'Windows'
         run: |
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
 
       - name: Create macOS DMG
         if: runner.os == 'macOS'
