@@ -92,7 +92,7 @@ jobs:
           curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
 
-          ./appimagetool-x86_64.AppImage build/AppDir build/EchoProtocol.AppImage
+          ./appimagetool-x86_64.AppImage build/AppDir build/EchoProtocol.AppImage --no-appstream
 
       - name: Upload Windows artifacts
         if: runner.os == 'Windows'
