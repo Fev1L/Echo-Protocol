@@ -5,7 +5,7 @@
 //  Created by Fev1L on 10.01.2026.
 //
 
-#define SDL_MAIN_USE_CALLBACKS
+#include <SDL3/SDL_main.h>
 
 #include "types.h"
 #include "scene/scene.h"

@@ -43,6 +43,8 @@ target_link_libraries(EchoProtocol
         SDL3_ttf::SDL3_ttf
 )
 
+target_compile_definitions(EchoProtocol PRIVATE SDL_MAIN_USE_CALLBACKS=1)
+
 add_custom_target(copy_assets ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/assets

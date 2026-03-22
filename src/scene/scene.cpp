@@ -94,7 +94,6 @@ void renderLoseScreen(Game* game, App* app) {
     SDL_RenderFillRect(app->renderer, &fullScreen);
 
     if (t >= 12.5f) {
-        game->currentView == ViewSide::CENTER;
         game->viewAngle = 0;
         drawText(app->renderer, fonts->loseText, app);
         game->loseCanExit = true;
