@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: EchoProtocol-Linux-x64
-          path: build/EchoProtocol.AppImage
+          path: build/EchoProtocol-x86_64.AppImage
 
   build-linux-arm64:
     runs-on: ubuntu-24.04-arm
@@ -104,14 +104,11 @@ jobs:
       - name: Package Linux ARM64 AppImage
         run: bash scripts/build_appimage.sh
 
-      - name: Rename ARM64 AppImage
-        run: mv build/EchoProtocol.AppImage build/EchoProtocol-arm64.AppImage
-
       - name: Upload Linux ARM64 artifacts
         uses: actions/upload-artifact@v4
         with:
           name: EchoProtocol-Linux-ARM64
-          path: build/EchoProtocol-arm64.AppImage
+          path: build/EchoProtocol-aarch64.AppImage
 
   build-macos-intel:
     runs-on: macos-13
@@ -155,44 +152,44 @@ jobs:
           name: EchoProtocol-macOS-Intel
           path: build/installer/EchoProtocol-Intel.dmg
 
-    build-macos-arm:
-      runs-on: macos-latest
+  build-macos-arm:
+    runs-on: macos-latest
 
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-          with:
-            submodules: recursive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-        - name: Install macOS dependencies
-          run: |
-            brew update
-            brew install freetype harfbuzz libpng jpeg webp
+      - name: Install macOS dependencies
+        run: |
+          brew update
+          brew install freetype harfbuzz libpng jpeg webp
 
-        - name: Configure CMake
-          run: |
-            cmake -B build \
-              -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-              -DCMAKE_OSX_ARCHITECTURES=arm64 \
-              -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
-              -DCMAKE_PREFIX_PATH="/opt/homebrew;/opt/homebrew/opt/freetype;/opt/homebrew/opt/harfbuzz"
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_PREFIX_PATH="/opt/homebrew;/opt/homebrew/opt/freetype;/opt/homebrew/opt/harfbuzz"
 
-        - name: Build
-          run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
-        - name: Create macOS ARM DMG
-          run: |
-            mkdir -p build/installer
-            mkdir -p build/dmg_content
-            cp -a build/EchoProtocol.app build/dmg_content/
-            ln -s /Applications build/dmg_content/Applications
-            hdiutil create -volname "EchoProtocol-ARM" \
-              -srcfolder build/dmg_content \
-              -ov -format UDZO \
-              build/installer/EchoProtocol-ARM.dmg
+      - name: Create macOS ARM DMG
+        run: |
+          mkdir -p build/installer
+          mkdir -p build/dmg_content
+          cp -a build/EchoProtocol.app build/dmg_content/
+          ln -s /Applications build/dmg_content/Applications
+          hdiutil create -volname "EchoProtocol-ARM" \
+            -srcfolder build/dmg_content \
+            -ov -format UDZO \
+            build/installer/EchoProtocol-ARM.dmg
 
-        - name: Upload macOS ARM artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: EchoProtocol-macOS-ARM
-            path: build/installer/EchoProtocol-ARM.dmg
+      - name: Upload macOS ARM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-macOS-ARM
+          path: build/installer/EchoProtocol-ARM.dmg
