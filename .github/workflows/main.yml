@@ -6,12 +6,8 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+  build-windows:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
@@ -19,15 +15,39 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup MSYS2 & Inno Setup (Windows)
-        if: runner.os == 'Windows'
+      - name: Setup MSYS2 & Inno Setup
         shell: pwsh
         run: |
           choco install innosetup -y
           ridk exec pacman -S --noconfirm make
 
-      - name: Install Dependencies (Linux)
-        if: runner.os == 'Linux'
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+
+      - name: Create Windows Installer
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-Windows
+          path: build/installer/EchoProtocolInstaller.exe
+
+  build-linux-x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -40,59 +60,139 @@ jobs:
             libwebp-dev libtiff-dev libavif-dev
 
       - name: Configure CMake
-        if: runner.os == 'macOS'
-        run: |
-          cmake -B build \
-            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-            -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
-      
-      - name: Configure CMake
-        if: runner.os != 'macOS'
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
 
-      - name: Create Windows Installer
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
+      - name: Package Linux AppImage
+        run: bash scripts/build_appimage.sh
 
-      - name: Create macOS DMG
-        if: runner.os == 'macOS'
+      - name: Upload Linux x64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-Linux-x64
+          path: build/EchoProtocol.AppImage
+
+  build-linux-arm64:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2-dev libpulse-dev libx11-dev libxext-dev \
+            libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev \
+            libxss-dev libxtst-dev libwayland-dev libxkbcommon-dev \
+            libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+            libdbus-1-dev libibus-1.0-dev libudev-dev \
+            libfreetype-dev libharfbuzz-dev libpng-dev libjpeg-dev \
+            libwebp-dev libtiff-dev libavif-dev
+
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+
+      - name: Package Linux ARM64 AppImage
+        run: bash scripts/build_appimage.sh
+
+      - name: Rename ARM64 AppImage
+        run: mv build/EchoProtocol.AppImage build/EchoProtocol-arm64.AppImage
+
+      - name: Upload Linux ARM64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EchoProtocol-Linux-ARM64
+          path: build/EchoProtocol-arm64.AppImage
+
+  build-macos-intel:
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install macOS dependencies
+        run: |
+          brew update
+          brew install freetype harfbuzz libpng jpeg webp
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_PREFIX_PATH="/usr/local;/usr/local/opt/freetype;/usr/local/opt/harfbuzz"
+
+      - name: Build
+        run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+
+      - name: Create macOS Intel DMG
         run: |
           mkdir -p build/installer
           mkdir -p build/dmg_content
           cp -a build/EchoProtocol.app build/dmg_content/
           ln -s /Applications build/dmg_content/Applications
-          hdiutil create -volname "EchoProtocol" \
+          hdiutil create -volname "EchoProtocol-Intel" \
             -srcfolder build/dmg_content \
             -ov -format UDZO \
-            build/installer/EchoProtocol.dmg
+            build/installer/EchoProtocol-Intel.dmg
 
-      - name: Package Linux AppImage
-        if: runner.os == 'Linux'
-        run: bash scripts/build_appimage.sh
-    
-      - name: Upload Windows artifacts
-        if: runner.os == 'Windows'
+      - name: Upload macOS Intel artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: EchoProtocol-Windows
-          path: build/installer/EchoProtocolInstaller.exe
+          name: EchoProtocol-macOS-Intel
+          path: build/installer/EchoProtocol-Intel.dmg
 
-      - name: Upload macOS artifacts
-        if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
-        with:
-          name: EchoProtocol-macOS
-          path: build/installer/EchoProtocol.dmg
+    build-macos-arm:
+      runs-on: macos-latest
 
-      - name: Upload Linux artifacts
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v4
-        with:
-          name: EchoProtocol-Linux
-          path: build/EchoProtocol.AppImage
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+
+        - name: Install macOS dependencies
+          run: |
+            brew update
+            brew install freetype harfbuzz libpng jpeg webp
+
+        - name: Configure CMake
+          run: |
+            cmake -B build \
+              -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+              -DCMAKE_OSX_ARCHITECTURES=arm64 \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+              -DCMAKE_PREFIX_PATH="/opt/homebrew;/opt/homebrew/opt/freetype;/opt/homebrew/opt/harfbuzz"
+
+        - name: Build
+          run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel 2
+
+        - name: Create macOS ARM DMG
+          run: |
+            mkdir -p build/installer
+            mkdir -p build/dmg_content
+            cp -a build/EchoProtocol.app build/dmg_content/
+            ln -s /Applications build/dmg_content/Applications
+            hdiutil create -volname "EchoProtocol-ARM" \
+              -srcfolder build/dmg_content \
+              -ov -format UDZO \
+              build/installer/EchoProtocol-ARM.dmg
+
+        - name: Upload macOS ARM artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: EchoProtocol-macOS-ARM
+            path: build/installer/EchoProtocol-ARM.dmg
