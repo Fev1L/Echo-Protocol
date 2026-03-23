@@ -1,67 +1,55 @@
 #!/bin/bash
 set -e
 
-APP_NAME="EchoProtocol"
-DESKTOP_FILE="echo-protocol.desktop"
-ICON_NAME="echo-protocol"
-APPDIR="build/AppDir"
-
 ARCH="$(uname -m)"
 
-case "$ARCH" in
-  x86_64)
-    APPIMAGE_ARCH="x86_64"
-    OUTPUT_APPIMAGE="build/EchoProtocol-x86_64.AppImage"
-    ;;
-  aarch64|arm64)
-    APPIMAGE_ARCH="aarch64"
-    OUTPUT_APPIMAGE="build/EchoProtocol-aarch64.AppImage"
-    ;;
-  *)
-    echo "Unsupported architecture: $ARCH"
-    exit 1
-    ;;
-esac
+if [ "$ARCH" = "x86_64" ]; then
+  APPIMAGE_TOOL_URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+  APPIMAGE_ARCH="x86_64"
+  OUTPUT_NAME="EchoProtocol-x86_64.AppImage"
+elif [ "$ARCH" = "aarch64" ]; then
+  APPIMAGE_TOOL_URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage"
+  APPIMAGE_ARCH="aarch64"
+  OUTPUT_NAME="EchoProtocol-aarch64.AppImage"
+else
+  echo "Unsupported architecture: $ARCH"
+  exit 1
+fi
 
-rm -rf "$APPDIR" build/squashfs-root appimagetool.AppImage
-mkdir -p "$APPDIR/usr/bin"
-mkdir -p "$APPDIR/usr/share/applications"
-mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
+rm -rf build/AppDir build/squashfs-root appimagetool.AppImage
+mkdir -p build/AppDir/usr/bin
+mkdir -p build/AppDir/usr/share/applications
+mkdir -p build/AppDir/usr/share/icons/hicolor/256x256/apps
 
-cp "build/$APP_NAME" "$APPDIR/usr/bin/"
-cp -r assets "$APPDIR/usr/"
+cp build/EchoProtocol build/AppDir/usr/bin/
+cp -r assets build/AppDir/usr/
 
-cat > "$APPDIR/usr/share/applications/$DESKTOP_FILE" <<EOF
+cat > build/AppDir/usr/share/applications/echo-protocol.desktop <<'EOF'
 [Desktop Entry]
-Name=$APP_NAME
-Exec=$APP_NAME
-Icon=$ICON_NAME
+Name=EchoProtocol
+Exec=EchoProtocol
+Icon=echo-protocol
 Type=Application
 Categories=Game;
 Terminal=false
 EOF
 
-chmod 644 "$APPDIR/usr/share/applications/$DESKTOP_FILE"
+chmod 644 build/AppDir/usr/share/applications/echo-protocol.desktop
 
-cp assets/LOGO.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/$ICON_NAME.png"
+cp assets/LOGO.png build/AppDir/usr/share/icons/hicolor/256x256/apps/echo-protocol.png
+cp build/AppDir/usr/share/applications/echo-protocol.desktop build/AppDir/echo-protocol.desktop
+cp build/AppDir/usr/share/icons/hicolor/256x256/apps/echo-protocol.png build/AppDir/echo-protocol.png
 
-cp "$APPDIR/usr/share/applications/$DESKTOP_FILE" "$APPDIR/$DESKTOP_FILE"
-cp "$APPDIR/usr/share/icons/hicolor/256x256/apps/$ICON_NAME.png" "$APPDIR/$ICON_NAME.png"
-
-cat > "$APPDIR/AppRun" <<EOF
+cat > build/AppDir/AppRun <<'EOF'
 #!/bin/bash
-HERE="\$(dirname "\$(readlink -f "\$0")")"
-exec "\$HERE/usr/bin/$APP_NAME" "\$@"
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/EchoProtocol" "$@"
 EOF
 
-chmod +x "$APPDIR/AppRun"
+chmod +x build/AppDir/AppRun
 
-wget -O appimagetool.AppImage "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${APPIMAGE_ARCH}.AppImage"
+wget -O appimagetool.AppImage "$APPIMAGE_TOOL_URL"
 chmod +x appimagetool.AppImage
 
 ./appimagetool.AppImage --appimage-extract
-ARCH="$APPIMAGE_ARCH" ./squashfs-root/AppRun --no-appstream "$APPDIR" "$OUTPUT_APPIMAGE"
-
-cp "$OUTPUT_APPIMAGE" build/EchoProtocol.AppImage
-
-echo "Created AppImage: $OUTPUT_APPIMAGE"
+ARCH="$APPIMAGE_ARCH" ./squashfs-root/AppRun --no-appstream build/AppDir "build/$OUTPUT_NAME"
