@@ -40,6 +40,15 @@ jobs:
             libwebp-dev libtiff-dev libavif-dev
 
       - name: Configure CMake
+        if: runner.os == 'macOS'
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+      
+      - name: Configure CMake
+        if: runner.os != 'macOS'
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
       - name: Build
