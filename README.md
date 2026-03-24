@@ -8,6 +8,7 @@ This project was created as a personal low-level game development project with a
 
 **Current version:** `Alpha 1`  
 **Status:** Playable early release
+https://fev1l.itch.io/echo-protocol
 
 Alpha 1 is the first public milestone of the project.  
 The core gameplay loop is already implemented and playable: survive inside the bunker, monitor enemy movement, use the echo system, and place decoys strategically to stay alive through the night.
